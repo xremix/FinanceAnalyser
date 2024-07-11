@@ -332,9 +332,9 @@
   
 
   <div>
-    <div *ngFor="let transaction of dataState.transactions">
-      {{transaction.category?.category}}
-    </div>
+
+    <app-transaction-component *ngFor="let transaction of dataState.transactions" [transaction]="transaction">
+    </app-transaction-component>
   </div>
 
 </div>
