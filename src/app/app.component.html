@@ -328,11 +328,8 @@
 <div class="content" role="main">
 <div>
 
-
-  <div class="Block">
-    <label id="lbl">Code </label>
-    <input type='file' (change)="fileChanged($event)">
-  </div>
+<app-file-selector></app-file-selector>
+  
 
   <div>
     <div *ngFor="let transaction of dataState.transactions">

@@ -11,13 +11,6 @@ import { DataState } from './services/data-state';
 export class AppComponent {
   title = 'FinanceAnalyser';
 
-  constructor(private importService: ImportService, private categoryService: CategoryService, protected dataState: DataState) {}
-  file: any;
-  async fileChanged(e: any) {
-    this.file = e.target.files[0];
-    let fileContent = await this.importService.getFileContent(this.file);
-    let transactions = this.importService.parseCsvToTransactions(fileContent);
-   this.categoryService.fillCategoriesToTransactions(transactions);
-   this.dataState.transactions = transactions;
-  }
+  constructor(protected dataState: DataState) {}
+
 }
