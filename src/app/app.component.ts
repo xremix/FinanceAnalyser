@@ -11,6 +11,6 @@ import { DataState } from './services/data-state';
 export class AppComponent {
   title = 'FinanceAnalyser';
 
-  constructor(protected dataState: DataState) {}
+  constructor(protected dataState: DataState, protected categoryService: CategoryService) {}
 
 }

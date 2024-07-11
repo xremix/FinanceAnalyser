@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction';
 import { Category } from '../models/category';
+import { CategorySummary } from '../models/category-summary';
 @Injectable({
   providedIn: 'root',
 })
@@ -161,7 +162,10 @@ export class CategoryService {
         return category;
       }
     }
-
+    if(isNaN(transaction.amount)){
+        console.log('nan', transaction);
+    }
+    console.log('default category', transaction.amount);
     return this.defaultCategory;
   }
 
@@ -169,7 +173,29 @@ export class CategoryService {
     for (let transaction of transactions) {
         let category = this.categorizeTransaction(transaction);
         transaction.category = category;
-        console.log(transaction.category.category);
       }
+  }
+
+  public getCategorySummaries(transactions: Transaction[]): CategorySummary[] {
+    const categorySummaries: CategorySummary[] = [];
+    for (const transaction of transactions) {
+      const category = transaction.category;
+      if(!category){
+        continue;
+      }
+      let categorySummary = categorySummaries.find((cs) => cs.category === category.category);
+      if (!categorySummary) {
+        categorySummary = {
+          ...category,
+          value: 0,
+          transactions: [],
+        };
+        categorySummaries.push(categorySummary);
+      }
+    //   console.log(transaction.amount);
+      categorySummary.value += transaction.amount;
+      categorySummary.transactions.push(transaction);
+    }
+    return categorySummaries;
   }
 }

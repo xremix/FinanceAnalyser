@@ -61,7 +61,7 @@ export class ImportService {
       if (line.trim() === '') continue; // Überspringe leere Zeilen
       const columns = line.split(';');
       if (columns.length < 9) continue; // Überspringe Zeilen mit zu wenig Spalten
-      const keywords = ['Auftragskonto', 'Buchungstext'];
+      const keywords = ['Auftragskonto', 'Buchung'];
       if (this.containsAnyKeyword(columns[0], keywords)) {
         continue;
       }
