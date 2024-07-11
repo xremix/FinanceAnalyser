@@ -1,5 +1,7 @@
-<div class="row">
-    <div class="col">{{transaction.bookingText}}</div>
-    <div class="col">{{transaction.valueDate}}</div>
-    <div class="col">{{transaction.category?.category}}</div>
+<div class="row border-bottom">
+    <div class="col">{{transaction.payerReceiver}}</div>
+    <div class="col">{{transaction.purpose}}</div>
+    <div class="col">{{transaction.valueDate | date}}</div>
+    <div class="col">{{transaction.amount | currency:'EUR'}}</div>
+    <div class="col" [ngClass]="{'text-warning': transaction.category?.category === 'Sonstiges'}">{{transaction.category?.category}}</div>
 </div>

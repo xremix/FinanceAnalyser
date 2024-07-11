@@ -18,6 +18,7 @@ export class ImportService {
   }
 
   private parseSPKLine(columns: string[]): Transaction | undefined {
+    
     const transaction: Transaction = {
       bookingDate: new Date(columns[1].split('.').reverse().join('-')), // Buchungstag
       valueDate: new Date(columns[2].split('.').reverse().join('-')), // Valutadatum
@@ -47,9 +48,11 @@ export class ImportService {
     };
     return transaction;
   }
+
   private containsAnyKeyword(column: string, keywords: string[]): boolean {
     return keywords.some((keyword) => column.toLowerCase().includes(keyword.toLowerCase()));
   }
+
   public parseCsvToTransactions(csvData: string): Transaction[] {
     const lines = csvData.split('\n');
     const transactions: Transaction[] = [];
@@ -61,6 +64,10 @@ export class ImportService {
       if (line.trim() === '') continue; // Überspringe leere Zeilen
       const columns = line.split(';');
       if (columns.length < 9) continue; // Überspringe Zeilen mit zu wenig Spalten
+      // remove " from the columns
+        columns.forEach((column, index) => {
+            columns[index] = column.replace(/"/g, '');
+        });
       const keywords = ['Auftragskonto', 'Buchung'];
       if (this.containsAnyKeyword(columns[0], keywords)) {
         continue;

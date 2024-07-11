@@ -330,14 +330,17 @@
   <div>
 
     <div class="border-bottom mb-3">
+      <h2>Select File</h2>
       <app-file-selector></app-file-selector>
     </div>
 
     <div class="border-bottom mb-3">
+      <h2>Category Overview</h2>
       <app-category-overview-component [categorySummaries]="categoryService.getCategorySummaries(dataState.transactions)"></app-category-overview-component>
     </div>
 
     <div>
+      <h2>Transactions</h2>
       <app-transaction-component *ngFor="let transaction of dataState.transactions" [transaction]="transaction">
       </app-transaction-component>
     </div>
