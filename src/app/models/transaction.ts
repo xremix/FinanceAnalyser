@@ -1,3 +1,5 @@
+import { Category } from "./category";
+
 export interface Transaction {
   bookingDate: Date;
   valueDate: Date;
@@ -8,4 +10,5 @@ export interface Transaction {
   balanceCurrency: string;
   amount: number;
   amountCurrency: string;
+  category?: Category;
 }
