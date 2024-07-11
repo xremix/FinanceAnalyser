@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction';
 import { Category } from '../models/category';
 import { CategorySummary } from '../models/category-summary';
-import {availableCategories, defaultCategory} from '../../../../finance-categories';
+import {availableCategories, defaultCategory} from '../../../env';
 @Injectable({
   providedIn: 'root',
 })
