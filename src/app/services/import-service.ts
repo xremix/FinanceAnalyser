@@ -47,7 +47,9 @@ export class ImportService {
     };
     return transaction;
   }
-
+  private containsAnyKeyword(column: string, keywords: string[]): boolean {
+    return keywords.some((keyword) => column.toLowerCase().includes(keyword.toLowerCase()));
+  }
   public parseCsvToTransactions(csvData: string): Transaction[] {
     const lines = csvData.split('\n');
     const transactions: Transaction[] = [];
@@ -59,16 +61,20 @@ export class ImportService {
       if (line.trim() === '') continue; // Überspringe leere Zeilen
       const columns = line.split(';');
       if (columns.length < 9) continue; // Überspringe Zeilen mit zu wenig Spalten
-      console.log(columns);
+      const keywords = ['Auftragskonto', 'Buchungstext'];
+      if (this.containsAnyKeyword(columns[0], keywords)) {
+        continue;
+      }
       let transaction: Transaction | undefined;
-      if(this.isSpkCsv(csvData)){
+
+      if (this.isSpkCsv(csvData)) {
         transaction = this.parseSPKLine(columns);
-      } else if(this.isIngCsv(csvData)){
+      } else if (this.isIngCsv(csvData)) {
         transaction = this.parseINGLine(columns);
       }
       //= this.isIngCsv(csvData) ? this.parseINGLine(columns) : this.parseSPKLine(columns);
-      if(transaction){
-          transactions.push(transaction);
+      if (transaction) {
+        transactions.push(transaction);
       }
     }
     return transactions;
