@@ -334,14 +334,14 @@
       <app-file-selector></app-file-selector>
     </div>
 
-    <div class="border-bottom mb-3">
+    <!-- <div class="border-bottom mb-3">
       <h2>Category Overview</h2>
       <app-category-overview-component [categorySummaries]="categoryService.getCategorySummaries(dataState.transactions)"></app-category-overview-component>
-    </div>
+    </div> -->
 
     <div class="border-bottom mb-3">
       <h2>Dates</h2>  
-      <button class="btn btn-primary me-2" (click)="dataState.selectedMonth = date" *ngFor="let date of dateService.getMonths(dataState.transactions)">
+      <button class="btn btn-primary me-2" (click)="dataState.setSelectedMonth(date)" *ngFor="let date of dateService.getMonths(dataState.transactions)">
         {{date | date: 'MM yyyy'}}
       </button>
     </div>
@@ -352,12 +352,12 @@
       <app-category-overview-component [categorySummaries]="categoryService.getCategorySummaries(dataState.selectedTransactions)"></app-category-overview-component>
     </div>
 
-
+<!-- 
     <div>
       <h2>Transactions</h2>
       <app-transaction-component *ngFor="let transaction of dataState.selectedTransactions" [transaction]="transaction">
       </app-transaction-component>
-    </div>
+    </div> -->
 
   </div>
   <!-- Footer -->

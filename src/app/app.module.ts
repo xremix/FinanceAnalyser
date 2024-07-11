@@ -7,6 +7,7 @@ import { TransactionComponentComponent } from './transaction-component/transacti
 import { CategoryOverviewComponentComponent } from './category-overview-component/category-overview-component.component';
 import { CategoryComponentComponent } from './category-component/category-component.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,

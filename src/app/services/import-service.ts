@@ -19,8 +19,8 @@ export class ImportService {
 
   private parseSPKLine(columns: string[]): Transaction | undefined {
     const transaction: Transaction = {
-      bookingDate: new Date(columns[1].split('.').reverse().join('-')), // Buchungstag
-      valueDate: new Date(columns[2].split('.').reverse().join('-')), // Valutadatum
+      bookingDate: new Date(columns[1].split('.').join('-')), // Buchungstag
+      valueDate: new Date(columns[2].split('.').join('-')), // Valutadatum
       payerReceiver: columns[11], // Begünstigter/Zahlungspflichtiger
       bookingText: columns[3], // Buchungstext
       purpose: columns[4], // Verwendungszweck
@@ -35,7 +35,8 @@ export class ImportService {
     if (transaction.valueDate.getFullYear() < 2000) {
       transaction.valueDate.setFullYear(transaction.valueDate.getFullYear() + 2000);
     }
-    console.log(columns, transaction);
+
+
     return transaction;
   }
 

@@ -1,4 +1,4 @@
 
-<div *ngFor="let categorySummary of categorySummaries">
+<div *ngFor="let categorySummary of categorySummaries; trackBy: trackByCategoryId">
     <app-category-component [categorySummary]="categorySummary"></app-category-component>
  </div>

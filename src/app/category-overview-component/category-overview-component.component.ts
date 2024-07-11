@@ -8,6 +8,11 @@ import { CategorySummary } from '../models/category-summary';
 })
 export class CategoryOverviewComponentComponent implements OnInit {
 @Input() categorySummaries: CategorySummary[] = [];
+// In Ihrer übergeordneten Komponente
+public trackByCategoryId(index: number, item: CategorySummary): string {
+  return item.category; // Angenommen, jedes `CategorySummary`-Objekt hat eine eindeutige `id`
+}
+public toggle = false;
   constructor() { }
 
   ngOnInit(): void {

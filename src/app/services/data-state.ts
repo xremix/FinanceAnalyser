@@ -6,14 +6,19 @@ import { Category } from '../models/category';
 })
 export class DataState {
   public transactions: Transaction[] = [];
+  public selectedTransactions: Transaction[] = [];
 
   // default is first day of current month
-  public selectedMonth: Date = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-  public get selectedTransactions(): Transaction[] {
-    return this.transactions.filter(
+  private selectedMonth: Date = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  private refreshSelecatedTransactions(){
+    this.selectedTransactions = this.transactions.filter(
       (t) =>
         t.valueDate.getFullYear() === this.selectedMonth.getFullYear() &&
         t.valueDate.getMonth() === this.selectedMonth.getMonth()
     );
+  }
+  setSelectedMonth(month: Date) {
+    this.selectedMonth = month;
+    this.refreshSelecatedTransactions();
   }
 }
