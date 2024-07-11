@@ -1,0 +1,13 @@
+<div>
+    <h3>{{categorySummary.category}}: {{categorySummary.value * -1 | currency:'EUR'}}
+        <!-- Expand button -->
+        <button class="btn btn-link" (click)="expanded = !expanded">
+            <span *ngIf="expanded">Hide</span>
+            <span *ngIf="!expanded">Show</span>
+        </button>
+    </h3>
+    {{expanded | json}}
+    <div *ngIf="expanded">
+        <app-transaction-component *ngFor="let transaction of categorySummary.transactions" [transaction]="transaction"></app-transaction-component>
+    </div>
+</div>

@@ -2,6 +2,6 @@
     <div class="col">{{transaction.payerReceiver}}</div>
     <div class="col">{{transaction.purpose}}</div>
     <div class="col">{{transaction.valueDate | date}}</div>
-    <div class="col">{{transaction.amount | currency:'EUR'}}</div>
+    <div class="col" [ngClass]="{'text-success': transaction.amount > 0}">{{transaction.amount | currency:'EUR'}}</div>
     <div class="col" [ngClass]="{'text-warning': transaction.category?.category === 'Sonstiges'}">{{transaction.category?.category}}</div>
 </div>

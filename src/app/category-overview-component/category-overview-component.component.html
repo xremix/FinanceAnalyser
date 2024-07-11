@@ -1,4 +1,4 @@
 
 <div *ngFor="let categorySummary of categorySummaries">
-    {{categorySummary.category}}: {{categorySummary.value * -1 | currency:'EUR'}}
-</div>
+    <app-category-component [categorySummary]="categorySummary"></app-category-component>
+ </div>

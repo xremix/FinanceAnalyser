@@ -2,15 +2,14 @@ import { Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction';
 import { Category } from '../models/category';
 import { CategorySummary } from '../models/category-summary';
-import {availableCategories, defaultCategory} from '../../../env';
+import { availableCategories, defaultCategory } from '../../../env';
 @Injectable({
   providedIn: 'root',
 })
 export class CategoryService {
-
-private  categories = availableCategories;
+  private categories = availableCategories;
   public defaultCategory = defaultCategory;
-  
+
   private categorizeTransaction(transaction: Transaction): Category {
     for (const category of this.categories) {
       if (
@@ -33,16 +32,16 @@ private  categories = availableCategories;
 
   public fillCategoriesToTransactions(transactions: Transaction[]): void {
     for (let transaction of transactions) {
-        let category = this.categorizeTransaction(transaction);
-        transaction.category = category;
-      }
+      let category = this.categorizeTransaction(transaction);
+      transaction.category = category;
+    }
   }
 
   public getCategorySummaries(transactions: Transaction[]): CategorySummary[] {
     const categorySummaries: CategorySummary[] = [];
     for (const transaction of transactions) {
       const category = transaction.category;
-      if(!category){
+      if (!category) {
         continue;
       }
       let categorySummary = categorySummaries.find((cs) => cs.category === category.category);
@@ -54,7 +53,7 @@ private  categories = availableCategories;
         };
         categorySummaries.push(categorySummary);
       }
-    //   console.log(transaction.amount);
+      //   console.log(transaction.amount);
       categorySummary.value += transaction.amount;
       categorySummary.transactions.push(transaction);
     }

@@ -18,7 +18,6 @@ export class ImportService {
   }
 
   private parseSPKLine(columns: string[]): Transaction | undefined {
-    
     const transaction: Transaction = {
       bookingDate: new Date(columns[1].split('.').reverse().join('-')), // Buchungstag
       valueDate: new Date(columns[2].split('.').reverse().join('-')), // Valutadatum
@@ -27,10 +26,16 @@ export class ImportService {
       purpose: columns[4], // Verwendungszweck
       balance: 0, // Saldo ist nicht im CSV enthalten, daher 0 als Platzhalter
       balanceCurrency: columns[15], // Währung
-      amount: parseFloat(columns[14].replace(',', '.').replace('-', '')), // Betrag, entferne Vorzeichen für Konsistenz
+      amount: parseFloat(columns[14].replace(',', '.')), // Betrag, entferne Vorzeichen für Konsistenz
       amountCurrency: columns[15], // Währung
     };
-
+    if (transaction.bookingDate.getFullYear() < 2000) {
+      transaction.bookingDate.setFullYear(transaction.bookingDate.getFullYear() + 2000);
+    }
+    if (transaction.valueDate.getFullYear() < 2000) {
+      transaction.valueDate.setFullYear(transaction.valueDate.getFullYear() + 2000);
+    }
+    console.log(columns, transaction);
     return transaction;
   }
 
