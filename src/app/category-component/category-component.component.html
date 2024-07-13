@@ -7,7 +7,8 @@
 
         </div>
         <div class="col text-end" *ngIf="amountMonths > 1">
-            avg <span class="badge" [ngClass]="{'text-bg-success': categorySummary.value > 0, 'text-bg-warning': categorySummary.value < 0}">{{(categorySummary.value / amountMonths) | currency:'EUR'}}</span>
+            <span class="opacity-25">durchschnitt </span>
+             <span class="badge" [ngClass]="{'text-bg-success': categorySummary.value > 0, 'text-bg-warning': categorySummary.value < 0}">{{(categorySummary.value / amountMonths) | currency:'EUR'}}</span>
         </div>
         <div class="col text-end" *ngIf="amountMonths <= 1">
             <span class="badge" [ngClass]="{'text-bg-success': categorySummary.value > 0, 'text-bg-warning': categorySummary.value < 0}">{{categorySummary.value | currency:'EUR'}}</span>

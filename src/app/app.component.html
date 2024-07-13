@@ -38,26 +38,20 @@
   <div>
 
     <div class="border-bottom mb-3 text-center">
-      <h2>Select File</h2>
+      <h2>Wähle eine Datei</h2>
       <app-file-selector></app-file-selector>
     </div>
-
-    <!-- <div class="border-bottom mb-3">
-      <h2>Category Overview</h2>
-      <app-category-overview-component [categorySummaries]="categoryService.getCategorySummaries(dataState.transactions)"></app-category-overview-component>
-    </div> -->
 
     <div *ngIf="dataState.hasLoadedData">
 
 
-      <h2>Dates</h2>
+      <h2>Zeitraum wählen</h2>
    
       <div>
         <mat-form-field>
-          <mat-label>Enter a date range</mat-label>
           <mat-date-range-input [rangePicker]="picker">
-            <input matStartDate placeholder="Start date" [(ngModel)]="dataState.dateRangeFilter.from">
-            <input matEndDate placeholder="End date" [(ngModel)]="dataState.dateRangeFilter.to">
+            <input matStartDate placeholder="Start date" [(ngModel)]="dataState.dateRangeFilter.from" (dateChange)="refreshData()">
+            <input matEndDate placeholder="End date" [(ngModel)]="dataState.dateRangeFilter.to" (dateChange)="refreshData()">
           </mat-date-range-input>
           <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
@@ -68,8 +62,8 @@
         <button class="btn btn-primary btn-sm me-2" (click)="dataState.resetFilter()">
           All
         </button>
-        <button class="btn btn-primary btn-sm me-2" (click)="dataState.filterByMonth(date)" *ngFor="let date of dataState.getMonths()">
-          {{date | date: 'MM yyyy'}}
+        <button class="btn btn-sm me-2" [ngClass]="{'btn-outline-primary': !isSelectedMonth(date), 'btn-primary': isSelectedMonth(date)}" (click)="dataState.filterByMonth(date)" *ngFor="let date of dataState.getMonths()">
+          {{date | date: 'MM.yyyy'}}
         </button>
       </div>
 
@@ -78,7 +72,7 @@
 
 
       <div class="border-bottom mb-3">
-        <h2>Category Overview</h2>
+        <h2>Kategorien</h2>
         <app-category-overview-component [amountMonths]="dataState.selectedMonthAmountInDataRangeFilter"
           [categorySummaries]="categoryService.getCategorySummaries(dataState.selectedTransactions)"></app-category-overview-component>
       </div>

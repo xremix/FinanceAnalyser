@@ -105,7 +105,7 @@ export class LineIncomeComponentComponent implements OnInit, OnChanges{
         position: 'top',
       },
       title: {
-        text: 'Income Analysis',
+        text: 'Einkommen / Ausgaben',
       },
       chart: {
         type: 'bar',

@@ -12,5 +12,18 @@ import { DateService } from './services/date-service';
 export class AppComponent {
   title = 'FinanceAnalyser';
 
+
   constructor(protected dataState: DataState, protected categoryService: CategoryService, protected dateService: DateService) {}
+  isSelectedMonth(date: Date): boolean {
+    if (!this.dataState.dateRangeFilter.from || !this.dataState.dateRangeFilter.to) {
+      return false;
+    }
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    return this.dataState.dateRangeFilter.from.getTime() === firstDay.getTime() && this.dataState.dateRangeFilter.to.getTime() === lastDay.getTime();
+  }
+  public refreshData(){
+    debugger;
+    this.dataState.refresh();
+  }
 }

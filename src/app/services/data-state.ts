@@ -8,7 +8,7 @@ import { DateService } from './date-service';
 export class DataState {
 
   private _transactions: Transaction[] = [];
-  public transactionsChanged: EventEmitter<Transaction[]> = new EventEmitter();
+
   public months: Date[] = [];
 
   constructor(private dateService: DateService) {
@@ -28,7 +28,6 @@ export class DataState {
   
   public setTransactions(value: Transaction[]): void {
     this._transactions = value;
-    this.transactionsChanged.emit(this._transactions);
     this.months = this.dateService.getMonths(this._transactions);
   }
 
@@ -50,7 +49,7 @@ export class DataState {
   }
 
 
-  private refreshSelecatedTransactions(){
+  public refresh(){
     this.selectedTransactions = this.transactions.filter(
       (t) => t.bookingDate >= this.dateRangeFilter.from && t.bookingDate <= this.dateRangeFilter.to
     );
@@ -63,25 +62,35 @@ export class DataState {
       from: from,
       to: to,
     };
-    this.refreshSelecatedTransactions();
+    this.refresh();
   }
 
   filterByMonth(month: Date) {
-    const firstDay = new Date(month.getFullYear(), month.getMonth(), 1);
-    const lastDay = new Date(month.getFullYear(), month.getMonth() + 1, 0);
-    this.dateRangeFilter = {
-      from: firstDay,
-      to: lastDay,
-    };
-    this.refreshSelecatedTransactions();
-  }
+      const firstDay = new Date(month.getFullYear(), month.getMonth(), 1);
+      const lastDay = new Date(month.getFullYear(), month.getMonth() + 1, 0);
+  
+      // Check if the selected month is already the current filter
+      if (this.dateRangeFilter.from.getTime() === firstDay.getTime() && this.dateRangeFilter.to.getTime() === lastDay.getTime()) {
+        // Reset the filter if the same month is selected again
+        this.resetFilter()
+      } else {
+        // Set the filter to the selected month
+        this.dateRangeFilter = {
+          from: firstDay,
+          to: lastDay,
+        };
+      }
+  
+      this.refresh();
+    }
+
   resetFilter() {
     if(this._transactions.length > 0){
       this.dateRangeFilter = {
         to: this._transactions[0].bookingDate,
         from: this._transactions[this._transactions.length - 1].bookingDate,
       };
-      this.refreshSelecatedTransactions();
+      this.refresh();
     }
   }
 }
