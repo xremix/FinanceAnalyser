@@ -1,19 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction';
-import { Category } from '../models/category';
-import { CategorySummary } from '../models/category-summary';
-import { availableCategories, defaultCategory } from '../../../env';
+
 @Injectable({
   providedIn: 'root',
 })
 export class DateService {
   public firstDate(transactions: Transaction[]): Date | null {
       if (transactions.length === 0) return null;
-      return transactions.reduce((acc, t) => (t.valueDate < acc ? t.valueDate : acc), transactions[0].valueDate);
+      return transactions.reduce((acc, t) => (t.bookingDate < acc ? t.bookingDate : acc), transactions[0].bookingDate);
     }
     public lastDate(transactions: Transaction[]): Date | null {
       if (transactions.length === 0) return null;
-      return transactions.reduce((acc, t) => (t.valueDate > acc ? t.valueDate : acc), transactions[0].valueDate);
+      return transactions.reduce((acc, t) => (t.bookingDate > acc ? t.bookingDate : acc), transactions[0].bookingDate);
     }
   public getMonths(transactions: Transaction[]): Date[] {
       if (transactions.length === 0) return [];

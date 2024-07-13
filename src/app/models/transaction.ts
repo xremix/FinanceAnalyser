@@ -1,6 +1,7 @@
 import { Category } from "./category";
 
 export interface Transaction {
+  month: Date;
   bookingDate: Date;
   valueDate: Date;
   payerReceiver: string;

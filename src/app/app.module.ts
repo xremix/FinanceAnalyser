@@ -6,6 +6,8 @@ import { FileSelectorComponent } from './file-selector/file-selector.component';
 import { TransactionComponentComponent } from './transaction-component/transaction-component.component';
 import { CategoryOverviewComponentComponent } from './category-overview-component/category-overview-component.component';
 import { CategoryComponentComponent } from './category-component/category-component.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { LineIncomeComponentComponent } from "./line-income-component/line-income-component.component";
 
 
 @NgModule({
@@ -17,8 +19,9 @@ import { CategoryComponentComponent } from './category-component/category-compon
     CategoryComponentComponent
   ],
   imports: [
-    BrowserModule
-  ],
+    BrowserModule,
+    LineIncomeComponentComponent
+],
   providers: [],
   bootstrap: [AppComponent]
 })

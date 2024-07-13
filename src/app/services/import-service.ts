@@ -18,8 +18,13 @@ export class ImportService {
   }
 
   private parseSPKLine(columns: string[]): Transaction | undefined {
+    const bookingColumns = columns[1].split('.').reverse();
+    bookingColumns[0] = '20' + bookingColumns[0];
+    const monthAndYear =  bookingColumns[1] + '-01-' + bookingColumns[2];
+    debugger;
     const transaction: Transaction = {
-      bookingDate: new Date(columns[1].split('.').join('-')), // Buchungstag
+      month: new Date(monthAndYear), // Monat
+      bookingDate: new Date(bookingColumns.join('-')), // Buchungsdatum
       valueDate: new Date(columns[2].split('.').join('-')), // Valutadatum
       payerReceiver: columns[11], // Begünstigter/Zahlungspflichtiger
       bookingText: columns[3], // Buchungstext
@@ -29,6 +34,7 @@ export class ImportService {
       amount: parseFloat(columns[14].replace(',', '.')), // Betrag, entferne Vorzeichen für Konsistenz
       amountCurrency: columns[15], // Währung
     };
+    
     if (transaction.bookingDate.getFullYear() < 2000) {
       transaction.bookingDate.setFullYear(transaction.bookingDate.getFullYear() + 2000);
     }
@@ -41,7 +47,10 @@ export class ImportService {
   }
 
   private parseINGLine(columns: string[]): Transaction | undefined {
+    const bookingColumns = columns[0].split('.');
+    const monthAndYear =  bookingColumns[1] + '-01-' + bookingColumns[2];
     const transaction: Transaction = {
+      month: new Date(monthAndYear), // Monat
       bookingDate: new Date(columns[0].split('.').reverse().join('-')), // buchung
       valueDate: new Date(columns[1].split('.').reverse().join('-')), // valuta
       payerReceiver: columns[2], // auftraggeberEmpfaenger
@@ -52,6 +61,7 @@ export class ImportService {
       amount: parseFloat(columns[7].replace(',', '.')), // betrag
       amountCurrency: columns[8], // betragWaehrung
     };
+
     return transaction;
   }
 

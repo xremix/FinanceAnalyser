@@ -326,7 +326,7 @@
   </a>
 </div>
 
-<div class="content" role="main">
+<div class="container mt-4 pt-4" role="main">
   <div>
 
     <div class="border-bottom mb-3">
@@ -345,8 +345,9 @@
         {{date | date: 'MM yyyy'}}
       </button>
     </div>
-    
 
+  <app-line-income-component [dates]="dateService.getMonths(dataState.transactions)"></app-line-income-component>
+    
     <div class="border-bottom mb-3">
       <h2>Category Overview</h2>
       <app-category-overview-component [categorySummaries]="categoryService.getCategorySummaries(dataState.selectedTransactions)"></app-category-overview-component>
