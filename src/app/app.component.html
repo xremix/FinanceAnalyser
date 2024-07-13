@@ -34,7 +34,7 @@
   </a>
 </div>
 
-<div class="container mt-4 pt-4" role="main">
+<div class="container" role="main" style="margin-top: 100px;">
   <div>
 
     <div class="border-bottom mb-3 text-center">
@@ -53,36 +53,35 @@
             <input matStartDate placeholder="Start date" [(ngModel)]="dataState.currentFilter.from" (dateChange)="refreshData()">
             <input matEndDate placeholder="End date" [(ngModel)]="dataState.currentFilter.to" (dateChange)="refreshData()">
           </mat-date-range-input>
-          <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-date-range-picker #picker></mat-date-range-picker>
         </mat-form-field>
 
 
       </div>
-      <div class="border-bottom mb-3">
+      <div class="border-bottom mb-3 text-center">
         <button class="btn btn-primary btn-sm me-2" (click)="dataState.resetMonth()">
           All
         </button>
         <button class="btn btn-sm me-2" [ngClass]="{'btn-outline-primary': !isSelectedMonth(date), 'btn-primary': isSelectedMonth(date)}"
-          (click)="dataState.filterByMonth(date)" *ngFor="let date of dataState.months">
-          {{date | date: 'MM.yyyy'}}
+          (click)="dataState.filterByDateFilter(date)" *ngFor="let date of dataState.months">
+          {{date.name}}
         </button>
       </div>
 
-      <app-history-chart [dates]="dataState.months" [transactions]="dataState.selectedTransactions"></app-history-chart>
-
-
-      <div class="border-bottom mb-3">
+      
+      
+      <div class="border-bottom mb-3 text-center">
         <button class="btn btn-primary btn-sm me-2" (click)="dataState.resetCategory()">
           All
         </button>
         <button class="btn btn-sm me-2" [ngClass]="{'btn-outline-primary': !isSelectedCategory(category), 'btn-primary': isSelectedCategory(category)}"
-          (click)="dataState.filterByCategory(category)" *ngFor="let category of dataState.categories">
-          {{category}}
-        </button>
-      </div>
-
+        (click)="dataState.filterByCategory(category)" *ngFor="let category of dataState.categories">
+        {{category}}
+      </button>
+    </div>
+    
+    <app-history-chart [dates]="dataState.monthStarts" [transactions]="dataState.selectedTransactions"></app-history-chart>
 
       <div class="border-bottom mb-3">
         <h2>Kategorien</h2>
@@ -102,7 +101,7 @@
   </div>
   <!-- Footer -->
   <footer>
-    Footer
+    © 2024 Toni Hoffmann
   </footer>
 
   <svg id="clouds" xmlns="http://www.w3.org/2000/svg" width="2611.084" height="485.677" viewBox="0 0 2611.084 485.677">

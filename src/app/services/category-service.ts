@@ -12,9 +12,6 @@ export class CategoryService {
   public incomeCategory = incomeCategory;
 
   private categorizeTransaction(transaction: Transaction): Category {
-    if(transaction.amount > 0){
-      return this.incomeCategory;
-    }
     for (const category of this.categories){
       if (
         category.keywords.some(
@@ -28,6 +25,10 @@ export class CategoryService {
       }
     }
   
+    if(transaction.amount > 0){
+      return this.incomeCategory;
+    }
+    
     return this.defaultCategory;
   }
 

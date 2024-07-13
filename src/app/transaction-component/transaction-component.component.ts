@@ -8,7 +8,7 @@ import { Transaction } from '../models/transaction';
 export class TransactionComponentComponent implements OnInit {
   @Input() transaction: Transaction = {} as Transaction;
   constructor() { }
-
+  public expand = false;
   ngOnInit(): void {
   }
 

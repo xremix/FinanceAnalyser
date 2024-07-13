@@ -43,7 +43,6 @@ export class HistoryIncomeChartComponent implements OnInit, OnChanges{
   }];
 
   private refresh(){
-    console.log("refresh", this.dates);
     this.categories.categories = this.dates.map((d) => d.toLocaleDateString());
     if(this.dates.length === 0) return;
     
@@ -82,15 +81,12 @@ export class HistoryIncomeChartComponent implements OnInit, OnChanges{
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
     if (changes["dates"] || changes["transactions"]) {
-      console.log("dates changed");
       this.refresh();
     }
   }
 
   ngOnInit(): void {
-    console.log(this.dates);
     // this.refresh();
     // this.dataState.transactionsChanged.subscribe((transactions) => {
     //   this.transactions = transactions;

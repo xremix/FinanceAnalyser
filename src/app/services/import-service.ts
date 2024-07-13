@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction';
+import { ignoreKeywords } from 'env';
 @Injectable({
   providedIn: 'root',
 })
@@ -45,6 +46,7 @@ export class ImportService {
       balanceCurrency: columns[15], // Währung
       amount: parseFloat(columns[14].replace(',', '.')), // Betrag, entferne Vorzeichen für Konsistent      
       amountCurrency: columns[15], // Währung
+      raw: columns.join(';'),
     };
     
     if (transaction.bookingDate.getFullYear() < 2000) {
@@ -83,13 +85,13 @@ export class ImportService {
       payerReceiver: columns[2], // auftraggeberEmpfaenger
       bookingText: columns[3], // buchungstext
       purpose: columns[4], // verwendungszweck
-      balance: parseFloat(columns[5].replace(',', '.')), // saldo
+      balance: parseFloat(columns[5].replace('.', '').replace(',', '.')), // saldo
       balanceCurrency: columns[6], // saldoWaehrung
-      amount: parseFloat(columns[7].replace(',', '.')), // betrag
+      amount: parseFloat(columns[7].replace('.', '').replace(',', '.')), // betrag
       amountCurrency: columns[8], // betragWaehrung
+      raw: columns.join(';'),
     };
 
-    console.log(transaction.bookingDate, transaction.valueDate, transaction.month);
     return transaction;
   }
 
@@ -104,6 +106,12 @@ export class ImportService {
     // Überspringe die Kopfzeile
     for (let i = 1; i < lines.length; i++) {
       let line = lines[i];
+      
+      //ignoreKeywords
+      if (ignoreKeywords.some(keyword => line.toLowerCase().includes(keyword.toLowerCase()))) {
+        console.warn('Ignoring line because of keyword:', line);
+          continue;
+      }
 
       if (line.trim() === '') continue; // Überspringe leere Zeilen
       const columns = line.split(';');
@@ -127,6 +135,9 @@ export class ImportService {
       if (transaction) {
         transactions.push(transaction);
       }
+      if(line.toLowerCase().includes('getty datum')) {
+        console.log(line, transaction)
+      } 
     }
     return transactions;
   }

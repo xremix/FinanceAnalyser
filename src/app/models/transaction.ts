@@ -12,4 +12,5 @@ export interface Transaction {
   amount: number;
   amountCurrency: string;
   category?: Category;
+  raw: string;
 }

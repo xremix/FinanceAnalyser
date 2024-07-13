@@ -2,6 +2,12 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction';
 import { DateService } from './date-service';
 import { CategoryService } from './category-service';
+
+export interface DateFilter{
+  from: Date;
+  to: Date;
+  name: string;
+}
 @Injectable({
   providedIn: 'root',
 })
@@ -9,7 +15,8 @@ export class DataState {
 
   private _transactions: Transaction[] = [];
 
-  public months: Date[] = [];
+  public months: DateFilter[] = [];
+  public monthStarts: Date[] = [];
   public categories: string[] = [];
 
   constructor(private dateService: DateService, private categoryService: CategoryService) {
@@ -27,6 +34,7 @@ export class DataState {
   public setTransactions(value: Transaction[]): void {
     this._transactions = value;
     this.months = this.dateService.getMonths(this._transactions);
+    this.monthStarts = this.months.map((m) => m.from);
     this.categories = this.categoryService.getCategorySummaries(this._transactions).map((c) => c.category);
   }
 
@@ -66,18 +74,17 @@ export class DataState {
     this.refresh();
   }
 
-  filterByMonth(month: Date) {
-      const firstDay = new Date(month.getFullYear(), month.getMonth(), 1);
-      const lastDay = new Date(month.getFullYear(), month.getMonth() + 1, 0);
+  filterByDateFilter(dateFilter: DateFilter) {
+      
   
       // Check if the selected month is already the current filter
-      if (this.currentFilter.from.getTime() === firstDay.getTime() && this.currentFilter.to.getTime() === lastDay.getTime()) {
+      if (this.currentFilter.from.getTime() === dateFilter.from.getTime() && this.currentFilter.to.getTime() === dateFilter.to.getTime()) {
         // Reset the filter if the same month is selected again
-        this.resetFilter()
+        this.resetMonth()
       } else {
         // Set the filter to the selected month
-        this.currentFilter.from = firstDay;
-        this.currentFilter.to = lastDay;
+        this.currentFilter.from = dateFilter.from;
+        this.currentFilter.to = dateFilter.to;
         
       }
   

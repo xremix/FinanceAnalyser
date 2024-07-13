@@ -75,7 +75,6 @@ export class CategoryChartComponent implements  OnChanges{
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log("data changed", changes);
     if (changes["data"]) {
       this.refresh();
     }
