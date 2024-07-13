@@ -21,7 +21,7 @@ export class ImportService {
     const bookingColumns = columns[1].split('.').reverse();
     bookingColumns[0] = '20' + bookingColumns[0];
     const monthAndYear =  bookingColumns[1] + '-01-' + bookingColumns[2];
-    debugger;
+    // TODO probably need to fix bookingdate
     const transaction: Transaction = {
       month: new Date(monthAndYear), // Monat
       bookingDate: new Date(bookingColumns.join('-')), // Buchungsdatum

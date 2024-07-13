@@ -8,6 +8,7 @@ import { CategoryOverviewComponentComponent } from './category-overview-componen
 import { CategoryComponentComponent } from './category-component/category-component.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { LineIncomeComponentComponent } from "./line-income-component/line-income-component.component";
+import { OrderByCategorySummary, OrderByPipe } from './pipes/orderby.pipe';
 
 
 @NgModule({
@@ -16,11 +17,14 @@ import { LineIncomeComponentComponent } from "./line-income-component/line-incom
     FileSelectorComponent,
     TransactionComponentComponent,
     CategoryOverviewComponentComponent,
-    CategoryComponentComponent
+    CategoryComponentComponent,
+    OrderByPipe,
+    OrderByCategorySummary
   ],
   imports: [
     BrowserModule,
-    LineIncomeComponentComponent
+    LineIncomeComponentComponent,
+    
 ],
   providers: [],
   bootstrap: [AppComponent]
