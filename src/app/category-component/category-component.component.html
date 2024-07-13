@@ -1,17 +1,20 @@
 <div>
-    <div class="row">
+    <div class="row fs-4" (click)="expanded = !expanded" role="button">
         <div class="col">
-            <a class="btn btn-link p-0" (click)="expanded = !expanded">
+            <a class="text-primary p-0 fs-4">
                 {{categorySummary.category}}
             </a>
 
         </div>
-        <div class="col text-end">
+        <div class="col text-end" *ngIf="amountMonths > 1">
+            avg <span class="badge" [ngClass]="{'text-bg-success': categorySummary.value > 0, 'text-bg-warning': categorySummary.value < 0}">{{(categorySummary.value / amountMonths) | currency:'EUR'}}</span>
+        </div>
+        <div class="col text-end" *ngIf="amountMonths <= 1">
             <span class="badge" [ngClass]="{'text-bg-success': categorySummary.value > 0, 'text-bg-warning': categorySummary.value < 0}">{{categorySummary.value | currency:'EUR'}}</span>
         </div>
         
     </div>
     <div *ngIf="expanded">
-        <app-transaction-component *ngFor="let transaction of categorySummary.transactions" [transaction]="transaction"></app-transaction-component>
+        <app-transaction-component *ngFor="let transaction of categorySummary.transactions  | orderBy: 'amount'" [transaction]="transaction"></app-transaction-component>
     </div>
 </div>

@@ -20,7 +20,15 @@ export class FileSelectorComponent {
     let fileContent = await this.importService.getFileContent(this.file);
     let transactions = this.importService.parseCsvToTransactions(fileContent);
     this.categoryService.fillCategoriesToTransactions(transactions);
-    this.dataState.transactions = transactions;
-    this.dataState.setSelectedMonth(this.dataState.transactions[0].month);
+    this.dataState.setTransactions(transactions);
+
+    if(transactions.length > 0){
+      // this.dataState.dateRangeFilter = {
+      //   to: transactions[0].bookingDate,
+      //   from: transactions[transactions.length - 1].bookingDate,
+      // };
+      // this.dataState.refreshSelecatedTransactions();
+      this.dataState.resetFilter()
+    }
   }
 }

@@ -9,6 +9,7 @@ import { CategorySummary } from '../models/category-summary';
 export class CategoryComponentComponent {
   @Input() public categorySummary: CategorySummary = {} as any;
   public expanded: boolean = false;
+  @Input() amountMonths: number = 1;
   
 
 }

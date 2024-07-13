@@ -17,21 +17,33 @@ export class ImportService {
     });
   }
 
+  private parseSPKDate(dateString: string): Date {
+    // looks like 10.07.24 which is day.month.year
+    const dateParts = dateString.split('.');
+    const day = parseInt(dateParts[0]);
+    const month = parseInt(dateParts[1]);
+    const year = parseInt(dateParts[2]);
+    return new Date(year + 2000, month - 1, day);
+  }
+
   private parseSPKLine(columns: string[]): Transaction | undefined {
-    const bookingColumns = columns[1].split('.').reverse();
-    bookingColumns[0] = '20' + bookingColumns[0];
-    const monthAndYear =  bookingColumns[1] + '-01-' + bookingColumns[2];
+
+    // const bookingColumns = columns[1].split('.').reverse();
+    // bookingColumns[0] = '20' + bookingColumns[0];
+    // const monthAndYear =  bookingColumns[1] + '-01-' + bookingColumns[2];
     // TODO probably need to fix bookingdate
+    let monthAndYear = this.parseSPKDate(columns[1]);
+    monthAndYear.setDate(1);
     const transaction: Transaction = {
-      month: new Date(monthAndYear), // Monat
-      bookingDate: new Date(bookingColumns.join('-')), // Buchungsdatum
-      valueDate: new Date(columns[2].split('.').join('-')), // Valutadatum
+      month: monthAndYear, // Monat
+      bookingDate: this.parseSPKDate(columns[1]), // Buchungsdatum
+      valueDate: this.parseSPKDate(columns[2]), // Wertstellung
       payerReceiver: columns[11], // Begünstigter/Zahlungspflichtiger
       bookingText: columns[3], // Buchungstext
       purpose: columns[4], // Verwendungszweck
       balance: 0, // Saldo ist nicht im CSV enthalten, daher 0 als Platzhalter
       balanceCurrency: columns[15], // Währung
-      amount: parseFloat(columns[14].replace(',', '.')), // Betrag, entferne Vorzeichen für Konsistenz
+      amount: parseFloat(columns[14].replace(',', '.')), // Betrag, entferne Vorzeichen für Konsistent      
       amountCurrency: columns[15], // Währung
     };
     
@@ -46,13 +58,28 @@ export class ImportService {
     return transaction;
   }
 
+  private parseINGDate(dateString: string): Date {
+    // looks like 10.07.2024 which is day.month.year
+    const dateParts = dateString.split('.');
+    const day = parseInt(dateParts[0]);
+    const month = parseInt(dateParts[1]);
+    const year = parseInt(dateParts[2]);
+    return new Date(year, month - 1, day);
+  }
+
   private parseINGLine(columns: string[]): Transaction | undefined {
-    const bookingColumns = columns[0].split('.');
-    const monthAndYear =  bookingColumns[1] + '-01-' + bookingColumns[2];
+    // const bookingColumns = columns[0].split('.');
+    // const monthAndYear =  bookingColumns[1] + '-01-' + bookingColumns[2];
+    let monthAndYear = this.parseINGDate(columns[0]);
+    monthAndYear.setDate(1);
+
     const transaction: Transaction = {
-      month: new Date(monthAndYear), // Monat
-      bookingDate: new Date(columns[0].split('.').reverse().join('-')), // buchung
-      valueDate: new Date(columns[1].split('.').reverse().join('-')), // valuta
+      month: monthAndYear, // Monat
+      bookingDate: this.parseINGDate(columns[0]), // Buchung
+      valueDate: this.parseINGDate(columns[1]), // Valuta
+      // month: new Date(monthAndYear), // Monat
+      // bookingDate: new Date(columns[0].split('.').reverse().join('-')), // buchung
+      // valueDate: new Date(columns[1].split('.').reverse().join('-')), // valuta
       payerReceiver: columns[2], // auftraggeberEmpfaenger
       bookingText: columns[3], // buchungstext
       purpose: columns[4], // verwendungszweck
@@ -62,6 +89,7 @@ export class ImportService {
       amountCurrency: columns[8], // betragWaehrung
     };
 
+    console.log(transaction.bookingDate, transaction.valueDate, transaction.month);
     return transaction;
   }
 

@@ -1,125 +1,159 @@
-import { Component, Input, ViewChild } from '@angular/core';
-import { ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexPlotOptions, ApexYAxis, ApexXAxis, ApexFill, ApexTooltip, ApexStroke, ApexLegend, ChartComponent, NgApexchartsModule, ApexTitleSubtitle } from 'ng-apexcharts';
-import { CategorySummary } from '../models/category-summary';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexDataLabels,
+  ApexPlotOptions,
+  ApexYAxis,
+  ApexXAxis,
+  ApexFill,
+  ApexTooltip,
+  ApexStroke,
+  ApexLegend,
+  ChartComponent,
+  NgApexchartsModule,
+  ApexTitleSubtitle,
+} from 'ng-apexcharts';
 import { Transaction } from '../models/transaction';
 import { CommonModule } from '@angular/common';
-import { DateService } from '../services/date-service';
+import { DataState } from '../services/data-state';
 
 @Component({
   selector: 'app-line-income-component',
   standalone: true,
-  imports: [
-    NgApexchartsModule,
-    CommonModule
-  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgApexchartsModule, CommonModule],
   templateUrl: './line-income-component.component.html',
-  styleUrl: './line-income-component.component.scss'
+  styleUrl: './line-income-component.component.scss',
 })
-export class LineIncomeComponentComponent {
+export class LineIncomeComponentComponent implements OnInit, OnChanges{
   @Input() dates: Date[] = [];
   @Input() transactions: Transaction[] = [];
 
-  @ViewChild("chart") chart!: ChartComponent;
+  @ViewChild('chart') chart!: ChartComponent;
   public chartOptions!: ChartOptions;
 
-  get series(): ApexAxisChartSeries {
-    return [{
-      name: "X",
-      data: this.dates.map(d => {
-        const sum = this.transactions
-        // filter where is in month
-          .filter(t => t.month === d)
-          .map(t => {
-            console.log(t)
-            return t.amount
-          })
-          .reduce((acc, a) => acc + a, 0);
-        return sum;
-      })
-    }];
+  
+  public categories: ApexXAxis = {
+    categories: [],
+  };
+  public series: ApexAxisChartSeries = [{
+    name: "X",
+    data: [],
+  }];
+
+  private refresh(){
+    console.log("refresh", this.dates);
+    this.categories.categories = this.dates.map((d) => d.toLocaleDateString());
+    if(this.dates.length === 0) return;
+    
+    this.series = [
+      {
+        name: 'Ausgabe',
+        // takes the dates and filters the transactions for the month
+        data: [2, 33]
+      },
+    ];
+    this.series = [
+      {
+        name: 'Ausgabe',
+        // takes the dates and filters the transactions for the month
+        data: this.dates.map((d) => {
+          return this.transactions
+            .filter((t) => t.bookingDate.getMonth() === d.getMonth() && t.bookingDate.getFullYear() === d.getFullYear())
+            // only negative transactions
+            .filter((t) => t.amount < 0)
+            .reduce((acc, t) => acc + (t.amount * -1 | 0), 0);
+        }),
+        color: '#E75454',
+      }, {
+        name: 'Einnahmen',
+        // takes the dates and filters the transactions for the month
+        data: this.dates.map((d) => {
+          return this.transactions
+          .filter((t) => t.bookingDate.getMonth() === d.getMonth() && t.bookingDate.getFullYear() === d.getFullYear())
+            // only negative transactions
+            .filter((t) => t.amount >= 0)
+            .reduce((acc, t) => acc + (t.amount | 0), 0);
+        }),
+        color: '#54E7A7'
+      },
+    ];
   }
 
-  get categories(): ApexXAxis {
-    return {
-      categories: this.dates.map(d => d.toDateString())
-    };
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
+    if (changes["dates"] || changes["transactions"]) {
+      console.log("dates changed");
+      this.refresh();
+    }
   }
 
-  constructor() {
+  ngOnInit(): void {
+    console.log(this.dates);
+    // this.refresh();
+    // this.dataState.transactionsChanged.subscribe((transactions) => {
+    //   this.transactions = transactions;
+    //   this.refresh();
+    // });
+  }
+
+
+  constructor(private dataState: DataState) {
     this.chartOptions = {
       legend: {
-        position: "top"
+        position: 'top',
       },
       title: {
-        text: "Income Analysis"
+        text: 'Income Analysis',
       },
-      series: [
-        {
-          name: "Net Profit",
-          data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
-        },
-        {
-          name: "Revenue",
-          data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
-        },
-        {
-          name: "Free Cash Flow",
-          data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
-        }
-      ],
       chart: {
-        type: "bar",
-        height: 350
+        type: 'bar',
+        height: 350,
       },
       plotOptions: {
         bar: {
           horizontal: false,
-          columnWidth: "55%"
-        }
+          columnWidth: '55%',
+        },
       },
       dataLabels: {
-        enabled: false
+        enabled: false,
       },
       stroke: {
         show: true,
         width: 2,
-        colors: ["transparent"]
+        colors: ['transparent'],
       },
       xaxis: {
-        categories: [
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct"
-        ]
+        categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
       },
       yaxis: {
         title: {
-          text: "$ (thousands)"
-        }
+          text: '$ (thousands)',
+        },
+        labels: {
+          formatter:  function(val, index) {
+            return val.toFixed(2);
+          }
+        },
+        decimalsInFloat: 2,
       },
       fill: {
-        opacity: 1
+        opacity: 1,
       },
       tooltip: {
         y: {
-          formatter: function(val) {
-            return "$ " + val + " thousands";
-          }
-        }
-      }
+          formatter: function (val) {
+            return '$ ' + val + ' thousands';
+          },
+        },
+      },
     };
   }
 }
 
-
 export type ChartOptions = {
-  series: ApexAxisChartSeries;
   chart: ApexChart;
   dataLabels: ApexDataLabels;
   plotOptions: ApexPlotOptions;

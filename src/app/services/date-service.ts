@@ -20,6 +20,7 @@ export class DateService {
       if (!first || !last) return [];
       const months: Date[] = [];
       let current = new Date(first);
+      current.setDate(1);
       while (current <= last) {
         months.push(new Date(current));
         current.setMonth(current.getMonth() + 1);
