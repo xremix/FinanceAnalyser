@@ -7,7 +7,7 @@ import { TransactionComponentComponent } from './transaction-component/transacti
 import { CategoryOverviewComponentComponent } from './category-overview-component/category-overview-component.component';
 import { CategoryComponentComponent } from './category-component/category-component.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
-import { LineIncomeComponentComponent } from "./line-income-component/line-income-component.component";
+import { HistoryIncomeChartComponent } from "./history-income-chart/history-income-chart.component";
 import { OrderByCategorySummary, OrderByPipe } from './pipes/orderby.pipe';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -29,7 +29,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
   ],
   imports: [
     BrowserModule,
-    LineIncomeComponentComponent,
+    HistoryIncomeChartComponent,
     MatFormFieldModule,
      MatDatepickerModule,
      FormsModule,

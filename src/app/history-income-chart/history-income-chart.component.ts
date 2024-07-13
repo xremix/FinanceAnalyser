@@ -23,10 +23,10 @@ import { DataState } from '../services/data-state';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgApexchartsModule, CommonModule],
-  templateUrl: './line-income-component.component.html',
-  styleUrl: './line-income-component.component.scss',
+  templateUrl: './history-income-chart.component.html',
+  styleUrl: './history-income-chart.component.scss',
 })
-export class LineIncomeComponentComponent implements OnInit, OnChanges{
+export class HistoryIncomeChartComponent implements OnInit, OnChanges{
   @Input() dates: Date[] = [];
   @Input() transactions: Transaction[] = [];
 
