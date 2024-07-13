@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CategoryService } from './services/category-service';
 import { DataState } from './services/data-state';
 import { DateService } from './services/date-service';
+import { Category } from './models/category';
 
 @Component({
   selector: 'app-root',
@@ -15,13 +16,17 @@ export class AppComponent {
 
   constructor(protected dataState: DataState, protected categoryService: CategoryService, protected dateService: DateService) {}
   isSelectedMonth(date: Date): boolean {
-    if (!this.dataState.dateRangeFilter.from || !this.dataState.dateRangeFilter.to) {
+    if (!this.dataState.currentFilter.from || !this.dataState.currentFilter.to) {
       return false;
     }
     const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
     const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-    return this.dataState.dateRangeFilter.from.getTime() === firstDay.getTime() && this.dataState.dateRangeFilter.to.getTime() === lastDay.getTime();
+    return this.dataState.currentFilter.from.getTime() === firstDay.getTime() && this.dataState.currentFilter.to.getTime() === lastDay.getTime();
   }
+  isSelectedCategory(category: string): boolean {
+    return this.dataState.currentFilter.category === category;
+  }
+
   public refreshData(){
     debugger;
     this.dataState.refresh();
