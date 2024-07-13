@@ -1,6 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction';
-import { Category } from '../models/category';
 import { DateService } from './date-service';
 import { CategoryService } from './category-service';
 @Injectable({
@@ -102,6 +101,11 @@ export class DataState {
     }
   resetFilter() {
     this.resetMonth();
+    this.resetCategory();
+  }
+  resetCategory() {
+    this.currentFilter.category = undefined;
+    this.refresh();
   }
 
 
