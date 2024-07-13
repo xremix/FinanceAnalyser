@@ -26,4 +26,19 @@ export class AppComponent {
     debugger;
     this.dataState.refresh();
   }
+
+
+
+  // this.today = new Date();
+  // this.sixMonthsAgo = new Date();
+  // this.sixMonthsAgo.setMonth(this.today.getMonth() - 6);
+
+  openDatePicker(dp: any) {
+    dp.open();
+  }
+
+  closeDatePicker(eventData: any, dp?:any) {
+    // get month and year from eventData and close datepicker, thus not allowing user to select date
+    dp.close();    
+  }
 }

@@ -57,6 +57,8 @@
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-date-range-picker #picker></mat-date-range-picker>
         </mat-form-field>
+
+
       </div>
       <div class="border-bottom mb-3">
         <button class="btn btn-primary btn-sm me-2" (click)="dataState.resetFilter()">
@@ -66,13 +68,15 @@
           {{date | date: 'MM.yyyy'}}
         </button>
       </div>
+      <app-history-chart [dates]="dataState.months" [transactions]="dataState.selectedTransactions"></app-history-chart>
 
-      <app-line-income-component [dates]="dataState.months" [transactions]="dataState.selectedTransactions"></app-line-income-component>
-
-
-
+      
+      
+      
+      
       <div class="border-bottom mb-3">
         <h2>Kategorien</h2>
+        <app-category-chart [data]="categoryService.getCategorySummaries(dataState.selectedTransactions)"></app-category-chart>
         <app-category-overview-component [amountMonths]="dataState.selectedMonthAmountInDataRangeFilter"
           [categorySummaries]="categoryService.getCategorySummaries(dataState.selectedTransactions)"></app-category-overview-component>
       </div>

@@ -15,6 +15,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { CategoryChartComponent } from './category-chart/category-chart.component';
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
   imports: [
     BrowserModule,
     HistoryIncomeChartComponent,
+    CategoryChartComponent,
     MatFormFieldModule,
      MatDatepickerModule,
      FormsModule,

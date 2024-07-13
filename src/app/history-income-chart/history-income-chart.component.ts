@@ -19,7 +19,7 @@ import { CommonModule } from '@angular/common';
 import { DataState } from '../services/data-state';
 
 @Component({
-  selector: 'app-line-income-component',
+  selector: 'app-history-chart',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgApexchartsModule, CommonModule],
