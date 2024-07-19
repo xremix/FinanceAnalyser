@@ -13,8 +13,25 @@ import { CommonModule } from '@angular/common';
 })
 export class CategorySelectComponent {
   constructor(protected dataState: DataState) {}
+
+ 
   get selectedSubCategories(): Category[] {
+    if(this.isSubCategorySelected){
+      return this.getSubCategoriesOfParent(this.dataState.currentFilter.category!);
+    }
     return this.dataState.currentFilter.category?.subCategories || [];
+  }
+
+  private getSubCategoriesOfParent(category: Category): Category[] {
+    var parentCategory = this.dataState.categories.filter(c => c.subCategories.includes(category))[0];
+    return parentCategory.subCategories;
+  }
+
+  get isSubCategorySelected(): boolean {
+    const isCategorySelected = !!this.dataState.currentFilter.category;
+    const selectedCategoryHasSubCategories = (this.dataState.currentFilter.category?.subCategories.length ?? 0) > 0;
+    const isSelectedCategoryRootCategory = isCategorySelected && this.dataState.categories.includes(this.dataState.currentFilter.category!)
+    return isCategorySelected &&  !selectedCategoryHasSubCategories && !isSelectedCategoryRootCategory;
   }
   isSelectedCategory(category: Category): boolean {
     return this.dataState.currentFilter.category === category;

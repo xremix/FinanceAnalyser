@@ -135,9 +135,6 @@ export class ImportService {
       if (transaction) {
         transactions.push(transaction);
       }
-      if(line.toLowerCase().includes('getty datum')) {
-        console.log(line, transaction)
-      } 
     }
     return transactions;
   }
