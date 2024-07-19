@@ -9,11 +9,22 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './category-select.component.html',
-  styleUrl: './category-select.component.scss'
+  styleUrl: './category-select.component.scss',
 })
 export class CategorySelectComponent {
-constructor(protected dataState: DataState){}
-isSelectedCategory(category: Category): boolean {
-  return this.dataState.currentFilter.category === category;
-}
+  constructor(protected dataState: DataState) {}
+  get selectedSubCategories(): Category[] {
+    return this.dataState.currentFilter.category?.subCategories || [];
+  }
+  isSelectedCategory(category: Category): boolean {
+    return this.dataState.currentFilter.category === category;
+  }
+
+  isNothingSelected(): boolean {
+    return !this.dataState.currentFilter.category;
+  }
+
+  isChildCategorySelected(category: Category): boolean {
+    return this.dataState.currentFilter.category?.subCategories.includes(category) === true;
+  }
 }
