@@ -21,7 +21,7 @@ export class DataState {
   public monthStarts: Date[] = [];
   public categories: Category[] = availableCategories;
 
-  constructor(private dateService: DateService, private categoryService: CategoryService) {
+  constructor(private dateService: DateService) {
   }
 
 
@@ -64,7 +64,9 @@ export class DataState {
       (t) => t.bookingDate >= this.currentFilter.from && t.bookingDate <= this.currentFilter.to
     );
     this.selectedTransactions = this.selectedTransactions.filter(
-      (t) => this.currentFilter.category === undefined || t.category === this.currentFilter.category
+      (t) => this.currentFilter.category === undefined ||
+             t.category === this.currentFilter.category ||
+             this.currentFilter.category.subCategories?.some(subCat => t.category === subCat)
     );
     this.selectedTransactionsChanged.emit(this.selectedTransactions);
   }
@@ -76,8 +78,7 @@ export class DataState {
     this.refresh();
   }
 
-  filterByDateFilter(dateFilter: DateFilter) {
-      
+  filterByDateFilter(dateFilter: DateFilter) {     
   
       // Check if the selected month is already the current filter
       if (this.currentFilter.from.getTime() === dateFilter.from.getTime() && this.currentFilter.to.getTime() === dateFilter.to.getTime()) {

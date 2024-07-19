@@ -12,18 +12,18 @@ export class CategoryService {
   private get defaultCategory(): Category {
     return this.categories.find((c) => c.isDefault)!;
   }
-  private findMatchingCategory(transaction: Transaction): Category {
+  private findMatchingCategory(transaction: Transaction): {category: Category, parentCategory?: Category} {
     for (const category of this.categories) {
       // Überprüfen Sie zuerst die Hauptkategorie
       if (this.matchesKeywords(category, transaction)) {
-        return category;
+        return {category};
       }
   
       // Überprüfen Sie dann die Unterkategorien, falls vorhanden
       if (category.subCategories) {
         for (const subCategory of category.subCategories) {
           if (this.matchesKeywords(subCategory, transaction)) {
-            return subCategory;
+            return {category: subCategory, parentCategory: category};
           }
         }
       }
@@ -31,10 +31,10 @@ export class CategoryService {
   
     // Standardverhalten, wenn keine Übereinstimmung gefunden wurde
     if (transaction.amount > 0) {
-      return this.incomeCategory;
+      return {category: this.incomeCategory};
     }
   
-    return this.defaultCategory;
+    return {category: this.defaultCategory};
   }
   
   // Hilfsfunktion, um den Code sauber zu halten
@@ -49,10 +49,15 @@ export class CategoryService {
 
   public fillCategoriesToTransactions(transactions: Transaction[]): void {
     for (let transaction of transactions) {
-      let category = this.findMatchingCategory(transaction);
-      //transaction.category = category;
-      category.transactions.push(transaction);
-      category.total += transaction.amount;
+      let foundCategory = this.findMatchingCategory(transaction);
+      transaction.category = foundCategory.category;
+      foundCategory.category.transactions.push(transaction);
+      foundCategory.category.total += transaction.amount;
+
+      if(foundCategory.parentCategory){
+        // foundCategory.parentCategory.transactions.push(transaction);
+        foundCategory.parentCategory.total += transaction.amount;
+      }
     }
   }
 
