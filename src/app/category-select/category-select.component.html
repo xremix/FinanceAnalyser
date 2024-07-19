@@ -1,0 +1,9 @@
+<div class="border-bottom mb-3 text-center">
+    <button class="btn btn-primary btn-sm me-2" (click)="dataState.resetCategory()">
+      All
+    </button>
+    <button class="btn btn-sm me-2" [ngClass]="{'btn-outline-primary': !isSelectedCategory(category), 'btn-primary': isSelectedCategory(category)}"
+      (click)="dataState.filterByCategory(category)" *ngFor="let category of dataState.categories">
+      {{category.category}}
+    </button>
+  </div>

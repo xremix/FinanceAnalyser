@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { CategoryChartComponent } from './category-chart/category-chart.component';
+import { CategorySelectComponent } from "./category-select/category-select.component";
 
 
 @NgModule({
@@ -31,10 +32,10 @@ import { CategoryChartComponent } from './category-chart/category-chart.componen
     HistoryIncomeChartComponent,
     CategoryChartComponent,
     MatFormFieldModule,
-     MatDatepickerModule,
-     FormsModule,
-     BrowserAnimationsModule
-     
+    MatDatepickerModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    CategorySelectComponent
 ],
   providers: [provideNativeDateAdapter(), provideAnimationsAsync()],
   bootstrap: [AppComponent]
