@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { CategorySummary } from '../models/category-summary';
+import { Category } from '../models/category';
 
 @Component({
   selector: 'app-category-component',
@@ -7,7 +7,7 @@ import { CategorySummary } from '../models/category-summary';
   styleUrls: ['./category-component.component.scss']
 })
 export class CategoryComponentComponent {
-  @Input() public categorySummary: CategorySummary = {} as any;
+  @Input() public categorySummary: Category = {} as any;
   public expanded: boolean = false;
   @Input() amountMonths: number = 1;
   

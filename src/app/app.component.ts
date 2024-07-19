@@ -22,7 +22,7 @@ export class AppComponent {
     
     return this.dataState.currentFilter.from.getTime() === date.from.getTime() && this.dataState.currentFilter.to.getTime() === date.to.getTime();
   }
-  isSelectedCategory(category: string): boolean {
+  isSelectedCategory(category: Category): boolean {
     return this.dataState.currentFilter.category === category;
   }
 

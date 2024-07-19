@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from "@angular/core";
-import { CategorySummary } from "../models/category-summary";
+import { Category } from "../models/category";
 
 
 @Pipe({
@@ -18,19 +18,19 @@ import { CategorySummary } from "../models/category-summary";
         });
     }
   }
-  @Pipe({
-    name: "orderByCategorySummary",
-  })
-  export class OrderByCategorySummary implements PipeTransform {
-    transform(value: CategorySummary[], property: keyof CategorySummary, order: "asc" | "desc" = "asc"): CategorySummary[] {
-        return value.sort((a, b) => {
-            if (a[property] < b[property]) {
-                return order === "asc" ? -1 : 1;
-            }
-            if (a[property] > b[property]) {
-                return order === "asc" ? 1 : -1;
-            }
-            return 0;
-        });
-    }
-  }
+//   @Pipe({
+//     name: "orderByCategorySummary",
+//   })
+//   export class OrderByCategorySummary implements PipeTransform {
+//     transform(value: Category[], property: keyof Category, order: "asc" | "desc" = "asc"): Category[] {
+//         return value.sort((a, b) => {
+//             if (a[property] < b[property]) {
+//                 return order === "asc" ? -1 : 1;
+//             }
+//             if (a[property] > b[property]) {
+//                 return order === "asc" ? 1 : -1;
+//             }
+//             return 0;
+//         });
+//     }
+//   }

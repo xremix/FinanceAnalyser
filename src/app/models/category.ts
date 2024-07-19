@@ -1,6 +1,12 @@
+
+import { Transaction } from "./transaction";
+
 export interface Category{
     category: string;
-    mainCategory: string;
     type: 'savings' | 'income' | 'expense';
     keywords: string[];
+    subCategories: Category[];
+    total: number;
+    transactions: Transaction[];
+    isDefault?: boolean;
 }

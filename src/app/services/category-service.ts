@@ -1,64 +1,59 @@
 import { Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction';
 import { Category } from '../models/category';
-import { CategorySummary } from '../models/category-summary';
-import { availableCategories, defaultCategory, incomeCategory } from '../../../env';
+import { availableCategories, incomeCategory } from '../../../env';
 @Injectable({
   providedIn: 'root',
 })
 export class CategoryService {
   private categories = availableCategories;
-  public defaultCategory = defaultCategory;
   public incomeCategory = incomeCategory;
 
-  private categorizeTransaction(transaction: Transaction): Category {
-    for (const category of this.categories){
-      if (
-        category.keywords.some(
-          (keyword) =>
-            transaction.payerReceiver.toUpperCase().includes(keyword.toUpperCase()) ||
-            transaction.bookingText.toUpperCase().includes(keyword.toUpperCase()) ||
-            transaction.purpose.toUpperCase().includes(keyword.toUpperCase())
-        )
-      ) {
+  private get defaultCategory(): Category {
+    return this.categories.find((c) => c.isDefault)!;
+  }
+  private findMatchingCategory(transaction: Transaction): Category {
+    for (const category of this.categories) {
+      // Überprüfen Sie zuerst die Hauptkategorie
+      if (this.matchesKeywords(category, transaction)) {
         return category;
+      }
+  
+      // Überprüfen Sie dann die Unterkategorien, falls vorhanden
+      if (category.subCategories) {
+        for (const subCategory of category.subCategories) {
+          if (this.matchesKeywords(subCategory, transaction)) {
+            return subCategory;
+          }
+        }
       }
     }
   
-    if(transaction.amount > 0){
+    // Standardverhalten, wenn keine Übereinstimmung gefunden wurde
+    if (transaction.amount > 0) {
       return this.incomeCategory;
     }
-    
+  
     return this.defaultCategory;
+  }
+  
+  // Hilfsfunktion, um den Code sauber zu halten
+  private matchesKeywords(category: Category, transaction: Transaction): boolean {
+    return category.keywords.some(
+      (keyword) =>
+        transaction.payerReceiver.toUpperCase().includes(keyword.toUpperCase()) ||
+        transaction.bookingText.toUpperCase().includes(keyword.toUpperCase()) ||
+        transaction.purpose.toUpperCase().includes(keyword.toUpperCase())
+    );
   }
 
   public fillCategoriesToTransactions(transactions: Transaction[]): void {
     for (let transaction of transactions) {
-      let category = this.categorizeTransaction(transaction);
-      transaction.category = category;
+      let category = this.findMatchingCategory(transaction);
+      //transaction.category = category;
+      category.transactions.push(transaction);
+      category.total += transaction.amount;
     }
   }
 
-  public getCategorySummaries(transactions: Transaction[]): CategorySummary[] {
-    const categorySummaries: CategorySummary[] = [];
-    for (const transaction of transactions) {
-      const category = transaction.category;
-      if (!category) {
-        continue;
-      }
-      let categorySummary = categorySummaries.find((cs) => cs.category === category.category);
-      if (!categorySummary) {
-        categorySummary = {
-          ...category,
-          value: 0,
-          transactions: [],
-        };
-        categorySummaries.push(categorySummary);
-      }
-      
-      categorySummary.value += transaction.amount;
-      categorySummary.transactions.push(transaction);
-    }
-    return categorySummaries;
-  }
 }

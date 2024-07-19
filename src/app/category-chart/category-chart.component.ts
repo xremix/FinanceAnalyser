@@ -16,7 +16,7 @@ import {
 } from 'ng-apexcharts';
 import { CommonModule } from '@angular/common';
 import { DataState } from '../services/data-state';
-import { CategorySummary } from '../models/category-summary';
+import { Category } from '../models/category';
 
 @Component({
   selector: 'app-category-chart',
@@ -28,7 +28,7 @@ import { CategorySummary } from '../models/category-summary';
 })
 export class CategoryChartComponent implements  OnChanges{
 
-  @Input() data: CategorySummary[] = [];
+  @Input() data: Category[] = [];
 
   public chartOptions =  {
     chart: {
@@ -59,8 +59,8 @@ export class CategoryChartComponent implements  OnChanges{
   private refresh() {
       // Filtern und Umwandeln der Daten in einem Schritt
       const filteredData = this.data
-          .filter((d) => d.value < 0)
-          .map((d) => ({ ...d, value: Math.abs(d.value | 0) }))
+          .filter((d) => d.total < 0)
+          .map((d) => ({ ...d, value: Math.abs(d.total | 0) }))
           .sort((a, b) => a.value - b.value);
   
       const _series = filteredData.map((d) => d.value);

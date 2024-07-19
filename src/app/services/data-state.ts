@@ -2,6 +2,8 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction';
 import { DateService } from './date-service';
 import { CategoryService } from './category-service';
+import { Category } from '../models/category';
+import { availableCategories } from 'env';
 
 export interface DateFilter{
   from: Date;
@@ -17,7 +19,7 @@ export class DataState {
 
   public months: DateFilter[] = [];
   public monthStarts: Date[] = [];
-  public categories: string[] = [];
+  public categories: Category[] = availableCategories;
 
   constructor(private dateService: DateService, private categoryService: CategoryService) {
   }
@@ -35,7 +37,7 @@ export class DataState {
     this._transactions = value;
     this.months = this.dateService.getMonths(this._transactions);
     this.monthStarts = this.months.map((m) => m.from);
-    this.categories = this.categoryService.getCategorySummaries(this._transactions).map((c) => c.category);
+    // this.categories = this.categoryService.getCategorySummaries(this._transactions).map((c) => c.category);
   }
 
   // event emitter when selected transactions change
@@ -44,7 +46,7 @@ export class DataState {
   public currentFilter = {
     from: new Date(0),
     to: new Date(),
-    category: undefined as string | undefined,
+    category: undefined as Category | undefined,
   };
 
   get selectedMonthAmountInDataRangeFilter(): number {
@@ -62,7 +64,7 @@ export class DataState {
       (t) => t.bookingDate >= this.currentFilter.from && t.bookingDate <= this.currentFilter.to
     );
     this.selectedTransactions = this.selectedTransactions.filter(
-      (t) => this.currentFilter.category === undefined || t.category?.category === this.currentFilter.category
+      (t) => this.currentFilter.category === undefined || t.category === this.currentFilter.category
     );
     this.selectedTransactionsChanged.emit(this.selectedTransactions);
   }
@@ -90,7 +92,7 @@ export class DataState {
   
       this.refresh();
     }
-    filterByCategory(category: string) {
+    filterByCategory(category: Category) {
       if (this.currentFilter.category === category) {
         this.currentFilter.category = undefined;
       } else {

@@ -1,14 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppComponent } from './app.component';
 import { FileSelectorComponent } from './file-selector/file-selector.component';
 import { TransactionComponentComponent } from './transaction-component/transaction-component.component';
 import { CategoryOverviewComponentComponent } from './category-overview-component/category-overview-component.component';
 import { CategoryComponentComponent } from './category-component/category-component.component';
-import { NgApexchartsModule } from 'ng-apexcharts';
 import { HistoryIncomeChartComponent } from "./history-income-chart/history-income-chart.component";
-import { OrderByCategorySummary, OrderByPipe } from './pipes/orderby.pipe';
+import {  OrderByPipe } from './pipes/orderby.pipe';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
@@ -26,7 +24,7 @@ import { CategoryChartComponent } from './category-chart/category-chart.componen
     CategoryOverviewComponentComponent,
     CategoryComponentComponent,
     OrderByPipe,
-    OrderByCategorySummary
+    // OrderByCategorySummary
   ],
   imports: [
     BrowserModule,
