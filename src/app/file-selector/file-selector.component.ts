@@ -8,7 +8,7 @@ import { ImportService } from '../services/import-service';
   templateUrl: './file-selector.component.html',
   styleUrls: ['./file-selector.component.scss'],
 })
-export class FileSelectorComponent {
+export class FileSelectorComponent implements OnInit {
   constructor(
     private importService: ImportService,
     private categoryService: CategoryService,
@@ -18,17 +18,25 @@ export class FileSelectorComponent {
   async fileChanged(e: any) {
     this.file = e.target.files[0];
     let fileContent = await this.importService.getFileContent(this.file);
+    localStorage.setItem('fileContent', fileContent);
+    this.loadFileFromLocalStorage();
+  }
+  ngOnInit(): void {
+    this.loadFileFromLocalStorage();
+  }
+
+  private loadFileFromLocalStorage() {
+    const fileContent = localStorage.getItem('fileContent');
+    if (!fileContent) {
+      console.error('No file content found in local storage');
+      return;
+    }
     let transactions = this.importService.parseCsvToTransactions(fileContent);
     this.categoryService.fillCategoriesToTransactions(transactions);
     this.dataState.setTransactions(transactions);
 
-    if(transactions.length > 0){
-      // this.dataState.dateRangeFilter = {
-      //   to: transactions[0].bookingDate,
-      //   from: transactions[transactions.length - 1].bookingDate,
-      // };
-      // this.dataState.refreshSelecatedTransactions();
-      this.dataState.resetFilter()
+    if (transactions.length > 0) {
+      this.dataState.resetFilter();
     }
   }
 }
