@@ -1,8 +1,5 @@
 <!-- Toolbar -->
 <div class="toolbar" role="banner">
-  <!-- <img width="40" alt="Angular Logo"
-    src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==" /> -->
-
   <!-- License: CC Attribution. Made by chikin icons: https://www.figma.com/@chikin_icons -->
   <svg width="80px" height="80px" viewBox="-20 0 190 190" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path fill-rule="evenodd" clip-rule="evenodd"
@@ -11,17 +8,18 @@
   </svg>
   <span>Finanz Uhu</span>
   <div class="spacer"></div>
-  <a rel="noopener" class="text-white me-3 fs-3">
-    +
-  </a>
+  
+  <div class="me-4">
+    <button class="btn text-white fw-bold" (click)="dataState.resetState()">⃠</button>
+    <app-file-selector [big]="false"></app-file-selector>
+  </div>
 </div>
 
 <div class="container" role="main" style="margin-top: 100px;">
   <div>
-
-    <div class="border-bottom mb-3 text-center">
-      <h2>Wähle eine Datei</h2>
-      <app-file-selector></app-file-selector>
+    <div class="border-bottom mb-3 text-center" *ngIf="!dataState.hasLoadedData">
+      <h2>Wähle eine Datei</h2> 
+      <app-file-selector [big]="true"></app-file-selector>
     </div>
 
     <div *ngIf="dataState.hasLoadedData">

@@ -1,38 +1,8 @@
-<style>
-  .inputfile {
-    width: 0.1px;
-    height: 0.1px;
-    opacity: 0;
-    overflow: hidden;
-    position: absolute;
-    z-index: -1;
-  }
-  .inputfile + label {
-    font-size: 1.25em;
-    font-weight: 700;
-    color: white;
-    background-color: #007bff; /* Bootstrap primary blue */
-    padding: 20px 25px;
-    border-radius: 5px; /* Rounded corners */
-    display: inline-block;
-    margin: 5px; /* Add some space around the label */
-
-    border: 4px dashed #0b69cd;
-    transition: background-color 0.3s ease; /* Smooth background color change */
-  }
-
-  .inputfile + label:hover,
-  .inputfile + label:focus {
-    background-color: #0056b3; /* Darker blue on hover/focus */
-    outline: none; /* Remove outline */
-    cursor: pointer; /* "hand" cursor */
-  }
-.inputfile:focus + label,
-.inputfile + label:hover {
-    background-color: #0b69cd;
-}
-</style>
-<div class="Block">
-    <input type="file" name="file" id="file" class="inputfile"  (change)="fileChanged($event)" />
-<label for="file">Datei wählen</label>
-  </div>
+<div class="big" *ngIf="big">
+  <input type="file" name="file" id="file" class="inputfile" (change)="fileChanged($event)" />
+  <label for="file">Datei wählen</label>
+</div>
+<div class="small d-inline" *ngIf="!big">
+  <input type="file" name="file" id="file" class="inputfile" (change)="fileChanged($event)" />
+  <label for="file" class="fw-bold">+</label>
+</div>

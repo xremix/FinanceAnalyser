@@ -24,6 +24,7 @@ export class AppComponent {
   }
 
 
+
   public refreshData(){
     this.dataState.refresh();
   }

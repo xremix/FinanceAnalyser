@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction';
 import { ignoreKeywords } from 'env';
+import { DataState } from './data-state';
+import { CategoryService } from './category-service';
 @Injectable({
   providedIn: 'root',
 })
@@ -146,4 +148,21 @@ export class ImportService {
   private isSpkCsv(csvData: string): boolean {
     return csvData.toLowerCase().startsWith(`"Auftragskonto";"`.toLowerCase());
   }
+
+  public loadFileFromLocalStorage() {
+    const fileContent = localStorage.getItem('fileContent');
+    if (!fileContent) {
+      console.error('No file content found in local storage');
+      return;
+    }
+    let transactions = this.parseCsvToTransactions(fileContent);
+    this.categoryService.fillCategoriesToTransactions(transactions);
+    this.dataState.setTransactions(transactions);
+
+    if (transactions.length > 0) {
+      this.dataState.resetFilter();
+    }
+  }
+
+  constructor(private categoryService: CategoryService, private dataState: DataState) {}
 }

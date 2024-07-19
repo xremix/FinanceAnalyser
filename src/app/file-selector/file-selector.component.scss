@@ -1,0 +1,45 @@
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.inputfile+label:hover,
+.inputfile+label:focus {
+  /* Darker blue on hover/focus */
+  outline: none;
+  /* Remove outline */
+  cursor: pointer;
+  /* "hand" cursor */
+}
+.big {
+  .inputfile+label {
+    font-size: 1.25em;
+    font-weight: 700;
+    color: white;
+    background-color: #007bff;
+    /* Bootstrap primary blue */
+    padding: 20px 25px;
+    border-radius: 5px;
+    /* Rounded corners */
+    display: inline-block;
+    margin: 5px;
+    /* Add some space around the label */
+
+    border: 4px dashed #0b69cd;
+    transition: background-color 0.3s ease;
+    /* Smooth background color change */
+    &:hover, &:focus {
+      background-color: #0056b3;
+    }
+  }
+  
+
+  .inputfile:focus+label,
+  .inputfile+label:hover {
+    background-color: #0b69cd;
+  }
+}
