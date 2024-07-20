@@ -15,6 +15,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { CategoryChartComponent } from './category-chart/category-chart.component';
 import { CategorySelectComponent } from "./category-select/category-select.component";
+import { TransactionOverviewComponent } from './transaction-overview/transaction-overview.component';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { CategorySelectComponent } from "./category-select/category-select.compo
     TransactionComponentComponent,
     CategoryOverviewComponentComponent,
     CategoryComponentComponent,
+    TransactionOverviewComponent,
     OrderByPipe,
     // OrderByCategorySummary
   ],
