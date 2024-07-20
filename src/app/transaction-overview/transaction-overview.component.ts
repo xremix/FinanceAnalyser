@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DataState } from '../services/data-state';
 import { Transaction } from '../models/transaction';
+import { DuplicateService } from '../services/duplicate-service';
 
 @Component({
   selector: 'app-transaction-overview',
@@ -12,33 +13,12 @@ export class TransactionOverviewComponent {
     all: false,
     reoccurent: false,
   };
-  constructor(protected dataState: DataState) {}
+  constructor(protected dataState: DataState, private duplicateService: DuplicateService) {}
   duplicateTransactions: Transaction[] = [];
-  findDuplicateTransactions() {
-    // check where amount and payer/receiver are the same
-    // always just return the first of the similar transactions
-    const duplicates = [];
-    const transactions = this.dataState.selectedTransactions;
-    for (let i = 0; i < transactions.length; i++) {
-      console.log('checking', transactions[i]);
-      if(this.foundDuplicates(transactions[i], transactions)  > 3) {
-        
-        // check if is already in duplicates
-        if(this.foundDuplicates(transactions[i], duplicates) == 0) {
-
-          duplicates.push(transactions[i]);
-        }
-      }
-
-    }
-    return duplicates;
-  }
-  private foundDuplicates(transaction: Transaction, transactionPool: Transaction[]): number {
-    return transactionPool.filter(t => t.amount === transaction.amount && t.payerReceiver === transaction.payerReceiver && t !== transaction).length
-  }
+  
   showDuplicates() {
     this.expanded.reoccurent = !this.expanded.reoccurent;
-    this.duplicateTransactions = this.findDuplicateTransactions();
+    this.duplicateTransactions = this.duplicateService.findDuplicateTransactions();
 
   }
 }
