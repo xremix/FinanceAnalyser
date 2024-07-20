@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction';
 import { Category } from '../models/category';
-import { availableCategories, incomeCategory } from '../../../env';
+import { availableCategories } from '../../../env';
 @Injectable({
   providedIn: 'root',
 })
 export class CategoryService {
   private categories = availableCategories;
-  public incomeCategory = incomeCategory;
 
   private get defaultCategory(): Category {
     return this.categories.find((c) => c.isDefault)!;
+  }
+  private get incomeCategory(): Category {
+    return this.categories.find((c) => c.type === 'income')!;
   }
   private findMatchingCategory(transaction: Transaction): {category: Category, parentCategory?: Category} {
     for (const category of this.categories) {

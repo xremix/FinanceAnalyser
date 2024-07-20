@@ -1,4 +1,4 @@
 <div *ngIf="amountMonths > 1">Durchschnittliche Kosten für {{amountMonths}} Monate</div>
 <div *ngFor="let categorySummary of categorySummaries | orderBy: 'total'; trackBy: trackByCategoryId">
-    <app-category-component [amountMonths]="amountMonths" [categorySummary]="categorySummary"></app-category-component>
+    <app-category-component [amountMonths]="amountMonths" [categorySummary]="categorySummary" *ngIf="categorySummary.total > 0"></app-category-component>
  </div>

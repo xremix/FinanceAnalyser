@@ -18,7 +18,7 @@ export class DataState {
 
   public months: DateFilter[] = [];
   public monthStarts: Date[] = [];
-  public categories: Category[] = JSON.parse(JSON.stringify( availableCategories));
+  public categories: Category[] = availableCategories;
 
   constructor(private dateService: DateService) {}
 
@@ -117,6 +117,12 @@ export class DataState {
     this._transactions = [];
     this.selectedTransactions = [];
     this.months = [];
-    this.categories = JSON.parse(JSON.stringify( availableCategories));
+    this.resetCategories();
+
   }
+  private resetCategories() {
+    // TODO Reset the amount and transactions
+    this.categories = availableCategories;
+  }
+
 }
