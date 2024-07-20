@@ -41,7 +41,7 @@
       </div>
       <div class="border-bottom mb-3 text-center">
         <button class="btn btn-primary btn-sm me-2 mb-1" (click)="dataState.resetMonth()">
-          All
+          Alle
         </button>
         <button class="btn btn-sm me-2 mb-1" [ngClass]="{'btn-outline-primary': !isSelectedMonth(date), 'btn-primary': isSelectedMonth(date)}"
           (click)="dataState.filterByDateFilter(date)" *ngFor="let date of dataState.months">
@@ -86,6 +86,7 @@
   </svg>
 
 </div>
+<div style="min-height: 50vh;"></div>
 
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * The content above * * * * * * * * * * * -->

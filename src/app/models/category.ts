@@ -5,6 +5,7 @@ export interface Category{
     category: string;
     type: 'savings' | 'income' | 'expense';
     keywords: string[];
+    excludeKeywords?: string[];
     subCategories: Category[];
     total: number;
     transactions: Transaction[];

@@ -14,6 +14,14 @@ export class CategoryComponentComponent {
   constructor(protected dataState: DataState
 
   ) { }
-  
 
+  protected get calculatedTotal() {
+    const transactionValues = this.activeTransactions.map(t => t.amount);
+    return transactionValues.reduce((a, b) => a + b, 0);
+  }
+  
+  protected get activeTransactions() {
+    //return this.categorySummary.transactions.flatMap(t => [t, ...(t.?.flatMap(subCat => subCat.transactions) || [])]);
+    return this.categorySummary.subCategories.flatMap(sc => sc.transactions).concat(this.categorySummary.transactions).filter(t => this.dataState.showTransaction(t));
+  }
 }

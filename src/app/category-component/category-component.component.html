@@ -7,11 +7,11 @@
 
         </div>
         <div class="col text-end" *ngIf="amountMonths > 1">
-            <span class="opacity-25 fs-5">{{categorySummary.total | currency:'EUR'}}∑</span>
-             <span class="badge" [ngClass]="{'text-bg-success': categorySummary.total > 0, 'text-bg-warning': categorySummary.total < 0}">⌀ {{(categorySummary.total / amountMonths) | currency:'EUR'}}</span>
+            <span class="opacity-25 fs-5">{{calculatedTotal | currency:'EUR'}}∑</span>
+             <span class="badge" [ngClass]="{'text-bg-success': calculatedTotal > 0, 'text-bg-warning': calculatedTotal < 0}">⌀ {{(calculatedTotal / amountMonths) | currency:'EUR'}}</span>
         </div>
         <div class="col text-end" *ngIf="amountMonths <= 1">
-            <span class="badge" [ngClass]="{'text-bg-success': categorySummary.total > 0, 'text-bg-warning': categorySummary.total < 0}">{{categorySummary.total | currency:'EUR'}}</span>
+            <span class="badge" [ngClass]="{'text-bg-success': calculatedTotal > 0, 'text-bg-warning': calculatedTotal < 0}">{{calculatedTotal | currency:'EUR'}}</span>
         </div>
         
     </div>
@@ -20,9 +20,9 @@
             <app-category-component [categorySummary]="subCategory" [amountMonths]="amountMonths" *ngIf="subCategory.total != 0"></app-category-component>
         </div>
     </div>
-    <div *ngIf="expanded">
-        <ng-container *ngFor="let transaction of categorySummary.transactions | orderBy: 'amount'">
-        <app-transaction-component  [transaction]="transaction" *ngIf="dataState.showTransaction(transaction)"></app-transaction-component>
+    <div *ngIf="!categorySummary.subCategories?.length && expanded">
+        <ng-container *ngFor="let transaction of activeTransactions | orderBy: 'amount'">
+        <app-transaction-component  [transaction]="transaction"></app-transaction-component>
         </ng-container>
     </div>
 </div>
