@@ -17,7 +17,7 @@
     </div>
     <div *ngIf="categorySummary.subCategories?.length && expanded" class="ms-2">
         <div *ngFor="let subCategory of categorySummary.subCategories">
-            <app-category-component [categorySummary]="subCategory" [amountMonths]="amountMonths" *ngIf="subCategory.total > 0"></app-category-component>
+            <app-category-component [categorySummary]="subCategory" [amountMonths]="amountMonths" *ngIf="subCategory.total != 0"></app-category-component>
         </div>
     </div>
     <div *ngIf="expanded">

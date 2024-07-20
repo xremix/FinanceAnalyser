@@ -5,11 +5,8 @@ import { Transaction } from '../models/transaction';
   selector: 'app-transaction-component',
   templateUrl: './transaction-component.component.html'
 })
-export class TransactionComponentComponent implements OnInit {
+export class TransactionComponentComponent {
   @Input() transaction: Transaction = {} as Transaction;
   constructor() { }
-  public expand = false;
-  ngOnInit(): void {
-  }
 
 }
