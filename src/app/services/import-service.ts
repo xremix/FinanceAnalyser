@@ -30,11 +30,6 @@ export class ImportService {
   }
 
   private parseSPKLine(columns: string[]): Transaction | undefined {
-
-    // const bookingColumns = columns[1].split('.').reverse();
-    // bookingColumns[0] = '20' + bookingColumns[0];
-    // const monthAndYear =  bookingColumns[1] + '-01-' + bookingColumns[2];
-    // TODO probably need to fix bookingdate
     let monthAndYear = this.parseSPKDate(columns[1]);
     monthAndYear.setDate(1);
     const transaction: Transaction = {
@@ -46,11 +41,11 @@ export class ImportService {
       purpose: columns[4], // Verwendungszweck
       balance: 0, // Saldo ist nicht im CSV enthalten, daher 0 als Platzhalter
       balanceCurrency: columns[15], // Währung
-      amount: parseFloat(columns[14].replace(',', '.')), // Betrag, entferne Vorzeichen für Konsistent      
+      amount: parseFloat(columns[14].replace(',', '.')), // Betrag, entferne Vorzeichen für Konsistent
       amountCurrency: columns[15], // Währung
       raw: columns.join(';'),
     };
-    
+
     if (transaction.bookingDate.getFullYear() < 2000) {
       transaction.bookingDate.setFullYear(transaction.bookingDate.getFullYear() + 2000);
     }
@@ -58,12 +53,10 @@ export class ImportService {
       transaction.valueDate.setFullYear(transaction.valueDate.getFullYear() + 2000);
     }
 
-
     return transaction;
   }
 
   private parseINGDate(dateString: string): Date {
-    // looks like 10.07.2024 which is day.month.year
     const dateParts = dateString.split('.');
     const day = parseInt(dateParts[0]);
     const month = parseInt(dateParts[1]);
@@ -72,8 +65,6 @@ export class ImportService {
   }
 
   private parseINGLine(columns: string[]): Transaction | undefined {
-    // const bookingColumns = columns[0].split('.');
-    // const monthAndYear =  bookingColumns[1] + '-01-' + bookingColumns[2];
     let monthAndYear = this.parseINGDate(columns[0]);
     monthAndYear.setDate(1);
 
@@ -81,9 +72,6 @@ export class ImportService {
       month: monthAndYear, // Monat
       bookingDate: this.parseINGDate(columns[0]), // Buchung
       valueDate: this.parseINGDate(columns[1]), // Valuta
-      // month: new Date(monthAndYear), // Monat
-      // bookingDate: new Date(columns[0].split('.').reverse().join('-')), // buchung
-      // valueDate: new Date(columns[1].split('.').reverse().join('-')), // valuta
       payerReceiver: columns[2], // auftraggeberEmpfaenger
       bookingText: columns[3], // buchungstext
       purpose: columns[4], // verwendungszweck
@@ -97,10 +85,6 @@ export class ImportService {
     return transaction;
   }
 
-  private containsAnyKeyword(column: string, keywords: string[]): boolean {
-    return keywords.some((keyword) => column.toLowerCase().includes(keyword.toLowerCase()));
-  }
-
   public parseCsvToTransactions(csvData: string): Transaction[] {
     const lines = csvData.split('\n');
     const transactions: Transaction[] = [];
@@ -108,24 +92,22 @@ export class ImportService {
     // Überspringe die Kopfzeile
     for (let i = 1; i < lines.length; i++) {
       let line = lines[i];
-      
+
       //ignoreKeywords
-      if (ignoreKeywords.some(keyword => line.toLowerCase().includes(keyword.toLowerCase()))) {
+      if (ignoreKeywords.some((keyword) => line.toLowerCase().includes(keyword.toLowerCase()))) {
         console.warn('Ignoring line because of keyword:', line);
-          continue;
+        continue;
       }
 
       if (line.trim() === '') continue; // Überspringe leere Zeilen
       const columns = line.split(';');
       if (columns.length < 9) continue; // Überspringe Zeilen mit zu wenig Spalten
+      
       // remove " from the columns
-        columns.forEach((column, index) => {
-            columns[index] = column.replace(/"/g, '');
-        });
-      const keywords = ['Auftragskonto', 'Buchung'];
-      if (this.containsAnyKeyword(columns[0], keywords)) {
-        continue;
-      }
+      columns.forEach((column, index) => {
+        columns[index] = column.replace(/"/g, '');
+      });
+
       let transaction: Transaction | undefined;
 
       if (this.isSpkCsv(csvData)) {
@@ -133,7 +115,7 @@ export class ImportService {
       } else if (this.isIngCsv(csvData)) {
         transaction = this.parseINGLine(columns);
       }
-      //= this.isIngCsv(csvData) ? this.parseINGLine(columns) : this.parseSPKLine(columns);
+
       if (transaction) {
         transactions.push(transaction);
       }
