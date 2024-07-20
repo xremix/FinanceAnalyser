@@ -8,11 +8,14 @@ import { availableCategories } from '../../../env';
 export class CategoryService {
   private categories = availableCategories;
 
+  private get flatCategories(): Category[] {
+    return this.categories.flatMap(c => [c, ...(c.subCategories || [])]);
+  }
   private get defaultCategory(): Category {
-    return this.categories.find((c) => c.isDefault)!;
+    return this.flatCategories.find((c) => c.isDefault)!;
   }
   private get incomeCategory(): Category {
-    return this.categories.find((c) => c.type === 'income')!;
+    return this.flatCategories.find((c) => c.type === 'income')!;
   }
   private findMatchingCategory(transaction: Transaction): {category: Category, parentCategory?: Category} {
     for (const category of this.categories) {

@@ -14,7 +14,13 @@ import { CommonModule } from '@angular/common';
 export class CategorySelectComponent {
   constructor(protected dataState: DataState) {}
 
- 
+  get categoriesCleaned(): Category[] {
+    return this.dataState.categories.filter(c => c.total != 0);
+  }
+
+  get selectedSubCategoriesCleaned(): Category[] {
+    return this.selectedSubCategories.filter(c => c.total != 0);
+  }
   get selectedSubCategories(): Category[] {
     if(this.isSubCategorySelected){
       return this.getSubCategoriesOfParent(this.dataState.currentFilter.category!);

@@ -150,6 +150,7 @@ export class ImportService {
   }
 
   public loadFileFromLocalStorage() {
+    this.dataState.resetState();
     const fileContent = localStorage.getItem('fileContent');
     if (!fileContent) {
       console.error('No file content found in local storage');

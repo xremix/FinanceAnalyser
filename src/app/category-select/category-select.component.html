@@ -1,17 +1,17 @@
 <div class="border-bottom mb-3 text-center">
     <div>
-        <button class="btn btn-sm me-2" [ngClass]="{'btn-outline-primary': !isNothingSelected(), 'btn-primary': isNothingSelected()}"
+        <button class="btn btn-sm me-2 mb-1" [ngClass]="{'btn-outline-primary': !isNothingSelected(), 'btn-primary': isNothingSelected()}"
             (click)="dataState.resetCategory()">
             All
         </button>
-        <button class="btn btn-sm me-2" [ngClass]="{'btn-outline-primary': !isSelectedCategory(category), 'btn-primary': isSelectedCategory(category)}"
-            (click)="dataState.filterByCategory(category)" *ngFor="let category of dataState.categories">
+        <button class="btn btn-sm me-2 mb-1" [ngClass]="{'btn-outline-primary': !isSelectedCategory(category), 'btn-primary': isSelectedCategory(category)}"
+            (click)="dataState.filterByCategory(category)" *ngFor="let category of categoriesCleaned">
             {{category.category}}
         </button>
     </div>
     <div class="mt-2">
-        <button class="btn btn-sm me-2" [ngClass]="{'btn-link': !isSelectedCategory(category), 'btn-primary': isSelectedCategory(category)}"
-            (click)="dataState.filterByCategory(category)" *ngFor="let category of selectedSubCategories">
+        <button class="btn btn-sm me-2 mb-1" [ngClass]="{'btn-link': !isSelectedCategory(category), 'btn-primary': isSelectedCategory(category)}"
+            (click)="dataState.filterByCategory(category)" *ngFor="let category of selectedSubCategoriesCleaned">
             {{category.category}}
         </button>
 

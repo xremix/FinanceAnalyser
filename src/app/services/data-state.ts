@@ -54,16 +54,25 @@ export class DataState {
     return amountMonths + 1; // Include both start and end month in the count
   }
 
+  public showTransaction(transaction: Transaction): boolean{
+    // this.selectedTransactions = this.transactions.filter(
+    //   (t) => t.bookingDate >= this.currentFilter.from && t.bookingDate <= this.currentFilter.to
+    // );
+    // this.selectedTransactions = this.selectedTransactions.filter(
+    //   (t) =>
+    //     this.currentFilter.category === undefined ||
+    //     t.category === this.currentFilter.category ||
+    //     this.currentFilter.category.subCategories?.some((subCat) => t.category === subCat)
+    // );
+    const isBookingDateInFilter = transaction.bookingDate >= this.currentFilter.from && transaction.bookingDate <= this.currentFilter.to;
+    const isCategoryInFilter = this.currentFilter.category === undefined ||
+      transaction.category === this.currentFilter.category ||
+      this.currentFilter.category.subCategories?.some((subCat) => transaction.category === subCat);
+    return isBookingDateInFilter && isCategoryInFilter; 
+  }
+
   public refresh() {
-    this.selectedTransactions = this.transactions.filter(
-      (t) => t.bookingDate >= this.currentFilter.from && t.bookingDate <= this.currentFilter.to
-    );
-    this.selectedTransactions = this.selectedTransactions.filter(
-      (t) =>
-        this.currentFilter.category === undefined ||
-        t.category === this.currentFilter.category ||
-        this.currentFilter.category.subCategories?.some((subCat) => t.category === subCat)
-    );
+    this.selectedTransactions = this.transactions.filter(t => this.showTransaction(t));
     this.selectedTransactionsChanged.emit(this.selectedTransactions);
   }
 
@@ -113,16 +122,25 @@ export class DataState {
     this.currentFilter.category = undefined;
     this.refresh();
   }
-  resetState(){
+  resetState() {
     this._transactions = [];
     this.selectedTransactions = [];
     this.months = [];
     this.resetCategories();
-
   }
+
+
+
   private resetCategories() {
     // TODO Reset the amount and transactions
-    this.categories = availableCategories;
+    // for each category clean the total and transactions
+    this.categories.forEach((c) => {
+      c.total = 0;
+      c.transactions = [];
+      c.subCategories?.forEach((subCat) => {
+        subCat.total = 0;
+        subCat.transactions = [];
+      });
+    });
   }
-
 }

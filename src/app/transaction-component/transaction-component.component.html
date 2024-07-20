@@ -1,9 +1,14 @@
-<div class="row border-bottom" title="{{transaction.raw}}">
-    <div class="col">{{transaction.payerReceiver}}</div>
-    <div class="col">{{transaction.purpose}}</div>
-    <div class="col">{{transaction.bookingDate | date}}</div>
-    <div class="col" [ngClass]="{'text-warning': transaction.category?.category === 'Sonstiges'}">{{transaction.category?.category}}</div>
-    <div class="col text-end">
-        <span class="badge" [ngClass]="{'text-bg-success': transaction.amount > 0, 'text-bg-warning': transaction.amount < 0}">{{transaction.amount | currency:'EUR'}}</span>
+<div class="border-bottom py-2" title="{{transaction.raw}}">
+    <div class="row">
+        <div class="col">
+            <span class="fw-bold">{{transaction.payerReceiver}}<br/></span>
+            {{transaction.bookingDate | date}}
+        </div>
+        <div class="col">{{transaction.purpose}}</div>
+        <div class="col text-end">
+            <div class="text-end fw-bold" [ngClass]="{'text-warning': transaction.category?.category === 'Sonstiges'}">{{transaction.category?.category}}</div>
+            <span class="badge" [ngClass]="{'text-bg-success': transaction.amount > 0, 'text-bg-warning': transaction.amount < 0}">{{transaction.amount | currency:'EUR'}}</span>
+        </div>
     </div>
+
 </div>
