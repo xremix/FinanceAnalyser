@@ -1,7 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction';
 import { DateService } from './date-service';
-import { CategoryService } from './category-service';
 import { Category } from '../models/category';
 import { availableCategories } from 'env';
 
@@ -11,12 +10,12 @@ export interface DateFilter {
   name: string;
 }
 
-export interface DataFilter{
+export interface DataFilter {
   from: Date;
   to: Date;
   category: Category | undefined;
   type: 'all' | 'income' | 'expense';
-};
+}
 
 @Injectable({
   providedIn: 'root',
@@ -51,7 +50,7 @@ export class DataState {
     from: new Date(0),
     to: new Date(),
     category: undefined as Category | undefined,
-    type: 'all'
+    type: 'all',
   };
 
   get selectedMonthAmountInDataRangeFilter(): number {
@@ -63,17 +62,22 @@ export class DataState {
     return amountMonths + 1; // Include both start and end month in the count
   }
 
-  public showTransaction(transaction: Transaction): boolean{
-    const isBookingDateInFilter = transaction.bookingDate >= this.currentFilter.from && transaction.bookingDate <= this.currentFilter.to;
-    const isCategoryInFilter = this.currentFilter.category === undefined ||
+  public showTransaction(transaction: Transaction): boolean {
+    const isBookingDateInFilter =
+      transaction.bookingDate >= this.currentFilter.from && transaction.bookingDate <= this.currentFilter.to;
+    const isCategoryInFilter =
+      this.currentFilter.category === undefined ||
       transaction.category === this.currentFilter.category ||
       this.currentFilter.category.subCategories?.some((subCat) => transaction.category === subCat);
-    const isTypeInFilter = this.currentFilter.type === 'all' || this.currentFilter.type === transaction.category?.type;
+    const isTypeInFilter =
+      this.currentFilter.type === 'all' ||
+      (this.currentFilter.type === 'expense' && transaction.amount < 0) ||
+      (this.currentFilter.type === 'income' && transaction.amount > 0);
     return isBookingDateInFilter && isCategoryInFilter && isTypeInFilter;
   }
 
   public refresh() {
-    this.selectedTransactions = this.transactions.filter(t => this.showTransaction(t));
+    this.selectedTransactions = this.transactions.filter((t) => this.showTransaction(t));
     this.selectedTransactionsChanged.emit(this.selectedTransactions);
   }
 
@@ -96,9 +100,9 @@ export class DataState {
       this.currentFilter.from = dateFilter.from;
       this.currentFilter.to = dateFilter.to;
     }
-
     this.refresh();
   }
+
   filterByCategory(category: Category) {
     if (this.currentFilter.category === category) {
       this.currentFilter.category = undefined;
@@ -109,9 +113,10 @@ export class DataState {
   }
 
   resetMonth() {
-    if (this._transactions.length > 0) {
-      (this.currentFilter.to = this._transactions[0].bookingDate),
-        (this.currentFilter.from = this._transactions[this._transactions.length - 1].bookingDate);
+    const transactionsWithDate = this._transactions.filter((t) => t.bookingDate);
+    if (transactionsWithDate.length > 0) {
+      this.currentFilter.to = transactionsWithDate[0].bookingDate;
+      this.currentFilter.from = transactionsWithDate[transactionsWithDate.length - 1].bookingDate;
       this.refresh();
     }
   }
@@ -129,8 +134,6 @@ export class DataState {
     this.months = [];
     this.resetCategories();
   }
-
-
 
   private resetCategories() {
     // TODO Reset the amount and transactions
