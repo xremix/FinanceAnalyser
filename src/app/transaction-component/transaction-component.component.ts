@@ -20,6 +20,5 @@ export class TransactionComponentComponent implements OnInit {
   }
   findDuplicates() {
     this.dupllicates = this.duplicateService.foundDuplicates(this.transaction, this.dataState.selectedTransactions);
-    console.log('duplicates', this.dupllicates);
   }
 }
