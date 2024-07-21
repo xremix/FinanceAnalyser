@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DataState } from '../services/data-state';
-import { ImportService } from '../services/import-service';
+import { ImportService } from '../services/import-services/import-service';
 
 @Component({
   selector: 'app-file-selector',
