@@ -10,6 +10,14 @@ export interface DateFilter {
   to: Date;
   name: string;
 }
+
+export interface DataFilter{
+  from: Date;
+  to: Date;
+  category: Category | undefined;
+  type: 'all' | 'income' | 'expense';
+};
+
 @Injectable({
   providedIn: 'root',
 })
@@ -39,10 +47,11 @@ export class DataState {
   // event emitter when selected transactions change
   public selectedTransactionsChanged: EventEmitter<Transaction[]> = new EventEmitter();
   public selectedTransactions: Transaction[] = [];
-  public currentFilter = {
+  public currentFilter: DataFilter = {
     from: new Date(0),
     to: new Date(),
     category: undefined as Category | undefined,
+    type: 'all'
   };
 
   get selectedMonthAmountInDataRangeFilter(): number {
@@ -55,20 +64,12 @@ export class DataState {
   }
 
   public showTransaction(transaction: Transaction): boolean{
-    // this.selectedTransactions = this.transactions.filter(
-    //   (t) => t.bookingDate >= this.currentFilter.from && t.bookingDate <= this.currentFilter.to
-    // );
-    // this.selectedTransactions = this.selectedTransactions.filter(
-    //   (t) =>
-    //     this.currentFilter.category === undefined ||
-    //     t.category === this.currentFilter.category ||
-    //     this.currentFilter.category.subCategories?.some((subCat) => t.category === subCat)
-    // );
     const isBookingDateInFilter = transaction.bookingDate >= this.currentFilter.from && transaction.bookingDate <= this.currentFilter.to;
     const isCategoryInFilter = this.currentFilter.category === undefined ||
       transaction.category === this.currentFilter.category ||
       this.currentFilter.category.subCategories?.some((subCat) => transaction.category === subCat);
-    return isBookingDateInFilter && isCategoryInFilter; 
+    const isTypeInFilter = this.currentFilter.type === 'all' || this.currentFilter.type === transaction.category?.type;
+    return isBookingDateInFilter && isCategoryInFilter && isTypeInFilter;
   }
 
   public refresh() {
@@ -142,5 +143,10 @@ export class DataState {
         subCat.transactions = [];
       });
     });
+  }
+
+  filterByType(type: 'all' | 'income' | 'expense') {
+    this.currentFilter.type = type;
+    this.refresh();
   }
 }

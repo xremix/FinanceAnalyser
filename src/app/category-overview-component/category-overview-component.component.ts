@@ -11,7 +11,7 @@ export class CategoryOverviewComponentComponent implements OnInit {
 @Input() amountMonths: number = 1;
 // In Ihrer übergeordneten Komponente
 public trackByCategoryId(index: number, item: Category): string {
-  return item.category; // Angenommen, jedes `CategorySummary`-Objekt hat eine eindeutige `id`
+  return item.name; // Angenommen, jedes `CategorySummary`-Objekt hat eine eindeutige `id`
 }
 public toggle = false;
   constructor() { }

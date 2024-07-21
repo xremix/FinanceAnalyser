@@ -2,7 +2,7 @@
 import { Transaction } from "./transaction";
 
 export interface Category{
-    category: string;
+    name: string;
     type: 'savings' | 'income' | 'expense';
     keywords: string[];
     excludeKeywords?: string[];
@@ -10,4 +10,5 @@ export interface Category{
     total: number;
     transactions: Transaction[];
     isDefault?: boolean;
+    icon?: string;
 }

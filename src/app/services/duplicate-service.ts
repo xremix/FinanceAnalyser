@@ -14,7 +14,7 @@ export class DuplicateService {
     const transactions = this.dataState.selectedTransactions;
     for (let i = 0; i < transactions.length; i++) {
       console.log('checking', transactions[i]);
-      if(this.foundDuplicates(transactions[i], transactions).length  > 3) {
+      if(this.foundDuplicates(transactions[i], transactions).length  >= 3) {
         
         // check if is already in duplicates
         if(this.foundDuplicates(transactions[i], duplicates).length == 0) {
@@ -26,7 +26,7 @@ export class DuplicateService {
     }
     return duplicates;
   }
-  private foundDuplicates(transaction: Transaction, transactionPool: Transaction[]): Transaction[] {
+  public foundDuplicates(transaction: Transaction, transactionPool: Transaction[]): Transaction[] {
     return transactionPool.filter(t => t.amount === transaction.amount && t.payerReceiver === transaction.payerReceiver && t !== transaction)
   }
 }

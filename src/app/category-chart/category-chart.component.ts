@@ -68,7 +68,7 @@ export class CategoryChartComponent implements  OnChanges{
   
       this.series = [..._series]; // Verwenden Sie Spread-Operator, um eine neue Referenz zu erstellen
   
-      const _labels = filteredData.map((d) => d.category);
+      const _labels = filteredData.map((d) => d.name);
       if (this.arraysAreEqual(_labels, this.labels)) return;
   
       this.labels = [..._labels]; // Verwenden Sie Spread-Operator, um eine neue Referenz zu erstellen
