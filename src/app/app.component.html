@@ -74,7 +74,7 @@
 
         <app-category-overview-component *ngIf="!dataState.currentFilter.category" [amountMonths]="dataState.selectedMonthAmountInDataRangeFilter"
           [categorySummaries]="dataState.categories"></app-category-overview-component>
-        <app-category-component *ngIf="dataState.currentFilter.category" [categorySummary]="dataState.currentFilter.category"></app-category-component>
+        <app-category-component *ngIf="dataState.currentFilter.category" [amountMonths]="dataState.selectedMonthAmountInDataRangeFilter" [categorySummary]="dataState.currentFilter.category"></app-category-component>
       </div>
 
       <div class="border-bottom mb-3">
