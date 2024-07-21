@@ -1,18 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import {
-  ApexAxisChartSeries,
   ApexChart,
-  ApexDataLabels,
-  ApexPlotOptions,
-  ApexYAxis,
-  ApexXAxis,
-  ApexFill,
-  ApexTooltip,
-  ApexStroke,
-  ApexLegend,
-  ChartComponent,
   NgApexchartsModule,
-  ApexTitleSubtitle,
 } from 'ng-apexcharts';
 import { CommonModule } from '@angular/common';
 import { DataState } from '../services/data-state';
@@ -24,9 +13,8 @@ import { Category } from '../models/category';
   imports: [NgApexchartsModule, CommonModule],
   templateUrl: './category-chart.component.html',
   styleUrl: './category-chart.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CategoryChartComponent implements  OnChanges{
+export class CategoryChartComponent implements  OnChanges, OnInit{
 
   @Input() data: Category[] = [];
 
@@ -55,18 +43,35 @@ export class CategoryChartComponent implements  OnChanges{
   private arraysAreEqual(array1: any[], array2: any[]): boolean {
     return array1.length === array2.length && array1.every((value, index) => value === array2[index]);
   }
+
+  private getCalculatedCategory(category: Category): {value: number, name: string} {
+    const flatTransactions = [category.transactions, ...category.subCategories.map((c) => c.transactions)].flat();
+    const activeTransactions = flatTransactions.filter(t => this.dataState.showTransaction(t))
+    const total = activeTransactions.reduce((acc, t) => acc + t.amount, 0);
+    return {
+      value: Math.abs(total | 0),
+      name: category.name
+    };
+  }
+
+  private getFilteredCategoryData(): {value: number, name: string}[] {
+    let x = this.data.filter((d) => d.total < 0)
+    .map((d) => this.getCalculatedCategory(d))
+    .sort((a, b) => a.value - b.value);
+    return x;
+  }
   
   private refresh() {
       // Filtern und Umwandeln der Daten in einem Schritt
-      const filteredData = this.data
-          .filter((d) => d.total < 0)
-          .map((d) => ({ ...d, value: Math.abs(d.total | 0) }))
-          .sort((a, b) => a.value - b.value);
-  
+      const filteredData = this.getFilteredCategoryData();
+      console.log('filteredData', filteredData);
+
       const _series = filteredData.map((d) => d.value);
+      console.log('series', this.series, _series);
       if (this.arraysAreEqual(_series, this.series)) return;
-  
+      
       this.series = [..._series]; // Verwenden Sie Spread-Operator, um eine neue Referenz zu erstellen
+      console.log('series', this.series, _series);
   
       const _labels = filteredData.map((d) => d.name);
       if (this.arraysAreEqual(_labels, this.labels)) return;
@@ -80,5 +85,14 @@ export class CategoryChartComponent implements  OnChanges{
     }
   }
 
-   
+  constructor(private dataState: DataState) {
+
+  }
+  ngOnInit(): void {
+    this.dataState.selectedTransactionsChanged.subscribe(() => {
+      this.refresh();
+    });
+  }
+
+
 }

@@ -10,7 +10,7 @@
   <div class="spacer"></div>
 
   <div class="me-4">
-    <button class="btn text-white fw-bold" (click)="dataState.resetState()">⃠</button>
+    <!-- <button class="btn text-white fw-bold" (click)="dataState.resetState()">⃠</button> -->
     <app-file-selector [big]="false"></app-file-selector>
   </div>
 </div>
@@ -71,7 +71,6 @@
         <!-- Chart -->
         <app-category-chart [data]="dataState.categories"></app-category-chart>
         <!-- Elements -->
-
         <app-category-overview-component *ngIf="!dataState.currentFilter.category" [amountMonths]="dataState.selectedMonthAmountInDataRangeFilter"
           [categorySummaries]="dataState.categories"></app-category-overview-component>
         <app-category-component *ngIf="dataState.currentFilter.category" [amountMonths]="dataState.selectedMonthAmountInDataRangeFilter" [categorySummary]="dataState.currentFilter.category"></app-category-component>
