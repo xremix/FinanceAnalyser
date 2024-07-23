@@ -1,8 +1,9 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction';
 import { DateService } from './date-service';
-import { Category } from '../models/category';
-import { availableCategories } from 'env';
+import { BaseCategory, Category, mapBaseCategoryToCategory, mapCategoryToBaseCategory } from '../models/category';
+import { defaultCategories } from '../default-categories';
+// import { availableCategories } from 'env';
 
 export interface DateFilter {
   from: Date;
@@ -25,7 +26,7 @@ export class DataState {
 
   public months: DateFilter[] = [];
   public monthStarts: Date[] = [];
-  public categories: Category[] = availableCategories;
+  public categories: Category[] = [];
 
   constructor(private dateService: DateService) {}
 
@@ -151,5 +152,15 @@ export class DataState {
   filterByType(type: 'all' | 'income' | 'expense') {
     this.currentFilter.type = type;
     this.refresh();
+  }
+
+  public loadCategoriesFromLocalStorage() {
+    let baseCategories: BaseCategory[] = localStorage.getItem('categories') ? JSON.parse(localStorage.getItem('categories')!) : defaultCategories;
+    this.categories = baseCategories.map((c) => mapBaseCategoryToCategory(c));
+  }
+
+  public saveCategoriesToLocalStorage() {
+    let baseCategories: BaseCategory[] = this.categories.map((c) => mapCategoryToBaseCategory(c));
+    localStorage.setItem('categories', JSON.stringify(baseCategories));
   }
 }

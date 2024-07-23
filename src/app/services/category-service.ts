@@ -2,14 +2,17 @@ import { Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction';
 import { Category } from '../models/category';
 import { availableCategories } from '../../../env';
+import { DataState } from './data-state';
 @Injectable({
   providedIn: 'root',
 })
 export class CategoryService {
-  private categories = availableCategories;
+
+  constructor(private dataState: DataState) {
+  }
 
   private get flatCategories(): Category[] {
-    return this.categories.flatMap(c => [c, ...(c.subCategories || [])]);
+    return this.dataState.categories.flatMap(c => [c, ...(c.subCategories || [])]);
   }
   private get defaultCategory(): Category {
     return this.flatCategories.find((c) => c.isDefault)!;
@@ -18,7 +21,7 @@ export class CategoryService {
     return this.flatCategories.find((c) => c.type === 'income')!;
   }
   private findMatchingCategory(transaction: Transaction): {category: Category, parentCategory?: Category} {
-    for (const category of this.categories) {
+    for (const category of this.dataState.categories) {
       // Überprüfen Sie zuerst die Hauptkategorie
       if (this.matchesKeywords(category, transaction) && !this.matchesExcludeKeywords(category, transaction)) {
         return {category};

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Transaction } from '../../models/transaction';
 import { DataState } from '../data-state';
 import { CategoryService } from '../category-service';
-import {  IngImporter } from './ing-importer';
+import { IngImporter } from './ing-importer';
 import { SpkImporter } from './spk-importer';
 import { Importer } from './importer';
 @Injectable({

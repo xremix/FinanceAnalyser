@@ -14,7 +14,10 @@ export class AppComponent {
   title = 'FinanceAnalyser';
 
 
-  constructor(protected dataState: DataState, protected categoryService: CategoryService, protected dateService: DateService) {}
+  constructor(protected dataState: DataState, protected categoryService: CategoryService, protected dateService: DateService) {
+    dataState.loadCategoriesFromLocalStorage();
+  }
+  
   isSelectedMonth(date: DateFilter): boolean {
     if (!this.dataState.currentFilter.from || !this.dataState.currentFilter.to) {
       return false;
