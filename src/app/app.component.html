@@ -63,13 +63,20 @@
       </div>
 
       <app-category-select></app-category-select>
+      
+      <div class="row">
+        <div class="col-md-8">
+          <app-history-chart [dates]="dataState.monthStarts" [transactions]="dataState.selectedTransactions"></app-history-chart>
+        </div>
+        <div class="col-md-4">
 
-      <app-history-chart [dates]="dataState.monthStarts" [transactions]="dataState.selectedTransactions"></app-history-chart>
+          <app-category-chart [data]="dataState.categories"></app-category-chart>
+        </div>
+      </div>
 
       <div class="border-bottom mb-3">
         <h2>Kategorien</h2>
         <!-- Chart -->
-        <app-category-chart [data]="dataState.categories"></app-category-chart>
         <!-- Elements -->
         <app-category-overview-component *ngIf="!dataState.currentFilter.category" [amountMonths]="dataState.selectedMonthAmountInDataRangeFilter"
           [categorySummaries]="dataState.categories"></app-category-overview-component>

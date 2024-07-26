@@ -180,6 +180,7 @@ export const defaultCategories: BaseCategory[] = [
           'Electronic Arts',
           'EA',
         ],
+        excludeKeywords: ['Apple Pay'],
       },
     ],
     type: 'expense',

@@ -17,7 +17,6 @@ import { CategoryChartComponent } from './category-chart/category-chart.componen
 import { CategorySelectComponent } from "./category-select/category-select.component";
 import { TransactionOverviewComponent } from './transaction-overview/transaction-overview.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,7 +26,6 @@ import { TransactionOverviewComponent } from './transaction-overview/transaction
     CategoryComponentComponent,
     TransactionOverviewComponent,
     OrderByPipe,
-    // OrderByCategorySummary
   ],
   imports: [
     BrowserModule,
