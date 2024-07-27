@@ -13,12 +13,7 @@ export class TransactionOverviewComponent {
     all: false,
     reoccurent: false,
   };
-  constructor(protected dataState: DataState, private duplicateService: DuplicateService) {}
-  duplicateTransactions: Transaction[] = [];
+  constructor(protected dataState: DataState, ) {}
   
-  showDuplicates() {
-    this.expanded.reoccurent = !this.expanded.reoccurent;
-    this.duplicateTransactions = this.duplicateService.findDuplicateTransactions();
 
-  }
 }

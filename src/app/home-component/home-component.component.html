@@ -1,72 +1,110 @@
-
 <div class="border-bottom mb-3 text-center" *ngIf="!dataState.hasLoadedData">
-    <h2>Wähle eine Datei</h2>
-    <app-file-selector [big]="true"></app-file-selector>
+  <h2>Wähle eine Datei</h2>
+  <app-file-selector [big]="true"></app-file-selector>
+</div>
+
+<div *ngIf="dataState.hasLoadedData">
+
+
+  <h2>Zeitraum wählen</h2>
+
+  <div>
+    <mat-form-field>
+      <mat-date-range-input [rangePicker]="picker">
+        <input matStartDate placeholder="Start date" [(ngModel)]="dataState.currentFilter.from" (dateChange)="refreshData()">
+        <input matEndDate placeholder="End date" [(ngModel)]="dataState.currentFilter.to" (dateChange)="refreshData()">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+
+
+  </div>
+  <div class="border-bottom mb-3 text-center">
+    <button class="btn btn-primary btn-sm me-2 mb-1" (click)="dataState.resetMonth()">
+      Alle
+    </button>
+    <button class="btn btn-sm me-2 mb-1" [ngClass]="{'btn-outline-primary': !isSelectedMonth(date), 'btn-primary': isSelectedMonth(date)}"
+      (click)="dataState.filterByDateFilter(date)" *ngFor="let date of dataState.months">
+      {{date.name}}
+    </button>
   </div>
 
-  <div *ngIf="dataState.hasLoadedData">
 
+  <div class="border-bottom mb-3 text-center">
+    <button class="btn btn-primary btn-sm me-2 mb-1" (click)="dataState.filterByType('all')">
+      Alle
+    </button>
+    <button class="btn btn-primary btn-sm me-2 mb-1" (click)="dataState.filterByType('income')">
+      Einnahmen
+    </button>
+    <button class="btn btn-primary btn-sm me-2 mb-1" (click)="dataState.filterByType('expense')">
+      Ausgaben
+    </button>
+  </div>
 
-    <h2>Zeitraum wählen</h2>
+  <app-category-select></app-category-select>
 
-    <div>
-      <mat-form-field>
-        <mat-date-range-input [rangePicker]="picker">
-          <input matStartDate placeholder="Start date" [(ngModel)]="dataState.currentFilter.from" (dateChange)="refreshData()">
-          <input matEndDate placeholder="End date" [(ngModel)]="dataState.currentFilter.to" (dateChange)="refreshData()">
-        </mat-date-range-input>
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-date-range-picker #picker></mat-date-range-picker>
-      </mat-form-field>
-
-
+  <div class="row">
+    <div class="col-md-8">
+      <app-history-chart [dates]="dataState.monthStarts" [transactions]="dataState.selectedTransactions"></app-history-chart>
     </div>
-    <div class="border-bottom mb-3 text-center">
-      <button class="btn btn-primary btn-sm me-2 mb-1" (click)="dataState.resetMonth()">
-        Alle
-      </button>
-      <button class="btn btn-sm me-2 mb-1" [ngClass]="{'btn-outline-primary': !isSelectedMonth(date), 'btn-primary': isSelectedMonth(date)}"
-        (click)="dataState.filterByDateFilter(date)" *ngFor="let date of dataState.months">
-        {{date.name}}
-      </button>
+    <div class="col-md-4">
+
+      <app-category-chart [data]="dataState.categories"></app-category-chart>
     </div>
+  </div>
 
-
-    <div class="border-bottom mb-3 text-center">
-      <button class="btn btn-primary btn-sm me-2 mb-1" (click)="dataState.filterByType('all')">
-        Alle
-      </button>
-      <button class="btn btn-primary btn-sm me-2 mb-1" (click)="dataState.filterByType('income')">
-        Einnahmen
-      </button>
-      <button class="btn btn-primary btn-sm me-2 mb-1" (click)="dataState.filterByType('expense')">
-        Ausgaben
-      </button>
-    </div>
-
-    <app-category-select></app-category-select>
-    
-    <div class="row">
-      <div class="col-md-8">
-        <app-history-chart [dates]="dataState.monthStarts" [transactions]="dataState.selectedTransactions"></app-history-chart>
-      </div>
-      <div class="col-md-4">
-
-        <app-category-chart [data]="dataState.categories"></app-category-chart>
-      </div>
-    </div>
-
-    <div class="border-bottom mb-3">
-      <h2>Kategorien</h2>
-      <!-- Chart -->
-      <!-- Elements -->
+  <ul class="nav nav-tabs">
+    <li class="nav-item" *ngFor="let tab of tabs">
+      <a class="nav-link" [ngClass]="{'active': tab == activeTab}" aria-current="page" href="#" (click)="activeTab = tab">{{tab}}</a>
+    </li>
+    <!-- <li class="nav-item">
+        <a class="nav-link" href="#">Monatlich wiederkehrend</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Alle</a>
+      </li> -->
+  </ul>
+  <div class="border-bottom mb-3">
+    <h2>Kategorien</h2>
+    <!-- Chart -->
+    <!-- Elements -->
+    <div *ngIf="activeTab == 'Kategorien'">
       <app-category-overview-component *ngIf="!dataState.currentFilter.category" [amountMonths]="dataState.selectedMonthAmountInDataRangeFilter"
         [categorySummaries]="dataState.categories"></app-category-overview-component>
-      <app-category-component *ngIf="dataState.currentFilter.category" [amountMonths]="dataState.selectedMonthAmountInDataRangeFilter" [categorySummary]="dataState.currentFilter.category"></app-category-component>
+        <app-category-component *ngIf="dataState.currentFilter.category" [amountMonths]="dataState.selectedMonthAmountInDataRangeFilter"
+        [categorySummary]="dataState.currentFilter.category" [expanded]="true"></app-category-component>
     </div>
 
-    <div class="border-bottom mb-3">
-      <app-transaction-overview></app-transaction-overview>
+    <div *ngIf="activeTab == 'Monatlich wiederkehrend'">
+      <div class="row">
+        <div class="col">
+          <button class="btn btn-link p-0" (click)="showDuplicates()">Laden</button>
+
+          <app-transaction-component *ngFor="let transaction of duplicateTransactions | orderBy: 'amount'" [transaction]="transaction">
+          </app-transaction-component>
+        </div>
+      </div>
+      
+
+    </div>
+    <div *ngIf="activeTab == 'Alle'">
+      <!-- <app-transaction-overview></app-transaction-overview> -->
+
+      <div class="row">
+        <div class="col">
+
+
+          <app-transaction-component *ngFor="let transaction of dataState.selectedTransactions | orderBy: 'amount'" [transaction]="transaction">
+          </app-transaction-component>
+
+        </div>
+      </div>
+
+
     </div>
   </div>
 
+
+</div>

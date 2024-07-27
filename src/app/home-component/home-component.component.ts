@@ -3,6 +3,8 @@ import { CategoryService } from '../services/category-service';
 import { DataState, DateFilter } from '../services/data-state';
 import { DateService } from '../services/date-service';
 import { ImportService } from '../services/import-services/import-service';
+import { Transaction } from '../models/transaction';
+import { DuplicateService } from '../services/duplicate-service';
 
 @Component({
   selector: 'app-home-component',
@@ -11,7 +13,14 @@ import { ImportService } from '../services/import-services/import-service';
 })
 export class HomeComponentComponent {
 
-  constructor(protected dataState: DataState, private importService: ImportService,protected categoryService: CategoryService, protected dateService: DateService) {
+  public tabs: string[] = [
+    'Kategorien',
+    'Monatlich wiederkehrend',
+    'Alle'
+  ];
+  public activeTab: string = this.tabs[0];
+
+  constructor(protected dataState: DataState, private importService: ImportService,protected categoryService: CategoryService, protected dateService: DateService, private duplicateService: DuplicateService) {
     //importService.loadFromLocalStorage();
   }
   
@@ -42,5 +51,11 @@ export class HomeComponentComponent {
   closeDatePicker(eventData: any, dp?:any) {
     // get month and year from eventData and close datepicker, thus not allowing user to select date
     dp.close();    
+  }
+  duplicateTransactions: Transaction[] = [];
+
+  showDuplicates() {
+    this.duplicateTransactions = this.duplicateService.findDuplicateTransactions();
+
   }
 }

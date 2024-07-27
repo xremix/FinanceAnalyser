@@ -9,7 +9,7 @@ import { DataState } from '../services/data-state';
 })
 export class CategoryComponentComponent {
   @Input() public categorySummary: Category = {} as any;
-  public expanded: boolean = false;
+  @Input() public expanded: boolean = false;
   @Input() amountMonths: number = 1;
   constructor(protected dataState: DataState
 
