@@ -1,1 +1,25 @@
-<p>settings-component works!</p>
+<h1>Settings</h1>
+
+<div *ngFor="let category of dataState.categories">
+    <ng-container *ngTemplateOutlet="categoryTemplate; context:{category: category}"> </ng-container>
+</div>
+<div>
+    Add
+</div>
+
+<ng-template #categoryTemplate let-category='category'>
+    <h2>{{category.name}}</h2>
+    <div class="ms-4" *ngFor="let sub of category.subCategories">
+        <ng-container *ngTemplateOutlet="categoryTemplate; context:{category: sub}"> </ng-container>
+    </div>
+    <div>
+        Include key words
+        <div *ngFor="let keyword of category.keywords" class="badge rounded-pill text-bg-primary">{{keyword}}</div>
+        add
+    </div>
+    <div>
+        Exclude key words
+        <div *ngFor="let keyword of category.excludeKeywords" class="badge rounded-pill text-bg-danger">{{keyword}}</div>
+        add
+    </div>
+</ng-template>

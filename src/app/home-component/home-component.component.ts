@@ -12,7 +12,7 @@ import { ImportService } from '../services/import-services/import-service';
 export class HomeComponentComponent {
 
   constructor(protected dataState: DataState, private importService: ImportService,protected categoryService: CategoryService, protected dateService: DateService) {
-    importService.loadFromLocalStorage();
+    //importService.loadFromLocalStorage();
   }
   
   isSelectedMonth(date: DateFilter): boolean {
