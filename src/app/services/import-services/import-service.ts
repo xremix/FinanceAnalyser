@@ -67,8 +67,12 @@ export class ImportService {
     this.dataState.categories = baseCategories.map((c) => mapBaseCategoryToCategory(c));
   }
 
-  public saveCategoriesToLocalStorage() {
+  public saveCategoriesToLocalStorage(json: string) {
+    
+    localStorage.setItem('categories', json);
+  }
+  public categorisAsJson(): string {
     let baseCategories: BaseCategory[] = this.dataState.categories.map((c) => mapCategoryToBaseCategory(c));
-    localStorage.setItem('categories', JSON.stringify(baseCategories));
+    return JSON.stringify(baseCategories, null, 2);
   }
 }
