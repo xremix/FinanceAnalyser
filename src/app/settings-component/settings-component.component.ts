@@ -39,7 +39,7 @@ export class SettingsComponentComponent implements OnInit {
   }
 
   public addCategory(category?: any[]) {
-    const name = prompt('Add new category', 'Category');
+    const name = prompt('Add new category', '');
     var elementToAdd = category ? category : this.dataState.categories;
       if (name) {
         elementToAdd.push({
@@ -57,7 +57,8 @@ export class SettingsComponentComponent implements OnInit {
 
   public fillCategoriesWithDefaults() {
     const flatDefaults = [...defaultCategories, ...defaultCategories.flatMap((c) => c.subCategories || [])];
-    for (const category of this.dataState.categories) {
+    const flatCatgeories = this.dataState.categories.flatMap((c) => c.subCategories || []);
+    for (const category of flatCatgeories) {
       for (const defaultCategory of flatDefaults) {
         if (category.name === defaultCategory.name) {
           this.fillupCategory(category, defaultCategory);

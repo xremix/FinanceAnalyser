@@ -1,7 +1,7 @@
 <h1>
     <span>Settings</span>
     <button class="btn btn-primary" (click)="saveState()">Save</button>
-    <button class="btn btn-primary" (click)="fillCategoriesWithDefaults()">Fill with defaults</button>
+    <button class="btn btn-primary ms-2" (click)="fillCategoriesWithDefaults()">Fill with defaults</button>
 </h1>
 
 <div *ngFor="let category of dataState.categories">
@@ -19,13 +19,13 @@
         <div class="ms-4" *ngFor="let sub of category.subCategories">
             <ng-container *ngTemplateOutlet="categoryTemplate; context:{category: sub}"> </ng-container>
         </div>
-        <div *ngIf="category.keywords.length > 0">
+        <div>
             Include<br />
             <div *ngFor="let keyword of category.keywords | order" class="badge rounded-pill p-2 text-bg-primary" role="button"
                 (click)="removeKeyWord(category.keywords, keyword)">{{keyword}}</div>
             <button class="btn btn-success btn-sm" (click)="addKeyWord(category.keywords)">Add</button>
         </div>
-        <div *ngIf="category.excludeKeywords?.length > 0">
+        <div>
             Exclude<br />
             <div *ngFor="let keyword of category.excludeKeywords | order" class="badge rounded-pill p-2 text-bg-danger" role="button"
                 (click)="removeKeyWord(category.excludeKeywords, keyword)">{{keyword}}</div>

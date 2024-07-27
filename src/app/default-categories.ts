@@ -1,6 +1,8 @@
+import { availableCategories } from 'env';
 import { BaseCategory } from './models/category';
 
-export const defaultCategories: BaseCategory[] = [
+export const defaultCategories: BaseCategory[] = availableCategories;
+[
   {
     name: 'Einkommen',
     icon: 'fa-solid fa-money-bill-trend-up',
@@ -312,6 +314,7 @@ export const defaultCategories: BaseCategory[] = [
           'Edeka',
           'Euroshop',
           'Getraenke',
+          'Getranke',
           'HelloFresh',
           'Ihle',
           'Kaufland',
@@ -466,6 +469,7 @@ export const defaultCategories: BaseCategory[] = [
           'TANKE',
           'Tankstelle',
           'Total ',
+          'Gutmann Eni',
         ],
       },
       {
