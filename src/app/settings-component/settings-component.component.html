@@ -1,30 +1,46 @@
-<h1>Settings</h1>
+<h1>
+    <span>Settings</span>
+    <button class="btn btn-primary" (click)="saveState()">Save</button>
+</h1>
 
 <div *ngFor="let category of dataState.categories">
     <ng-container *ngTemplateOutlet="categoryTemplate; context:{category: category}"> </ng-container>
+
+    <button class="btn btn-success" (click)="addCategory(category.subCategories)">Add Category</button>
+
 </div>
 
-
+<!-- 
 <div class="form-floating">
     <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" [(ngModel)]="json" style="height: 500px"></textarea>
     <label for="floatingTextarea">Categories</label>
     <button class="btn btn-primary" (click)="save()">Save</button>
-</div>
+</div> -->
 
 
 <ng-template #categoryTemplate let-category='category'>
-    <h2>{{category.name}}</h2>
-    <div class="ms-4" *ngFor="let sub of category.subCategories">
-        <ng-container *ngTemplateOutlet="categoryTemplate; context:{category: sub}"> </ng-container>
-    </div>
-    <div *ngIf="category.keywords.length > 0">
-        Include<br/>
-        <div *ngFor="let keyword of category.keywords" class="badge rounded-pill p-2 text-bg-primary" role="button" (click)="removeKeyWord(category.keywords, keyword)">{{keyword}}</div>
-        <button class="btn btn-success btn-sm" (click)="addKeyWord(category.keywords)">Add</button>
-    </div>
-    <div *ngIf="category.excludeKeywords?.length > 0">
-        Exclude<br/>
-        <div *ngFor="let keyword of category.excludeKeywords" class="badge rounded-pill p-2 text-bg-danger" role="button" (click)="removeKeyWord(category.excludeKeywords, keyword)">{{keyword}}</div>
-        <button class="btn btn-success btn-sm" (click)="addKeyWord(category.excludeKeywords)">Add</button>
+    <div class="bg-light m-3 rounded">
+        <h2>
+            <span>{{category.name}}</span>
+            <button class="btn btn-success btn-sm ms-2" (click)="addCategory(category.subCategories)">Add Sub Category</button>
+        </h2>
+        <div class="ms-4" *ngFor="let sub of category.subCategories">
+            <ng-container *ngTemplateOutlet="categoryTemplate; context:{category: sub}"> </ng-container>
+        </div>
+        <div *ngIf="category.keywords.length > 0">
+            Include<br />
+            <div *ngFor="let keyword of category.keywords" class="badge rounded-pill p-2 text-bg-primary" role="button"
+                (click)="removeKeyWord(category.keywords, keyword)">{{keyword}}</div>
+            <button class="btn btn-success btn-sm" (click)="addKeyWord(category.keywords)">Add</button>
+        </div>
+        <div *ngIf="category.excludeKeywords?.length > 0">
+            Exclude<br />
+            <div *ngFor="let keyword of category.excludeKeywords" class="badge rounded-pill p-2 text-bg-danger" role="button"
+                (click)="removeKeyWord(category.excludeKeywords, keyword)">{{keyword}}</div>
+            <button class="btn btn-success btn-sm" (click)="addKeyWord(category.excludeKeywords)">Add</button>
+        </div>
+
+        <div class="text-center">
+        </div>
     </div>
 </ng-template>

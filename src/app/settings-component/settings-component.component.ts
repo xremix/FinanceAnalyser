@@ -17,18 +17,37 @@ export class SettingsComponentComponent implements OnInit {
   public save() {
     this.importService.saveCategoriesToLocalStorage(this.json);
   }
+  public saveState() {
+    // let x = categorisAsJson
+    const x = this.importService.categorisAsJson();
+    this.importService.saveCategoriesToLocalStorage(x);
+  }
 
-  public addKeyWord(data: string[]){
-    const x = prompt('Add new category', 'Category');
-    if (x) {
-      data.push(x);
+  public addKeyWord(data: string[]) {
+    const keyword = prompt('Add new category', 'Category');
+    if (keyword) {
+      data.push(keyword);
     }
   }
-  public removeKeyWord(data: string[], keyword: string){
+  public removeKeyWord(data: string[], keyword: string) {
     const index = data.indexOf(keyword);
     if (index > -1) {
       data.splice(index, 1);
     }
   }
 
+  public addCategory(data: any[]) {
+    const name = prompt('Add new category', 'Category');
+    if (name) {
+      data.push({
+        name: name,
+        type: 'expense',
+        keywords: [],
+        excludeKeywords: [],
+        subCategories: [],
+        isDefault: false,
+        icon: 'fa fa-question',
+      });
+    }
+  }
 }

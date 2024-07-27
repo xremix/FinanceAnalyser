@@ -272,7 +272,7 @@ export const defaultCategories: BaseCategory[] = [
           'Spar Fil',
           'Starbucks',
           'Supermarkt',
-          'WUENSCHE',
+          'Wuensche',
           
         ],
       },
