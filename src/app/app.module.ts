@@ -19,6 +19,7 @@ import { TransactionOverviewComponent } from './transaction-overview/transaction
 import { HomeComponentComponent } from './home-component/home-component.component';
 import { SettingsComponentComponent } from './settings-component/settings-component.component';
 import { provideRouter, RouterOutlet } from '@angular/router';
+import { OrderPipe } from './pipes/order.pipe';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { provideRouter, RouterOutlet } from '@angular/router';
     HomeComponentComponent,
     SettingsComponentComponent,
     OrderByPipe,
+    OrderPipe
   ],
   imports: [
     BrowserModule,

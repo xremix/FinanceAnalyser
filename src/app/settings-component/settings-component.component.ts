@@ -36,18 +36,20 @@ export class SettingsComponentComponent implements OnInit {
     }
   }
 
-  public addCategory(data: any[]) {
+  public addCategory(category?: any[]) {
     const name = prompt('Add new category', 'Category');
-    if (name) {
-      data.push({
-        name: name,
-        type: 'expense',
-        keywords: [],
-        excludeKeywords: [],
-        subCategories: [],
-        isDefault: false,
-        icon: 'fa fa-question',
-      });
+    var elementToAdd = category ? category : this.dataState.categories;
+      if (name) {
+        elementToAdd.push({
+          name: name,
+          type: 'expense',
+          keywords: [],
+          excludeKeywords: [],
+          subCategories: [],
+          isDefault: false,
+          icon: 'fa fa-question',
+        });
+      
     }
   }
 }
