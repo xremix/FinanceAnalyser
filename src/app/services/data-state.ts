@@ -3,6 +3,7 @@ import { Transaction } from '../models/transaction';
 import { DateService } from './date-service';
 import { BaseCategory, Category, mapBaseCategoryToCategory, mapCategoryToBaseCategory } from '../models/category';
 import { defaultCategories } from '../default-categories';
+import { ImportService } from './import-services/import-service';
 // import { availableCategories } from 'env';
 
 export interface DateFilter {
@@ -28,7 +29,8 @@ export class DataState {
   public monthStarts: Date[] = [];
   public categories: Category[] = [];
 
-  constructor(private dateService: DateService) {}
+  constructor(private dateService: DateService
+  ) {}
 
   get hasLoadedData(): boolean {
     return this._transactions.length > 0;
@@ -154,13 +156,5 @@ export class DataState {
     this.refresh();
   }
 
-  public loadCategoriesFromLocalStorage() {
-    let baseCategories: BaseCategory[] = localStorage.getItem('categories') ? JSON.parse(localStorage.getItem('categories')!) : defaultCategories;
-    this.categories = baseCategories.map((c) => mapBaseCategoryToCategory(c));
-  }
 
-  public saveCategoriesToLocalStorage() {
-    let baseCategories: BaseCategory[] = this.categories.map((c) => mapCategoryToBaseCategory(c));
-    localStorage.setItem('categories', JSON.stringify(baseCategories));
-  }
 }

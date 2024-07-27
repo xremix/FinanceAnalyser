@@ -5,6 +5,8 @@ import { CategoryService } from '../category-service';
 import { IngImporter } from './ing-importer';
 import { SpkImporter } from './spk-importer';
 import { Importer } from './importer';
+import { defaultCategories } from 'src/app/default-categories';
+import { BaseCategory, mapBaseCategoryToCategory, mapCategoryToBaseCategory } from 'src/app/models/category';
 @Injectable({
   providedIn: 'root',
 })
@@ -52,4 +54,21 @@ export class ImportService {
   }
 
   constructor(private categoryService: CategoryService, private dataState: DataState) {}
+
+
+  public loadFromLocalStorage(){
+    this.loadCategoriesFromLocalStorage();
+    this.loadFileFromLocalStorage();
+
+  }
+
+  private loadCategoriesFromLocalStorage() {
+    let baseCategories: BaseCategory[] = localStorage.getItem('categories') ? JSON.parse(localStorage.getItem('categories')!) : defaultCategories;
+    this.dataState.categories = baseCategories.map((c) => mapBaseCategoryToCategory(c));
+  }
+
+  public saveCategoriesToLocalStorage() {
+    let baseCategories: BaseCategory[] = this.dataState.categories.map((c) => mapCategoryToBaseCategory(c));
+    localStorage.setItem('categories', JSON.stringify(baseCategories));
+  }
 }

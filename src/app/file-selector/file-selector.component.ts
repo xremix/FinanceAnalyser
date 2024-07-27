@@ -21,7 +21,7 @@ export class FileSelectorComponent implements OnInit {
     this.importService.loadFileFromLocalStorage();
   }
   ngOnInit(): void {
-    this.importService.loadFileFromLocalStorage();
+    
   }
 
 }

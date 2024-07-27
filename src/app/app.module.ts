@@ -16,6 +16,9 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { CategoryChartComponent } from './category-chart/category-chart.component';
 import { CategorySelectComponent } from "./category-select/category-select.component";
 import { TransactionOverviewComponent } from './transaction-overview/transaction-overview.component';
+import { HomeComponentComponent } from './home-component/home-component.component';
+import { SettingsComponentComponent } from './settings-component/settings-component.component';
+import { provideRouter, RouterOutlet } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -25,6 +28,8 @@ import { TransactionOverviewComponent } from './transaction-overview/transaction
     CategoryOverviewComponentComponent,
     CategoryComponentComponent,
     TransactionOverviewComponent,
+    HomeComponentComponent,
+    SettingsComponentComponent,
     OrderByPipe,
   ],
   imports: [
@@ -35,9 +40,14 @@ import { TransactionOverviewComponent } from './transaction-overview/transaction
     MatDatepickerModule,
     FormsModule,
     BrowserAnimationsModule,
-    CategorySelectComponent
+    CategorySelectComponent,
+    RouterOutlet
 ],
-  providers: [provideNativeDateAdapter(), provideAnimationsAsync()],
+  providers: [provideNativeDateAdapter(), provideAnimationsAsync(), provideRouter([
+    
+{path: '', component: HomeComponentComponent},
+{path: 'settings', component: SettingsComponentComponent},
+  ])],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
