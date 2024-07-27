@@ -19,12 +19,12 @@
     </div>
     <div *ngIf="category.keywords.length > 0">
         Include<br/>
-        <div *ngFor="let keyword of category.keywords" class="badge rounded-pill text-bg-primary">{{keyword}}</div>
-        
+        <div *ngFor="let keyword of category.keywords" class="badge rounded-pill p-2 text-bg-primary" role="button" (click)="removeKeyWord(category.keywords, keyword)">{{keyword}}</div>
+        <button class="btn btn-success btn-sm" (click)="addKeyWord(category.keywords)">Add</button>
     </div>
     <div *ngIf="category.excludeKeywords?.length > 0">
         Exclude<br/>
-        <div *ngFor="let keyword of category.excludeKeywords" class="badge rounded-pill text-bg-danger">{{keyword}}</div>
-        
+        <div *ngFor="let keyword of category.excludeKeywords" class="badge rounded-pill p-2 text-bg-danger" role="button" (click)="removeKeyWord(category.excludeKeywords, keyword)">{{keyword}}</div>
+        <button class="btn btn-success btn-sm" (click)="addKeyWord(category.excludeKeywords)">Add</button>
     </div>
 </ng-template>

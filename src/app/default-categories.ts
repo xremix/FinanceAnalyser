@@ -6,6 +6,7 @@ export const defaultCategories: BaseCategory[] = [
     icon: 'fa-solid fa-money-bill-trend-up',
     subCategories: [],
     type: 'income',
+    excludeKeywords: [],
     keywords: [],
   },
   {
@@ -16,6 +17,7 @@ export const defaultCategories: BaseCategory[] = [
         name: 'Sonstiges',
         subCategories: [],
         type: 'expense',
+        excludeKeywords: [],
         keywords: [],
         isDefault: true,
       },
@@ -23,6 +25,7 @@ export const defaultCategories: BaseCategory[] = [
         name: 'Kreditkartenabrechnung',
         subCategories: [],
         type: 'expense',
+        excludeKeywords: [],
         keywords: ['Kreditkartenabrechnung'],
       },
       {
@@ -34,6 +37,7 @@ export const defaultCategories: BaseCategory[] = [
       },
     ],
     type: 'expense',
+    excludeKeywords: [],
     keywords: [],
   },
   {
@@ -41,6 +45,7 @@ export const defaultCategories: BaseCategory[] = [
     icon: 'fa-solid fa-coins',
     subCategories: [],
     type: 'savings',
+    excludeKeywords: [],
     keywords: [
       'Sparen',
       'Sparplan',
@@ -111,6 +116,7 @@ export const defaultCategories: BaseCategory[] = [
         name: 'Kleidung',
         subCategories: [],
         type: 'expense',
+        excludeKeywords: [],
         keywords: [
           'Adidas',
           'Bench',
@@ -155,12 +161,14 @@ export const defaultCategories: BaseCategory[] = [
         name: 'Freizeit',
         subCategories: [],
         type: 'expense',
+        excludeKeywords: [],
         keywords: ['Thalia', 'Buecher', 'Buchhandlung', 'Kino', 'Konzert', 'Museum', 'Theater', 'Eventim', 'Ticket']
       },
       {
         name: 'Geschenke',
         subCategories: [],
         type: 'expense',
+        excludeKeywords: [],
         keywords: ['Geschenk', 'Spielwaren', 'Geburtstag', 'Weihnachten', 'Schreibwaren', 'Blumen'],
       },
       {
@@ -189,24 +197,28 @@ export const defaultCategories: BaseCategory[] = [
       },
     ],
     type: 'expense',
+    excludeKeywords: [],
     keywords: [],
   },
   {
     name: 'Essen & Trinken',
     icon: 'fa-solid fa-burger',
     type: 'expense',
+    excludeKeywords: [],
     keywords: [],
     subCategories: [
       {
         name: 'Tiere',
         subCategories: [],
         type: 'expense',
+        excludeKeywords: [],
         keywords: ['Fressnapf', 'Tierarzt', 'Tier', 'Zooplus', 'Dr.Med.Vet'],
       },
       {
         name: 'Restaurant',
         subCategories: [],
         type: 'expense',
+        excludeKeywords: [],
         keywords: [
           'Burger',
           'Cafe',
@@ -235,6 +247,7 @@ export const defaultCategories: BaseCategory[] = [
         name: 'Lebensmittel',
         subCategories: [],
         type: 'expense',
+        excludeKeywords: [],
         keywords: [
           'Aldi',
           'Back',
@@ -267,6 +280,7 @@ export const defaultCategories: BaseCategory[] = [
         name: 'Apotheke',
         subCategories: [],
         type: 'expense',
+        excludeKeywords: [],
         keywords: ['Apotheke'],
       },
       {
@@ -335,28 +349,33 @@ export const defaultCategories: BaseCategory[] = [
         name: 'Strom',
         subCategories: [],
         type: 'expense',
+        excludeKeywords: [],
         keywords: ['Strom', 'Energie', 'E.ON', 'Stadtwerke', 'SWM', 'EnBW', 'Yello'],
       },
       {
         name: 'Internet',
         subCategories: [],
         type: 'expense',
+        excludeKeywords: [],
         keywords: ['Vodafone', 'Congstar', 'Telekom', 'O2', 'Telefonica', 'Kabel Deutschland', 'Unitymedia', '1und1'],
       },
       {
         name: 'Streaming',
         subCategories: [],
         type: 'expense',
+        excludeKeywords: [],
         keywords: ['Spotify', 'Netflix', 'Prime Video', 'Disney', 'Sky', 'Maxdome', 'Apple Music', 'YouTube'],
       },
       {
         name: 'Rundfunk',
         subCategories: [],
         type: 'expense',
+        excludeKeywords: [],
         keywords: ['Rundfunk', 'GEZ'],
       },
     ],
     type: 'expense',
+    excludeKeywords: [],
     keywords: [],
   },
 
@@ -368,12 +387,14 @@ export const defaultCategories: BaseCategory[] = [
         name: 'Bus & Bahn',
         subCategories: [],
         type: 'expense',
+        excludeKeywords: [],
         keywords: ['MVG', 'MVV', 'DB', 'Bahn', 'Bus', 'Tram', 'U-Bahn', 'S-Bahn'],
       },
       {
         name: 'Tanken',
         subCategories: [],
         type: 'expense',
+        excludeKeywords: [],
         keywords: [
           'AGIP',
           'Allguth',
@@ -392,6 +413,7 @@ export const defaultCategories: BaseCategory[] = [
         name: 'Steuer etc.',
         subCategories: [],
         type: 'expense',
+        excludeKeywords: [],
         keywords: ['Kfz-Steuer', 'ADAC', 'TÜV', 'Dekra'],
       },
       {
@@ -405,10 +427,12 @@ export const defaultCategories: BaseCategory[] = [
         name: 'Fahrrad',
         subCategories: [],
         type: 'expense',
+        excludeKeywords: [],
         keywords: ['Fahrrad'],
       },
     ],
     type: 'expense',
+    excludeKeywords: [],
     keywords: [],
   },
   {
@@ -446,6 +470,7 @@ export const defaultCategories: BaseCategory[] = [
     icon: 'fa-solid fa-house-chimney',
     subCategories: [],
     type: 'expense',
+    excludeKeywords: [],
     keywords: ['Miete', 'Nebenkosten', 'Wohnung'],
   },
 ];

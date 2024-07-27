@@ -5,7 +5,7 @@ export interface BaseCategory{
     name: string;
     type: 'savings' | 'income' | 'expense';
     keywords: string[];
-    excludeKeywords?: string[];
+    excludeKeywords: string[];
     subCategories: BaseCategory[];
     isDefault?: boolean;
     icon?: string;
@@ -15,7 +15,7 @@ export interface Category extends BaseCategory{
     name: string;
     type: 'savings' | 'income' | 'expense';
     keywords: string[];
-    excludeKeywords?: string[];
+    excludeKeywords: string[];
     subCategories: Category[];
     total: number;
     transactions: Transaction[];

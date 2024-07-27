@@ -17,4 +17,18 @@ export class SettingsComponentComponent implements OnInit {
   public save() {
     this.importService.saveCategoriesToLocalStorage(this.json);
   }
+
+  public addKeyWord(data: string[]){
+    const x = prompt('Add new category', 'Category');
+    if (x) {
+      data.push(x);
+    }
+  }
+  public removeKeyWord(data: string[], keyword: string){
+    const index = data.indexOf(keyword);
+    if (index > -1) {
+      data.splice(index, 1);
+    }
+  }
+
 }
