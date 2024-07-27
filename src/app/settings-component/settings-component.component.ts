@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataState } from '../services/data-state';
 import { ImportService } from '../services/import-services/import-service';
 import { defaultCategories } from '../default-categories';
+import { BaseCategory, Category } from '../models/category';
 
 @Component({
   selector: 'app-settings-component',
@@ -55,7 +56,6 @@ export class SettingsComponentComponent implements OnInit {
   }
 
   public fillCategoriesWithDefaults() {
-    // const defaults = defaultCategories;
     const flatDefaults = [...defaultCategories, ...defaultCategories.flatMap((c) => c.subCategories || [])];
     for (const category of this.dataState.categories) {
       for (const defaultCategory of flatDefaults) {
@@ -65,17 +65,18 @@ export class SettingsComponentComponent implements OnInit {
       }
     }
   }
-      
 
-  private fillupCategory(category: any, defaultCategory: any) {
+  private fillupCategory(category: Category, defaultCategory: BaseCategory) {
     for (const keyw of defaultCategory.keywords) {
-      if (!category.keywords.includes(keyw)) {
+      if (!category.keywords.map(x => x.toLowerCase()).includes(keyw.toLowerCase())) {
         category.keywords.push(keyw);
+        console.log('added keyword', keyw, 'to', category.name);
       }
     }
     for (const keyw of defaultCategory.excludeKeywords) {
-      if (!category.excludeKeywords.includes(keyw)) {
+      if (!category.excludeKeywords.map(x => x.toLowerCase()).includes(keyw.toLocaleLowerCase())) {
         category.excludeKeywords.push(keyw);
+        console.log('added exclude keyword', keyw, 'to', category.name);
       }
     }
   }
