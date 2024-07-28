@@ -80,4 +80,9 @@ export class SettingsComponentComponent implements OnInit {
       }
     }
   }
+
+  public editIcon(category: Category){
+    const icon = prompt('Edit icon', category.icon);
+      category.icon = icon ?? '';
+  }
 }

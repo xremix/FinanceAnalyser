@@ -15,7 +15,7 @@
             
         </div>
         <div class="col-md-3 text-end">
-            <div class="text-end fw-bold" [ngClass]="{'text-warning': transaction.category?.name === 'Sonstiges'}">{{transaction.category?.name}}</div>
+            <div class="text-end fw-bold" [ngClass]="{'text-warning': transaction.category?.name === 'Sonstiges'}" (click)="showMatchingKeywords(transaction)">{{transaction.category?.name}}</div>
             <div><span class="badge" [ngClass]="{'text-bg-success': transaction.amount > 0, 'text-bg-warning': transaction.amount < 0}">{{transaction.amount | currency:'EUR'}}</span></div>
         </div>
     </div>

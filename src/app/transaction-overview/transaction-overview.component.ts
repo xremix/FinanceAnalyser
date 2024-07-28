@@ -13,7 +13,6 @@ export class TransactionOverviewComponent {
     all: false,
     reoccurent: false,
   };
-  constructor(protected dataState: DataState, ) {}
-  
+  constructor(protected dataState: DataState) {}
 
 }
