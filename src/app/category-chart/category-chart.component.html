@@ -1,6 +1,5 @@
 <div *ngIf="labels.length && series.length" class="text-center">
-    <!--The content below is only a placeholder and can be replaced.-->
-    <div id="chart m-auto" style="max-width: 500px;">
-        <apx-chart [series]="series" [chart]="chartOptions.chart" [labels]="labels" [responsive]="chartOptions.responsive"></apx-chart>
+    <div id="chart m-auto">
+        <apx-chart [series]="series" [chart]="chartOptions.chart" [labels]="labels" [legend]="chartOptions.legend"></apx-chart>
     </div>
 </div>

@@ -9,7 +9,7 @@
             <span *ngIf="dupllicates.length > 0" class="opacity-50" style="font-weight: 0.6rem;">
                 <br/>Auch verbucht am
                 <span *ngFor="let duplicate of dupllicates; let last = last">
-                    {{duplicate.bookingDate | date: 'MMMM'}}<span *ngIf="!last">, </span>
+                    {{duplicate.bookingDate | date: 'MMMM YY'}}<span *ngIf="!last">, </span>
                 </span> 
             </span>
             

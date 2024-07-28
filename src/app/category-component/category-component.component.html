@@ -1,7 +1,7 @@
 <div *ngIf="calculatedTotal != 0">
     <div class="row fs-4" (click)="expanded = !expanded" role="button">
         <div class="col">
-            <span class="badge text-bg-primary me-2" style="min-width:50px" *ngIf="categorySummary?.icon"><i  [class]="categorySummary.icon"></i></span>
+            <span class="badge text-bg-primary me-2" style="min-width:50px" *ngIf="categorySummary?.icon"><i [class]="categorySummary.icon"></i></span>
             <a class="text-primary p-0 fs-4">
                 <span>{{categorySummary.name}}</span>
             </a>
@@ -9,7 +9,8 @@
 
         <div class="col text-end">
             <span class="opacity-25 fs-5 me-2" *ngIf="amountMonths > 1">⌀ {{(calculatedTotal / amountMonths) | currency:'EUR'}}</span>
-            <span class="badge" [ngClass]="{'text-bg-success': calculatedTotal > 0, 'text-bg-warning': calculatedTotal < 0}">{{calculatedTotal | currency:'EUR'}}</span>
+            <span class="badge" [ngClass]="{'text-bg-success': calculatedTotal > 0, 'text-bg-warning': calculatedTotal < 0}">{{calculatedTotal |
+                currency:'EUR'}}</span>
         </div>
     </div>
 
@@ -19,9 +20,9 @@
         </div>
     </div>
 
-    <div *ngIf="!categorySummary.subCategories?.length && expanded">
+    <div *ngIf="!categorySummary.subCategories?.length && expanded" class="ms-4 ps-4">
         <ng-container *ngFor="let transaction of activeTransactions | orderBy: 'amount'">
-        <app-transaction-component  [transaction]="transaction"></app-transaction-component>
+            <app-transaction-component [transaction]="transaction"></app-transaction-component>
         </ng-container>
     </div>
 </div>
