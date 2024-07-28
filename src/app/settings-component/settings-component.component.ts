@@ -48,7 +48,7 @@ export class SettingsComponentComponent implements OnInit {
           excludeKeywords: [],
           subCategories: [],
           isDefault: false,
-          icon: 'fa fa-question',
+          icon: '',
         });
       
     }
