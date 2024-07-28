@@ -20,9 +20,8 @@ export class SettingsComponentComponent implements OnInit {
     this.importService.saveCategoriesToLocalStorage(this.json);
   }
   public saveState() {
-    // let x = categorisAsJson
-    const x = this.importService.categorisAsJson();
-    this.importService.saveCategoriesToLocalStorage(x);
+    this.importService.saveCategoriesToLocalStorage(this.importService.categorisAsJson());
+    alert('Saved');
   }
 
   public addKeyWord(data: string[]) {

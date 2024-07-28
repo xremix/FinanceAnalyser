@@ -15,7 +15,7 @@ export class HomeComponentComponent {
 
   public tabs: string[] = [
     'Kategorien',
-    'Monatlich wiederkehrend',
+    'Wiederkehrende',
     'Alle'
   ];
   public activeTab: string = this.tabs[0];
@@ -32,17 +32,9 @@ export class HomeComponentComponent {
     return this.dataState.currentFilter.from.getTime() === date.from.getTime() && this.dataState.currentFilter.to.getTime() === date.to.getTime();
   }
 
-
-
   public refreshData(){
     this.dataState.refresh();
   }
-
-
-
-  // this.today = new Date();
-  // this.sixMonthsAgo = new Date();
-  // this.sixMonthsAgo.setMonth(this.today.getMonth() - 6);
 
   openDatePicker(dp: any) {
     dp.open();
@@ -51,11 +43,5 @@ export class HomeComponentComponent {
   closeDatePicker(eventData: any, dp?:any) {
     // get month and year from eventData and close datepicker, thus not allowing user to select date
     dp.close();    
-  }
-  duplicateTransactions: Transaction[] = [];
-
-  showDuplicates() {
-    this.duplicateTransactions = this.duplicateService.findDuplicateTransactions();
-
   }
 }

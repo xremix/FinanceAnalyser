@@ -4,6 +4,7 @@ import { DateService } from './date-service';
 import { BaseCategory, Category, mapBaseCategoryToCategory, mapCategoryToBaseCategory } from '../models/category';
 import { defaultCategories } from '../default-categories';
 import { ImportService } from './import-services/import-service';
+import { DuplicateService } from './duplicate-service';
 // import { availableCategories } from 'env';
 
 export interface DateFilter {
@@ -24,13 +25,13 @@ export interface DataFilter {
 })
 export class DataState {
   private _transactions: Transaction[] = [];
+  public duplicates: Transaction[] = [];
 
   public months: DateFilter[] = [];
   public monthStarts: Date[] = [];
   public categories: Category[] = [];
 
-  constructor(private dateService: DateService
-  ) {}
+  constructor(private dateService: DateService, private duplicateService: DuplicateService) {}
 
   get hasLoadedData(): boolean {
     return this._transactions.length > 0;
@@ -44,6 +45,10 @@ export class DataState {
     this._transactions = value;
     this.months = this.dateService.getMonths(this._transactions);
     this.monthStarts = this.months.map((m) => m.from);
+    this.findDuplicates();
+  }
+  private findDuplicates(){
+    this.duplicates = this.duplicateService.findDuplicateTransactions(this.selectedTransactions);
   }
 
   // event emitter when selected transactions change
@@ -81,6 +86,7 @@ export class DataState {
 
   public refresh() {
     this.selectedTransactions = this.transactions.filter((t) => this.showTransaction(t));
+    this.findDuplicates();
     this.selectedTransactionsChanged.emit(this.selectedTransactions);
   }
 

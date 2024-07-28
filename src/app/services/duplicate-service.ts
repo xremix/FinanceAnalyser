@@ -6,12 +6,12 @@ import { DataState, DateFilter } from './data-state';
   providedIn: 'root',
 })
 export class DuplicateService {
-    constructor(private dataState: DataState) { }
-    findDuplicateTransactions() {
+
+    findDuplicateTransactions(selectedTransactions: Transaction[]): Transaction[] {
     // check where amount and payer/receiver are the same
     // always just return the first of the similar transactions
     const duplicates = [];
-    const transactions = this.dataState.selectedTransactions;
+    const transactions = selectedTransactions;
     for (let i = 0; i < transactions.length; i++) {
       console.log('checking', transactions[i]);
       if(this.foundDuplicates(transactions[i], transactions).length  >= 3) {

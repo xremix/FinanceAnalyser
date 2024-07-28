@@ -5,9 +5,6 @@
 
 <div *ngIf="dataState.hasLoadedData">
 
-
-  <h2>Zeitraum wählen</h2>
-
   <div>
     <mat-form-field>
       <mat-date-range-input [rangePicker]="picker">
@@ -59,38 +56,32 @@
     <li class="nav-item" *ngFor="let tab of tabs">
       <a class="nav-link" [ngClass]="{'active': tab == activeTab}" aria-current="page" href="#" (click)="activeTab = tab">{{tab}}</a>
     </li>
-    <!-- <li class="nav-item">
-        <a class="nav-link" href="#">Monatlich wiederkehrend</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Alle</a>
-      </li> -->
+
   </ul>
-  <div class="border-bottom mb-3">
-    <h2>Kategorien</h2>
-    <!-- Chart -->
-    <!-- Elements -->
+  <div class="border-start border-bottom border-end p-3">
     <div *ngIf="activeTab == 'Kategorien'">
+      <h2>Kategorien</h2>
       <app-category-overview-component *ngIf="!dataState.currentFilter.category" [amountMonths]="dataState.selectedMonthAmountInDataRangeFilter"
         [categorySummaries]="dataState.categories"></app-category-overview-component>
-        <app-category-component *ngIf="dataState.currentFilter.category" [amountMonths]="dataState.selectedMonthAmountInDataRangeFilter"
+      <app-category-component *ngIf="dataState.currentFilter.category" [amountMonths]="dataState.selectedMonthAmountInDataRangeFilter"
         [categorySummary]="dataState.currentFilter.category" [expanded]="true"></app-category-component>
     </div>
 
-    <div *ngIf="activeTab == 'Monatlich wiederkehrend'">
+    <div *ngIf="activeTab == 'Wiederkehrende'">
+      <h2>Wiederkehrende</h2>
       <div class="row">
         <div class="col">
-          <button class="btn btn-link p-0" (click)="showDuplicates()">Laden</button>
 
-          <app-transaction-component *ngFor="let transaction of duplicateTransactions | orderBy: 'amount'" [transaction]="transaction">
+          <app-transaction-component *ngFor="let transaction of dataState.duplicates | orderBy: 'amount'" [transaction]="transaction">
           </app-transaction-component>
         </div>
       </div>
-      
+
 
     </div>
     <div *ngIf="activeTab == 'Alle'">
       <!-- <app-transaction-overview></app-transaction-overview> -->
+      <h2>Alle</h2>
 
       <div class="row">
         <div class="col">
