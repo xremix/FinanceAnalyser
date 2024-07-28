@@ -9,39 +9,37 @@ import { DuplicateService } from '../services/duplicate-service';
 @Component({
   selector: 'app-home-component',
   templateUrl: './home-component.component.html',
-  styleUrl: './home-component.component.scss'
+  styleUrl: './home-component.component.scss',
 })
 export class HomeComponentComponent {
-
-  public tabs: string[] = [
-    'Kategorien',
-    'Wiederkehrende',
-    'Alle'
-  ];
+  public tabs: string[] = ['Kategorien', 'Wiederkehrende', 'Alle'];
   public activeTab: string = this.tabs[0];
 
-  constructor(protected dataState: DataState, private importService: ImportService,protected categoryService: CategoryService, protected dateService: DateService, private duplicateService: DuplicateService) {
-    //importService.loadFromLocalStorage();
+  constructor(
+    protected dataState: DataState,
+    protected categoryService: CategoryService,
+    protected dateService: DateService
+  ) {}
+
+  hasSelectedMonth(): boolean {
+    return (
+      this.dataState.currentFilter.from !== undefined &&
+      this.dataState.currentFilter.to !== undefined &&
+      this.dataState.currentFilter.from.getMonth() === this.dataState.currentFilter.to.getMonth() && this.dataState.currentFilter.from.getFullYear() === this.dataState.currentFilter.to.getFullYear()
+    );
   }
-  
   isSelectedMonth(date: DateFilter): boolean {
     if (!this.dataState.currentFilter.from || !this.dataState.currentFilter.to) {
       return false;
     }
-    
-    return this.dataState.currentFilter.from.getTime() === date.from.getTime() && this.dataState.currentFilter.to.getTime() === date.to.getTime();
+
+    return (
+      this.dataState.currentFilter.from.getTime() === date.from.getTime() &&
+      this.dataState.currentFilter.to.getTime() === date.to.getTime()
+    );
   }
 
-  public refreshData(){
+  public refreshData() {
     this.dataState.refresh();
-  }
-
-  openDatePicker(dp: any) {
-    dp.open();
-  }
-
-  closeDatePicker(eventData: any, dp?:any) {
-    // get month and year from eventData and close datepicker, thus not allowing user to select date
-    dp.close();    
   }
 }
