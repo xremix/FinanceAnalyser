@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -26,31 +26,34 @@ import { DataState } from '../services/data-state';
   templateUrl: './history-income-chart.component.html',
   styleUrl: './history-income-chart.component.scss',
 })
-export class HistoryIncomeChartComponent implements OnInit, OnChanges{
+export class HistoryIncomeChartComponent implements OnInit, OnChanges {
   @Input() dates: Date[] = [];
   @Input() transactions: Transaction[] = [];
+  @Output() triggerRefresh: EventEmitter<void> = new EventEmitter<void>();
 
   @ViewChild('chart') chart!: ChartComponent;
   public chartOptions!: ChartOptions;
 
-  
   public categories: ApexXAxis = {
     categories: [],
   };
-  public series: ApexAxisChartSeries = [{
-    name: "X",
-    data: [],
-  }];
+  public series: ApexAxisChartSeries = [
+    {
+      name: 'X',
+      data: [],
+    },
+  ];
 
-  private refresh(){
+
+  private refresh() {
     this.categories.categories = this.dates.map((d) => d.toLocaleDateString());
-    if(this.dates.length === 0) return;
-    
+    if (this.dates.length === 0) return;
+
     this.series = [
       {
         name: 'Ausgabe',
         // takes the dates and filters the transactions for the month
-        data: [2, 33]
+        data: [2, 33],
       },
     ];
     this.series = [
@@ -58,30 +61,40 @@ export class HistoryIncomeChartComponent implements OnInit, OnChanges{
         name: 'Ausgabe',
         // takes the dates and filters the transactions for the month
         data: this.dates.map((d) => {
-          return this.transactions
-            .filter((t) => t.bookingDate.getMonth() === d.getMonth() && t.bookingDate.getFullYear() === d.getFullYear())
-            // only negative transactions
-            .filter((t) => t.amount < 0)
-            .reduce((acc, t) => acc + (t.amount * -1 | 0), 0);
+          return (
+            this.transactions
+              .filter(
+                (t) => t.bookingDate.getMonth() === d.getMonth() && t.bookingDate.getFullYear() === d.getFullYear()
+              )
+              // only negative transactions
+              .filter((t) => t.amount < 0)
+              .reduce((acc, t) => acc + ((t.amount * -1) | 0), 0)
+          );
         }),
         color: '#E75454',
-      }, {
+      },
+      {
         name: 'Einnahmen',
         // takes the dates and filters the transactions for the month
         data: this.dates.map((d) => {
-          return this.transactions
-          .filter((t) => t.bookingDate.getMonth() === d.getMonth() && t.bookingDate.getFullYear() === d.getFullYear())
-            // only negative transactions
-            .filter((t) => t.amount >= 0)
-            .reduce((acc, t) => acc + (t.amount | 0), 0);
+          return (
+            this.transactions
+              .filter(
+                (t) => t.bookingDate.getMonth() === d.getMonth() && t.bookingDate.getFullYear() === d.getFullYear()
+              )
+              // only negative transactions
+              .filter((t) => t.amount >= 0)
+              .reduce((acc, t) => acc + (t.amount | 0), 0)
+          );
         }),
-        color: '#54E7A7'
+        color: '#54E7A7',
       },
     ];
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes["dates"] || changes["transactions"]) {
+    console.log('changes', changes);
+    if (changes['dates'] || changes['transactions']) {
       this.refresh();
     }
   }
@@ -94,8 +107,8 @@ export class HistoryIncomeChartComponent implements OnInit, OnChanges{
     // });
   }
 
-
   constructor(private dataState: DataState) {
+    var self = this;
     this.chartOptions = {
       legend: {
         position: 'top',
@@ -106,6 +119,14 @@ export class HistoryIncomeChartComponent implements OnInit, OnChanges{
       chart: {
         type: 'bar',
         height: 350,
+        events: {
+          dataPointSelection: function (event, chartContext, config) {
+            var ix = config.dataPointIndex;
+            self.dataState.filterByDay(self.dates[ix]);
+            // self.cds.detectChanges();
+            self.triggerRefresh.emit();
+          },
+        },
       },
       plotOptions: {
         bar: {
@@ -129,9 +150,9 @@ export class HistoryIncomeChartComponent implements OnInit, OnChanges{
           text: '$ (thousands)',
         },
         labels: {
-          formatter:  function(val, index) {
+          formatter: function (val, index) {
             return val.toFixed(2);
-          }
+          },
         },
         decimalsInFloat: 2,
       },

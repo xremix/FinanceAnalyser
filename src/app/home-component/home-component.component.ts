@@ -1,10 +1,7 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CategoryService } from '../services/category-service';
 import { DataState, DateFilter } from '../services/data-state';
 import { DateService } from '../services/date-service';
-import { ImportService } from '../services/import-services/import-service';
-import { Transaction } from '../models/transaction';
-import { DuplicateService } from '../services/duplicate-service';
 
 @Component({
   selector: 'app-home-component',
@@ -18,7 +15,8 @@ export class HomeComponentComponent {
   constructor(
     protected dataState: DataState,
     protected categoryService: CategoryService,
-    protected dateService: DateService
+    protected dateService: DateService,
+    private cds: ChangeDetectorRef
   ) {}
 
   hasSelectedMonth(): boolean {
@@ -37,5 +35,9 @@ export class HomeComponentComponent {
       this.dataState.currentFilter.from.getTime() === date.from.getTime() &&
       this.dataState.currentFilter.to.getTime() === date.to.getTime()
     );
+  }
+
+  refreshPage(){
+this.cds.detectChanges();
   }
 }

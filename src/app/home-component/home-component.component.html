@@ -53,7 +53,7 @@
 
   <div class="row">
     <div class="col-md-8">
-      <app-history-chart [dates]="dataState.monthStarts" [transactions]="dataState.selectedTransactions"></app-history-chart>
+      <app-history-chart [dates]="dataState.monthStarts" [transactions]="dataState.selectedTransactions" (triggerRefresh)="refreshPage()"></app-history-chart>
     </div>
     <div class="col-md-4">
       <app-category-chart [data]="dataState.categories"></app-category-chart>

@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { ChangeDetectorRef, EventEmitter, Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction';
 import { DateService } from './date-service';
 import { Category  } from '../models/category';
@@ -108,6 +108,14 @@ export class DataState {
       this.currentFilter.to = dateFilter.to;
     }
     this.refresh();
+  }
+  filterByDay(date: Date) {
+    let firstOfMonth = new Date(date);
+    firstOfMonth.setDate(1);
+    let lastOfMonth = new Date(firstOfMonth);
+    lastOfMonth.setMonth(lastOfMonth.getMonth() + 1);
+    lastOfMonth.setDate(-1);
+    this.filterByDateFilter({ from: firstOfMonth, to: lastOfMonth, name: date.toLocaleDateString() });
   }
 
   filterByCategory(category: Category) {
