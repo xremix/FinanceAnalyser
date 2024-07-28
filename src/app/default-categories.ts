@@ -1,7 +1,6 @@
-import { availableCategories } from 'env';
 import { BaseCategory } from './models/category';
 
-export const defaultCategories: BaseCategory[] = availableCategories;
+export const defaultCategories: BaseCategory[] = 
 [
   {
     name: 'Einkommen',
@@ -132,7 +131,7 @@ export const defaultCategories: BaseCategory[] = availableCategories;
           'Avis',
           'Europcar',
         ],
-        excludeKeywords: [],
+        excludeKeywords: ['GUTMANN ENI'],
       },
       {
         name: 'Kleidung',

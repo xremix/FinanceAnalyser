@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction';
 import { Category } from '../models/category';
-import { availableCategories } from '../../../env';
 import { DataState } from './data-state';
 @Injectable({
   providedIn: 'root',

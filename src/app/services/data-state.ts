@@ -1,11 +1,9 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction';
 import { DateService } from './date-service';
-import { BaseCategory, Category, mapBaseCategoryToCategory, mapCategoryToBaseCategory } from '../models/category';
-import { defaultCategories } from '../default-categories';
-import { ImportService } from './import-services/import-service';
+import { Category  } from '../models/category';
+
 import { DuplicateService } from './duplicate-service';
-// import { availableCategories } from 'env';
 
 export interface DateFilter {
   from: Date;
