@@ -76,7 +76,7 @@
     </li>
 
   </ul>
-  <div class="border-start border-bottom border-end bg-white p-3">
+  <div class="border-start border-bottom border-end bg-white py-1 px-4">
     <div *ngIf="activeTab == 'Kategorien'">
       <h2>Kategorien</h2>
       <app-category-overview-component *ngIf="!dataState.currentFilter.category" [amountMonths]="dataState.selectedMonthAmountInDataRangeFilter"

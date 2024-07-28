@@ -51,22 +51,6 @@ export class HistoryIncomeChartComponent implements OnInit, OnChanges {
 
     this.series = [
       {
-        name: 'Ausgabe',
-        // takes the dates and filters the transactions for the month
-        data: this.dates.map((d) => {
-          return (
-            this.transactions
-              .filter(
-                (t) => t.bookingDate.getMonth() === d.getMonth() && t.bookingDate.getFullYear() === d.getFullYear()
-              )
-              // only negative transactions
-              .filter((t) => t.amount < 0)
-              .reduce((acc, t) => acc + ((t.amount * -1) | 0), 0)
-          );
-        }),
-        color: '#E75454',
-      },
-      {
         name: 'Einnahmen',
         // takes the dates and filters the transactions for the month
         data: this.dates.map((d) => {
@@ -82,6 +66,23 @@ export class HistoryIncomeChartComponent implements OnInit, OnChanges {
         }),
         color: '#54E7A7',
       },
+      {
+        name: 'Ausgabe',
+        // takes the dates and filters the transactions for the month
+        data: this.dates.map((d) => {
+          return (
+            this.transactions
+              .filter(
+                (t) => t.bookingDate.getMonth() === d.getMonth() && t.bookingDate.getFullYear() === d.getFullYear()
+              )
+              // only negative transactions
+              .filter((t) => t.amount < 0)
+              .reduce((acc, t) => acc + ((t.amount * -1) | 0), 0)
+          );
+        }),
+        color: '#E75454',
+      },
+     
     ];
   }
 
@@ -115,7 +116,6 @@ export class HistoryIncomeChartComponent implements OnInit, OnChanges {
           dataPointSelection: function (event, chartContext, config) {
             var ix = config.dataPointIndex;
             self.dataState.filterByDay(self.dates[ix]);
-            // self.cds.detectChanges();
             self.triggerRefresh.emit();
           },
         },
@@ -128,11 +128,6 @@ export class HistoryIncomeChartComponent implements OnInit, OnChanges {
       },
       dataLabels: {
         enabled: false,
-      },
-      stroke: {
-        show: true,
-        width: 2,
-        colors: ['transparent'],
       },
       xaxis: {
         categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
@@ -170,7 +165,6 @@ export type ChartOptions = {
   xaxis: ApexXAxis;
   fill: ApexFill;
   tooltip: ApexTooltip;
-  stroke: ApexStroke;
   legend: ApexLegend;
   title: ApexTitleSubtitle;
 };

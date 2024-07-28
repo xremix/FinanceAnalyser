@@ -168,7 +168,7 @@ export const defaultCategories: BaseCategory[] = [
         subCategories: [],
         type: 'expense',
         excludeKeywords: [],
-        keywords: ['Thalia', 'Buecher', 'Buchhandlung', 'Kino', 'Konzert', 'Museum', 'Theater', 'Eventim', 'Ticket'],
+        keywords: ['Thalia', 'Buecher', 'Buchhandlung', 'Kino', 'Konzert', 'Museum', 'Theater', 'Eventim'],
       },
       {
         name: 'Geschenke',
@@ -248,6 +248,7 @@ export const defaultCategories: BaseCategory[] = [
           'Doener',
           'Essen',
           'Five Guys',
+          'Gasthaus',
           'Gastronomie',
           'Hofpfisterei',
           'Kaffee',
