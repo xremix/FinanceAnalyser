@@ -51,14 +51,11 @@ export class CategoryChartComponent implements OnChanges, OnInit {
   private refresh() {
     // Filtern und Umwandeln der Daten in einem Schritt
     const filteredData = this.getFilteredCategoryData();
-    console.log('filteredData', filteredData);
 
     const _series = filteredData.map((d) => d.value);
-    console.log('series', this.series, _series);
     if (this.arraysAreEqual(_series, this.series)) return;
 
     this.series = [..._series]; // Verwenden Sie Spread-Operator, um eine neue Referenz zu erstellen
-    console.log('series', this.series, _series);
 
     const _labels = filteredData.map((d) => d.name);
     if (this.arraysAreEqual(_labels, this.labels)) return;

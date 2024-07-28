@@ -1,6 +1,23 @@
 <div class="border-bottom mb-3 text-center" *ngIf="!dataState.hasLoadedData">
+
+  <div class="card m-auto my-4" style="width: 22rem;">
+    <div class="card-body">
+      <h5 class="card-title">Finanz Uhu</h5>
+      <p class="card-text">Das datenschutzfreundliche Tool um deine Finanzdateien auf deinem Computer zu analysieren</p>
+ 
+      <ul class="list-group">
+        <li class="list-group-item">Alle Daten werden auf deinem Computer verarbeitet</li>
+        <li class="list-group-item">Open Source</li>
+        <li class="list-group-item">Unterstützt ING und Sparkassen Dateien</li>
+      </ul>
+    </div>
+  </div>
+
   <h2>Wähle eine Datei</h2>
-  <app-file-selector [big]="true"></app-file-selector>
+  <app-file-selector [big]="true"></app-file-selector>  
+  <div class="text-center">
+    <caption class="m-auto d-inline-block">Wähle eine <i>.csv</i> Datei von der Sparkasse oder ING aus.</caption>
+  </div>
 </div>
 
 <div *ngIf="dataState.hasLoadedData">
