@@ -1,5 +1,5 @@
 <div *ngIf="calculatedTotal != 0">
-    <div class="row fs-4" (click)="expanded = !expanded" role="button">
+    <div class="row fs-4" (click)="collapsed = !collapsed" role="button">
         <div class="col">
             <span class="badge text-bg-primary me-2" style="min-width:50px" *ngIf="categorySummary?.icon"><i [class]="categorySummary.icon"></i></span>
             <a class="text-primary p-0 fs-4">
@@ -14,13 +14,13 @@
         </div>
     </div>
 
-    <div *ngIf="categorySummary.subCategories?.length && expanded" class="ms-3">
+    <div *ngIf="categorySummary.subCategories?.length" class="ms-3" #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
         <div *ngFor="let subCategory of categorySummary.subCategories | orderBy: 'total';">
             <app-category-component [categorySummary]="subCategory" [amountMonths]="amountMonths" *ngIf="subCategory.total != 0"></app-category-component>
         </div>
     </div>
 
-    <div *ngIf="!categorySummary.subCategories?.length && expanded" class="ms-4 ps-4">
+    <div *ngIf="!categorySummary.subCategories?.length" class="ms-4 ps-4" #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
         <ng-container *ngFor="let transaction of activeTransactions | orderBy: 'amount'">
             <app-transaction-component [transaction]="transaction"></app-transaction-component>
         </ng-container>

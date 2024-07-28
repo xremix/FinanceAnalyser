@@ -82,7 +82,7 @@
       <app-category-overview-component *ngIf="!dataState.currentFilter.category" [amountMonths]="dataState.selectedMonthAmountInDataRangeFilter"
         [categorySummaries]="dataState.categories"></app-category-overview-component>
       <app-category-component *ngIf="dataState.currentFilter.category" [amountMonths]="dataState.selectedMonthAmountInDataRangeFilter"
-        [categorySummary]="dataState.currentFilter.category" [expanded]="true"></app-category-component>
+        [categorySummary]="dataState.currentFilter.category" [collapsed]="false"></app-category-component>
     </div>
 
     <div *ngIf="activeTab == 'Wiederkehrende Buchungen'">
