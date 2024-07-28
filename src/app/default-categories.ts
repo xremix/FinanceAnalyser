@@ -94,6 +94,7 @@ export const defaultCategories: BaseCategory[] =
           ' GB Kaufumsatz',
           ' HR Kaufumsatz',
           ' IT Kaufumsatz',
+          ' PT Kaufumsatz',
           'Italia',
           'Air France',
           'Airbnb',
@@ -131,7 +132,7 @@ export const defaultCategories: BaseCategory[] =
           'Avis',
           'Europcar',
         ],
-        excludeKeywords: ['GUTMANN ENI'],
+        excludeKeywords: [],
       },
       {
         name: 'Kleidung',
@@ -264,7 +265,7 @@ export const defaultCategories: BaseCategory[] =
         name: 'Tiere',
         subCategories: [],
         type: 'expense',
-        excludeKeywords: [],
+        excludeKeywords: ['Tierpark'],
         keywords: ['Fressnapf', 'Tierarzt', 'Tier', 'Zooplus', 'Dr.Med.Vet'],
       },
       {
