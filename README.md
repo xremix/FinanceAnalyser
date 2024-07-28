@@ -1,7 +1,18 @@
 # FinanceAnalyser
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.1.0.
+The privacy-friendly tool to analyze your financial files on your computer.
 
-## Development server
+![Screenshot](./Screenshot.png)
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Getting Started
+
+To run you need to have npm, and the ng-cli installed.
+
+- `npm install`
+- `ng serve`
+
+## Deploy
+
+The following task is currently being used to deploy the app
+
+- ng build --deploy-url /finance-analyser
