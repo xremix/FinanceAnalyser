@@ -20,6 +20,7 @@ import { HomeComponentComponent } from './home-component/home-component.componen
 import { SettingsComponentComponent } from './settings-component/settings-component.component';
 import { provideRouter, RouterOutlet } from '@angular/router';
 import { OrderPipe } from './pipes/order.pipe';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { OrderPipe } from './pipes/order.pipe';
     FormsModule,
     BrowserAnimationsModule,
     CategorySelectComponent,
-    RouterOutlet
+    RouterOutlet,
+    NgbModule
 ],
   providers: [provideNativeDateAdapter(), provideAnimationsAsync(), provideRouter([
     
