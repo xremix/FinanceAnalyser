@@ -1,16 +1,17 @@
-<div *ngIf="calculatedTotal != 0">
+<div *ngIf="calculatedTotal != 0" class="m-2 p-2 bg-light rounded">
     <div class="row fs-4" (click)="collapsed = !collapsed" role="button">
         <div class="col">
-            <span class="badge text-bg-primary me-2" style="min-width:50px" *ngIf="categorySummary?.icon"><i [class]="categorySummary.icon"></i></span>
-            <a class="text-primary p-0 fs-4">
-                <span>{{categorySummary.name}}</span>
+            <a class="text-dark p-0 fs-4 text-decoration-none">
+                <span class="me-2" style="min-width:50px" *ngIf="categorySummary?.icon"><i [class]="categorySummary.icon"></i></span>
+                <span class="">{{categorySummary.name}}</span>
             </a>
         </div>
 
-        <div class="col text-end">
-            <span class="opacity-25 fs-5 me-2" *ngIf="amountMonths > 1">⌀ {{(calculatedTotal / amountMonths) | currency:'EUR'}}</span>
+        <div class="col text-end">            
+            <span ngbTooltip="Durchschnittliche Kosten für {{amountMonths}} Monate" class="opacity-25 fs-5 me-2" *ngIf="amountMonths > 1">⌀ {{(calculatedTotal / amountMonths) | currency:'EUR'}}</span>
             <span class="badge" [ngClass]="{'text-bg-success': calculatedTotal > 0, 'text-bg-warning': calculatedTotal < 0}">{{calculatedTotal |
                 currency:'EUR'}}</span>
+            <i class="fa-solid fa-chevron-right ms-3"></i>
         </div>
     </div>
 
