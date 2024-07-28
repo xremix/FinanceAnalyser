@@ -1,15 +1,27 @@
 <div class="alert alert-success">
-    You have <b>{{monthsWithPositiveBillance}} months</b> with a positive billance.
+    Du hast <b>{{monthsWithPositiveBillance}} Monate</b> mit einer positiven Bilanz.
 </div>
-<div class="row">
-    <div class="col">Name</div>
-    <div class="col">Einnahmen</div>
-    <div class="col">Ausgaben</div>
-    <div class="col">Differenz</div>
-</div>
-<div class="row" *ngFor="let x of monthlyData">
-    <div class="col">{{x.name}}</div>
-    <div class="col">{{x.income}}</div>
-    <div class="col">-{{x.expenses}}</div>
-    <div class="col" [ngClass]="{'text-success fw-bold': x.income - x.expenses > 0, 'text-danger': x.income - x.expenses <= 0}">{{x.income - x.expenses}}</div>
-    </div>
+
+<button class="btn btn-primary" (click)="toggleSavings()">
+    <span *ngIf="!includeSavings">Sparen nicht berücksichtigen</span>
+    <span *ngIf="includeSavings">Sparen berücksichtigen</span>
+</button>
+
+<table class="table table-striped border">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Einnahmen</th>
+            <th scope="col">Ausgaben</th>
+            <th scope="col text-end">Differenz</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let x of monthlyData">
+            <td>{{x.name}}</td>
+            <td>{{x.income}}</td>
+            <td>{{x.expenses}}</td>
+            <td [ngClass]="{'text-success fw-bold': x.income - x.expenses > 0, 'text-danger': x.income - x.expenses <= 0}">{{x.income - x.expenses | number}}€</td>
+        </tr>
+    </tbody>
+</table>
