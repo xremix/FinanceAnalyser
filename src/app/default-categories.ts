@@ -1,7 +1,6 @@
 import { BaseCategory } from './models/category';
 
-export const defaultCategories: BaseCategory[] = 
-[
+export const defaultCategories: BaseCategory[] = [
   {
     name: 'Einkommen',
     icon: 'fa-solid fa-money-bill-trend-up',
@@ -193,7 +192,7 @@ export const defaultCategories: BaseCategory[] =
           'Vero Moda',
           'Zalando',
           'Zara',
-'Ernstings',
+          'Ernstings',
         ],
       },
       {
@@ -223,7 +222,7 @@ export const defaultCategories: BaseCategory[] =
           'Steiff',
           'Tiffany',
           'Toys',
-          'parfum'
+          'parfum',
         ],
       },
       {
@@ -386,7 +385,7 @@ export const defaultCategories: BaseCategory[] =
           'Woolworth',
           'XXXL',
           'Emma Matratzen',
-          'Bett'
+          'Bett',
         ],
         excludeKeywords: [],
       },
@@ -449,7 +448,27 @@ export const defaultCategories: BaseCategory[] =
         subCategories: [],
         type: 'expense',
         excludeKeywords: [],
-        keywords: ['MVG', 'MVV', 'DB', 'Bahn', 'Bus', 'Tram', 'U-Bahn', 'S-Bahn'],
+        keywords: [
+          'Bahn',
+          'Bus',
+          'BVG',
+          'DB',
+          'HVV',
+          'MVG',
+          'MVV',
+          'S-Bahn',
+          'Tram',
+          'U-Bahn',
+          'Verkehrsbetriebe',
+          'VGN',
+          'VMT',
+          'VRR',
+          'VRS',
+          'VVO',
+          'VVS',
+          'VVS',
+          'VVS',
+        ],
       },
       {
         name: 'Tanken',
@@ -462,14 +481,14 @@ export const defaultCategories: BaseCategory[] =
           'ARAL',
           'AVIA',
           'Esso',
-          'JET Dankt',
+          'Gutmann Eni',
           'Jet ',
+          'JET Dankt',
           'Petrol',
           'SHELL',
           'TANKE',
           'Tankstelle',
           'Total ',
-          'Gutmann Eni',
         ],
       },
       {
@@ -506,7 +525,7 @@ export const defaultCategories: BaseCategory[] =
         name: 'Versicherung',
         subCategories: [],
         type: 'expense',
-        keywords: ['Versicherung', 'HUK', 'DEVK', 'AXA', 'Allianz', 'ERGO'],
+        keywords: ['Versicherung', 'HUK', 'DEVK', 'AXA', 'Allianz', 'ERGO', 'Signal Iduna', 'Gothaer'],
         excludeKeywords: [],
       },
       {
@@ -520,7 +539,7 @@ export const defaultCategories: BaseCategory[] =
         name: 'Bankgebühren',
         subCategories: [],
         type: 'expense',
-        keywords: ['Kontof�hrung', 'Bankgeb�hren'],
+        keywords: ['Kontof�hrung', 'Bankgeb�hren', 'Bankgebuehren'],
         excludeKeywords: [],
       },
     ],
@@ -534,6 +553,6 @@ export const defaultCategories: BaseCategory[] =
     subCategories: [],
     type: 'expense',
     excludeKeywords: [],
-    keywords: ['Miete', 'Nebenkosten', 'Wohnung', 'Kaution', 'Makler'],
+    keywords: ['Miete', 'Nebenkosten', 'Wohnung', 'Kaution', 'Makler', 'Immobili']
   },
 ];
