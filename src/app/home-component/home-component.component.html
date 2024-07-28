@@ -22,16 +22,16 @@
 
 <div *ngIf="dataState.hasLoadedData">
 
-  <div>
+  <div class="mb-3">
     <app-date-range-picker [from]="dataState.currentFilter.from" [to]="dataState.currentFilter.to"></app-date-range-picker>
-    <mat-form-field>
+    <!-- <mat-form-field>
       <mat-date-range-input [rangePicker]="picker">
         <input matStartDate placeholder="Start date" [(ngModel)]="dataState.currentFilter.from" (dateChange)="refreshData()">
         <input matEndDate placeholder="End date" [(ngModel)]="dataState.currentFilter.to" (dateChange)="refreshData()">
       </mat-date-range-input>
       <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-date-range-picker #picker></mat-date-range-picker>
-    </mat-form-field>
+    </mat-form-field> -->
 
     <div ngbDropdown class="d-inline-block ms-3">
       <button type="button" class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>
