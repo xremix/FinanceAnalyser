@@ -5,23 +5,20 @@ import { FileSelectorComponent } from './file-selector/file-selector.component';
 import { TransactionComponentComponent } from './transaction-component/transaction-component.component';
 import { CategoryOverviewComponentComponent } from './category-overview-component/category-overview-component.component';
 import { CategoryComponentComponent } from './category-component/category-component.component';
-import { HistoryIncomeChartComponent } from "./history-income-chart/history-income-chart.component";
-import {  OrderByPipe } from './pipes/orderby.pipe';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { provideNativeDateAdapter } from '@angular/material/core';
+import { HistoryIncomeChartComponent } from './history-income-chart/history-income-chart.component';
+import { OrderByPipe } from './pipes/orderby.pipe';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { CategoryChartComponent } from './category-chart/category-chart.component';
-import { CategorySelectComponent } from "./category-select/category-select.component";
+import { CategorySelectComponent } from './category-select/category-select.component';
 import { TransactionOverviewComponent } from './transaction-overview/transaction-overview.component';
 import { HomeComponentComponent } from './home-component/home-component.component';
 import { SettingsComponentComponent } from './settings-component/settings-component.component';
 import { provideRouter, RouterOutlet } from '@angular/router';
 import { OrderPipe } from './pipes/order.pipe';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { DateRangePickerComponent } from "./date-range-picker/date-range-picker.component";
+import { DateRangePickerComponent } from './date-range-picker/date-range-picker.component';
 
 @NgModule({
   declarations: [
@@ -35,25 +32,25 @@ import { DateRangePickerComponent } from "./date-range-picker/date-range-picker.
     SettingsComponentComponent,
     OrderByPipe,
     OrderPipe,
-    DateRangePickerComponent
+    DateRangePickerComponent,
   ],
   imports: [
     BrowserModule,
     HistoryIncomeChartComponent,
     CategoryChartComponent,
-    MatFormFieldModule,
-    MatDatepickerModule,
     FormsModule,
     BrowserAnimationsModule,
     CategorySelectComponent,
     RouterOutlet,
-    NgbModule
-],
-  providers: [provideNativeDateAdapter(), provideAnimationsAsync(), provideRouter([
-    
-{path: '', component: HomeComponentComponent},
-{path: 'settings', component: SettingsComponentComponent},
-  ])],
-  bootstrap: [AppComponent]
+    NgbModule,
+  ],
+  providers: [
+    provideAnimationsAsync(),
+    provideRouter([
+      { path: '', component: HomeComponentComponent },
+      { path: 'settings', component: SettingsComponentComponent },
+    ]),
+  ],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

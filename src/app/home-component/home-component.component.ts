@@ -38,8 +38,4 @@ export class HomeComponentComponent {
       this.dataState.currentFilter.to.getTime() === date.to.getTime()
     );
   }
-
-  public refreshData() {
-    this.dataState.refresh();
-  }
 }

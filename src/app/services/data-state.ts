@@ -82,7 +82,7 @@ export class DataState {
     return isBookingDateInFilter && isCategoryInFilter && isTypeInFilter;
   }
 
-  public refresh() {
+  private refresh() {
     this.selectedTransactions = this.transactions.filter((t) => this.showTransaction(t));
     this.findDuplicates();
     this.selectedTransactionsChanged.emit(this.selectedTransactions);
