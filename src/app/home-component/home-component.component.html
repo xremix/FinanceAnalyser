@@ -23,6 +23,7 @@
 <div *ngIf="dataState.hasLoadedData">
 
   <div>
+    <app-date-range-picker [from]="dataState.currentFilter.from" [to]="dataState.currentFilter.to"></app-date-range-picker>
     <mat-form-field>
       <mat-date-range-input [rangePicker]="picker">
         <input matStartDate placeholder="Start date" [(ngModel)]="dataState.currentFilter.from" (dateChange)="refreshData()">

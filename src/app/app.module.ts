@@ -21,6 +21,7 @@ import { SettingsComponentComponent } from './settings-component/settings-compon
 import { provideRouter, RouterOutlet } from '@angular/router';
 import { OrderPipe } from './pipes/order.pipe';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { DateRangePickerComponent } from "./date-range-picker/date-range-picker.component";
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     HomeComponentComponent,
     SettingsComponentComponent,
     OrderByPipe,
-    OrderPipe
+    OrderPipe,
+    DateRangePickerComponent
   ],
   imports: [
     BrowserModule,
