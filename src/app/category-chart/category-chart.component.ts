@@ -76,7 +76,7 @@ export class CategoryChartComponent implements OnChanges, OnInit {
           dataPointSelection: function (event, chartContext, config) {
             var ix = config.dataPointIndex;
             const label = config.w.config.labels[ix];
-            const category = self.data.find((c) => c.name === label);
+            const category = self.dataState.categories.find((c) => c.name === label);
             if (category) {
               self.dataState.filterByCategory(category);
             }

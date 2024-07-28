@@ -19,6 +19,7 @@ import { provideRouter, RouterOutlet } from '@angular/router';
 import { OrderPipe } from './pipes/order.pipe';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DateRangePickerComponent } from './date-range-picker/date-range-picker.component';
+import { MonthyBillanceComponent } from "./monthy-billance/monthy-billance.component";
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { DateRangePickerComponent } from './date-range-picker/date-range-picker.
     SettingsComponentComponent,
     OrderByPipe,
     OrderPipe,
+    MonthyBillanceComponent,
     DateRangePickerComponent,
   ],
   imports: [
@@ -43,7 +45,7 @@ import { DateRangePickerComponent } from './date-range-picker/date-range-picker.
     CategorySelectComponent,
     RouterOutlet,
     NgbModule,
-  ],
+],
   providers: [
     provideAnimationsAsync(),
     provideRouter([

@@ -103,6 +103,11 @@
 
 
     </div>
+
+    <div *ngIf="activeTab == 'Monatliche Bilanz'">
+      <h2>Monatliche Bilanz</h2>
+      <app-monthy-billance [dates]="dataState.monthStarts" [transactions]="dataState.selectedTransactions"></app-monthy-billance>
+    </div>
   </div>
 
 

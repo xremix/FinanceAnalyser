@@ -9,7 +9,7 @@ import { DateService } from '../services/date-service';
   styleUrl: './home-component.component.scss',
 })
 export class HomeComponentComponent {
-  public tabs: string[] = ['Kategorien', 'Wiederkehrende Buchungen', 'Alle'];
+  public tabs: string[] = ['Kategorien', 'Wiederkehrende Buchungen', 'Alle', 'Monatliche Bilanz'];
   public activeTab: string = this.tabs[0];
 
   constructor(

@@ -1,0 +1,15 @@
+<div class="alert alert-success">
+    You have <b>{{monthsWithPositiveBillance}} months</b> with a positive billance.
+</div>
+<div class="row">
+    <div class="col">Name</div>
+    <div class="col">Einnahmen</div>
+    <div class="col">Ausgaben</div>
+    <div class="col">Differenz</div>
+</div>
+<div class="row" *ngFor="let x of monthlyData">
+    <div class="col">{{x.name}}</div>
+    <div class="col">{{x.income}}</div>
+    <div class="col">-{{x.expenses}}</div>
+    <div class="col" [ngClass]="{'text-success fw-bold': x.income - x.expenses > 0, 'text-danger': x.income - x.expenses <= 0}">{{x.income - x.expenses}}</div>
+    </div>

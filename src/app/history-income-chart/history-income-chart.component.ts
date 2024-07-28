@@ -49,13 +49,6 @@ export class HistoryIncomeChartComponent implements OnInit, OnChanges {
     this.categories.categories = this.dates.map((d) => d.toLocaleDateString());
     if (this.dates.length === 0) return;
 
-    // this.series = [
-    //   {
-    //     name: 'Ausgabe',
-    //     // takes the dates and filters the transactions for the month
-    //     data: [2, 33],
-    //   },
-    // ];
     this.series = [
       {
         name: 'Ausgabe',
