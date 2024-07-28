@@ -1,8 +1,9 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ApexChart, ApexLegend, NgApexchartsModule } from 'ng-apexcharts';
 import { CommonModule } from '@angular/common';
 import { DataState } from '../services/data-state';
 import { Category } from '../models/category';
+import { ChartOptions } from '../history-income-chart/history-income-chart.component';
 
 @Component({
   selector: 'app-category-chart',
@@ -13,15 +14,9 @@ import { Category } from '../models/category';
 })
 export class CategoryChartComponent implements OnChanges, OnInit {
   @Input() data: Category[] = [];
-
-  public chartOptions = {
-    legend: {
-      position: 'bottom',
-    } as ApexLegend,
-    chart: {
-      type: 'donut',
-    } as ApexChart,
-  };
+  @Output() triggerRefresh: EventEmitter<void> = new EventEmitter<void>();
+  public chartOptions!: any;
+  
 
   public labels: string[] = [];
   public series: number[] = [];
@@ -69,7 +64,29 @@ export class CategoryChartComponent implements OnChanges, OnInit {
     }
   }
 
-  constructor(private dataState: DataState) {}
+  constructor(private dataState: DataState) {
+    const self = this;
+    this.chartOptions = {
+      legend: {
+        position: 'bottom',
+      } as ApexLegend,
+      chart: {
+        type: 'donut',
+        events: {
+          dataPointSelection: function (event, chartContext, config) {
+            var ix = config.dataPointIndex;
+            const label = config.w.config.labels[ix];
+            const category = self.data.find((c) => c.name === label);
+            if (category) {
+              self.dataState.filterByCategory(category);
+            }
+            
+            self.triggerRefresh.emit();
+          },
+        },
+      } as ApexChart,
+    };
+  }
   ngOnInit(): void {
     this.dataState.selectedTransactionsChanged.subscribe(() => {
       this.refresh();

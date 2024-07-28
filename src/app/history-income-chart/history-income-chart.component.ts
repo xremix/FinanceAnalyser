@@ -93,7 +93,6 @@ export class HistoryIncomeChartComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('changes', changes);
     if (changes['dates'] || changes['transactions']) {
       this.refresh();
     }
@@ -108,7 +107,7 @@ export class HistoryIncomeChartComponent implements OnInit, OnChanges {
   }
 
   constructor(private dataState: DataState) {
-    var self = this;
+    const self = this;
     this.chartOptions = {
       legend: {
         position: 'top',

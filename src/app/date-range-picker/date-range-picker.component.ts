@@ -45,7 +45,6 @@ export class DateRangePickerComponent implements OnInit, OnChanges {
       this.fromDate = date;
 		} else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
       this.toDate = date;
-      console.log('xxx')
       this.dataState.filterByRange(this.ngbDateToDate(this.fromDate),  this.ngbDateToDate(this.toDate));
 		} else {
 			this.toDate = null;

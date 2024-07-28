@@ -38,6 +38,6 @@ export class HomeComponentComponent {
   }
 
   refreshPage(){
-this.cds.detectChanges();
+    this.cds.detectChanges();
   }
 }

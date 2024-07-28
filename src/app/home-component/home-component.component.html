@@ -56,7 +56,7 @@
       <app-history-chart [dates]="dataState.monthStarts" [transactions]="dataState.selectedTransactions" (triggerRefresh)="refreshPage()"></app-history-chart>
     </div>
     <div class="col-md-4">
-      <app-category-chart [data]="dataState.categories"></app-category-chart>
+      <app-category-chart [data]="dataState.categories" (triggerRefresh)="refreshPage()"></app-category-chart>
     </div>
   </div>
 
