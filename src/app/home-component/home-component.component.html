@@ -36,7 +36,7 @@
   <div class="mb-3 text-center">
     <app-date-range-picker [from]="dataState.currentFilter.from" [to]="dataState.currentFilter.to"></app-date-range-picker>
 
-    <div ngbDropdown class="d-inline-block ms-3">
+    <!-- <div ngbDropdown class="d-inline-block ms-3">
       <button type="button" class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>
         <span *ngIf="hasSelectedMonth()">{{dataState.currentFilter.from | date}}</span>
         <span *ngIf="!hasSelectedMonth()">Monate</span>
@@ -46,7 +46,7 @@
         <button ngbDropdownItem (click)="dataState.filterByDateFilter(date)" *ngFor="let date of dataState.months"
           [ngClass]="{'bg-primary text-white': isSelectedMonth(date)}">{{date.name}}</button>
       </div>
-    </div>
+    </div> -->
 
     <div ngbDropdown class="d-inline-block ms-3">
       <button type="button" class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>

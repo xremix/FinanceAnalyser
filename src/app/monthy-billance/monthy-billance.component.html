@@ -18,7 +18,10 @@
     </thead>
     <tbody>
         <tr *ngFor="let x of monthlyData">
-            <td>{{x.name}}</td>
+            <td>
+                <i class="fa-regular fa-circle-xmark text-danger" *ngIf="x.income - x.expenses <= 0"></i>
+                <i class="fa-regular fa-circle-check text-success" *ngIf="x.income - x.expenses > 0"></i>
+                {{x.name}}</td>
             <td>{{x.income}}</td>
             <td>{{x.expenses}}</td>
             <td [ngClass]="{'text-success fw-bold': x.income - x.expenses > 0, 'text-danger': x.income - x.expenses <= 0}">{{x.income - x.expenses | number}}€</td>
