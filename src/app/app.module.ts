@@ -20,6 +20,7 @@ import { OrderPipe } from './pipes/order.pipe';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DateRangePickerComponent } from './date-range-picker/date-range-picker.component';
 import { MonthyBillanceComponent } from "./monthy-billance/monthy-billance.component";
+import { MoneyBadgeComponent } from "./money-badge/money-badge.component";
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { MonthyBillanceComponent } from "./monthy-billance/monthy-billance.compo
     CategorySelectComponent,
     RouterOutlet,
     NgbModule,
+    MoneyBadgeComponent
 ],
   providers: [
     provideAnimationsAsync(),

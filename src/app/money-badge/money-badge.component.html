@@ -1,0 +1,31 @@
+<style>
+.inline-block-container {
+    display: inline-block;
+    position: relative;
+    padding: 5px;
+}
+
+.background-div {
+    position: absolute;
+    width: 33%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+.background-div2 {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -2;
+}
+</style>
+
+<div class="inline-block-container">
+    <div class="background-div rounded-start {{fillColor}}" [style]="'width: {{fill}}%'"></div>
+    <div class="background-div2 bg-warning rounded {{background}}"></div>
+    <div class="">{{text}}</div>
+</div>
+
