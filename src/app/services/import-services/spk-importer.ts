@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Transaction } from '../../models/transaction';
-import { ignoreKeywords } from 'env';
 import { Importer } from './importer';
 
 
@@ -8,6 +7,7 @@ import { Importer } from './importer';
   providedIn: 'root',
 })
 export class SpkImporter implements Importer {
+  private ignoreKeywords: string[] = ['UEBERTRAG (', 'Auftragskonto', 'Buchung;Valuta'];
     public canParseCSV(csvData: string): boolean {
       return csvData.toLowerCase().startsWith(`"Auftragskonto";"`.toLowerCase());
     }
@@ -57,7 +57,7 @@ export class SpkImporter implements Importer {
       let line = lines[i];
 
       //ignoreKeywords
-      if (ignoreKeywords.some((keyword) => line.toLowerCase().includes(keyword.toLowerCase()))) {
+      if (this.ignoreKeywords.some((keyword) => line.toLowerCase().includes(keyword.toLowerCase()))) {
         console.warn('Ignoring line because of keyword:', line);
         continue;
       }
