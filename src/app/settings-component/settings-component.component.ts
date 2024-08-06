@@ -85,4 +85,15 @@ export class SettingsComponentComponent implements OnInit {
     const icon = prompt('Edit icon', category.icon);
       category.icon = icon ?? '';
   }
+
+  public toggleType(category: Category){
+    // toggle between 'savings' | 'income' | 'expense';
+    if(category.type === 'savings'){
+      category.type = 'income';
+    } else if(category.type === 'income'){
+      category.type = 'expense';
+    } else {
+      category.type = 'savings';
+    }
+  }
 }

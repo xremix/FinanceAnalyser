@@ -1,4 +1,4 @@
-<h1>
+<h1 class="bg-white sticky-top">
     <span>Settings</span>
     <button class="btn btn-primary" (click)="saveState()">Save</button>
     <button class="btn btn-primary ms-2" (click)="fillCategoriesWithDefaults()">Fill with defaults</button>
@@ -16,6 +16,8 @@
             <span>{{category.name}}</span>
             <button class="btn btn-success btn-sm ms-2" (click)="addCategory(category.subCategories)">Add Sub Category</button>
             <button class="btn btn-success btn-sm ms-2" (click)="editIcon(category)">Edit Icon</button>
+            <button class="btn btn-success btn-sm ms-2" (click)="toggleType(category)">{{category.type}}</button>
+            <button class="btn btn-success btn-sm ms-2" (click)="category.isDefault = !category.isDefault">{{category.isDefault | json}}</button>
         </h2>
         <div class="ms-4" *ngFor="let sub of category.subCategories">
             <ng-container *ngTemplateOutlet="categoryTemplate; context:{category: sub}"> </ng-container>

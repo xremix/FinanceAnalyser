@@ -3,7 +3,6 @@ import { ApexChart, ApexLegend, NgApexchartsModule } from 'ng-apexcharts';
 import { CommonModule } from '@angular/common';
 import { DataState } from '../services/data-state';
 import { Category } from '../models/category';
-import { ChartOptions } from '../history-income-chart/history-income-chart.component';
 
 @Component({
   selector: 'app-category-chart',

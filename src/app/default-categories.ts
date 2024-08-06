@@ -319,7 +319,7 @@ export const defaultCategories: BaseCategory[] = [
     ],
   },
   {
-    name: 'Einrichtung',
+    name: 'Haushalt',
     icon: 'fa-solid fa-bed',
     subCategories: [
       {
