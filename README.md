@@ -2,6 +2,8 @@
 
 The privacy-friendly tool to analyze your financial files on your computer.
 
+Checkout the [Demo](https://finanz-uhu.xremix.de/).
+
 ![Screenshot](./Screenshot.png)
 
 ## Getting Started
@@ -15,4 +17,4 @@ To run you need to have npm, and the ng-cli installed.
 
 The following task is currently being used to deploy the app
 
-- ng build --deploy-url /finance-analyser
+- `ng build`
