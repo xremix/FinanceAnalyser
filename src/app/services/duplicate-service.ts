@@ -57,7 +57,7 @@ export class DuplicateService {
 
     const matches = transactionPool.find(transaction => 
       transaction.amount === Math.abs(negativeTransaction.amount) &&
-      transaction.bookingDate >= negativeTransaction.bookingDate &&
+      transaction.bookingDate >= new Date(negativeTransaction.bookingDate.getTime() - 7 * 24 * 60 * 60 * 1000) &&
       transaction.category === negativeTransaction.category
     );
     return matches;
