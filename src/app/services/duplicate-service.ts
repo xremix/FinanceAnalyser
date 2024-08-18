@@ -26,11 +26,24 @@ export class DuplicateService {
   }
 
   public setWasBalancedAfterwardsForAllTransaction(transactions: Transaction[]){
+    // Create a copy of the transactions array to avoid modifying the original
+    let remainingTransactions = [...transactions];
+
+    // Function to remove a transaction from the remaining transactions
+    const removeTransaction = (trans: Transaction) => {
+      const index = remainingTransactions.findIndex(t => t === trans);
+      if (index !== -1) {
+        remainingTransactions.splice(index, 1);
+      }
+    };
+    
     transactions.forEach((transaction, index) => {
       if (transaction.amount < 0) {
-        const positiveMatch = this.findPositiveMatch(transaction, transactions);
+        const positiveMatch = this.findPositiveMatch(transaction, remainingTransactions);
         if(!!positiveMatch){
           transaction.balancedByDescription = `Ausgeglichen mit ${positiveMatch.payerReceiver} ${positiveMatch.purpose} am ${positiveMatch.bookingDate.toLocaleDateString()}`;
+          positiveMatch.balancedOfDescription = `Ausgeglich für ${transaction.payerReceiver} ${transaction.purpose} am ${transaction.bookingDate.toLocaleDateString()}`;
+          removeTransaction(positiveMatch);
         }
 
       } else {

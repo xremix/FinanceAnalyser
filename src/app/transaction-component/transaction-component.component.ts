@@ -25,7 +25,7 @@ export class TransactionComponentComponent implements OnInit {
   }
 
   get backgroundColor(): string {
-    if (this.transaction.balancedByDescription) {
+    if (this.transaction.balancedByDescription || this.transaction.balancedOfDescription) {
       return 'bg-secondary'; // Light gray for balanced transactions
     } else if (this.transaction.amount > 0) {
       return 'bg-success'; // Light green for positive amounts

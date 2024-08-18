@@ -19,7 +19,7 @@
             <div class="text-end fw-bold" [ngClass]="{'text-warning': transaction.category?.name === 'Sonstiges'}" (click)="showMatchingKeywords(transaction)">{{transaction.category?.name}}</div>
             <!-- Amount -->
             <div class="badge {{backgroundColor}}">
-                <i *ngIf="transaction.balancedByDescription" class="fa-solid fa-scale-balanced me-2" triggers="mouseenter:mouseleave" [ngbPopover]="transaction.balancedByDescription"></i>
+                <i *ngIf="transaction.balancedByDescription || transaction.balancedOfDescription" class="fa-solid fa-scale-balanced me-2" triggers="mouseenter:mouseleave" [ngbPopover]="transaction.balancedByDescription || transaction.balancedOfDescription"></i>
                 <span>{{transaction.amount | currency:'EUR'}}</span>
             </div>
         </div>

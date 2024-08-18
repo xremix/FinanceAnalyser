@@ -14,4 +14,5 @@ export interface Transaction {
   category?: Category;
   raw: string;
   balancedByDescription?: string;
+  balancedOfDescription?: string;
 }
