@@ -45,8 +45,6 @@ export class DuplicateService {
           positiveMatch.balancedOfDescription = `Ausgeglich für ${transaction.payerReceiver} ${transaction.purpose} am ${transaction.bookingDate.toLocaleDateString()}`;
           removeTransaction(positiveMatch);
         }
-
-      } else {
       }
     });
   }

@@ -10,7 +10,7 @@ import { Transaction } from '../models/transaction';
   styleUrl: './home-component.component.scss',
 })
 export class HomeComponentComponent {
-  public tabs: string[] = ['Kategorien', 'Wiederkehrende Buchungen', 'Ausgeglichene Buchungen', 'Alle', 'Monatliche Bilanz'];
+  public tabs: string[] = ['Kategorien', 'Alle Buchungen', 'Wiederkehrende Buchungen', 'Ausgeglichene Buchungen', 'Monatliche Bilanz'];
   public activeTab: string = this.tabs[0];
 
   constructor(

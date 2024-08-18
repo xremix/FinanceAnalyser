@@ -54,6 +54,34 @@ export class SettingsComponentComponent implements OnInit {
     }
   }
 
+  public deleteCategory(category: Category) {
+    const confirmDelete = confirm(`Are you sure you want to delete the category "${category.name}"?`);
+    if (confirmDelete) {
+      // Find the parent array containing this category
+      let parentArray = this.dataState.categories;
+      let index = parentArray.indexOf(category);
+
+      // If not found in the main categories, search in subcategories
+      if (index === -1) {
+        for (let mainCategory of this.dataState.categories) {
+          index = mainCategory.subCategories.indexOf(category);
+          if (index !== -1) {
+            parentArray = mainCategory.subCategories;
+            break;
+          }
+        }
+      }
+
+      // Remove the category if found
+      if (index !== -1) {
+        parentArray.splice(index, 1);
+        console.log(`Deleted category: ${category.name}`);
+      } else {
+        console.error(`Category not found: ${category.name}`);
+      }
+    }
+  }
+
   public fillCategoriesWithDefaults() {
     const flatDefaults = [...defaultCategories, ...defaultCategories.flatMap((c) => c.subCategories || [])];
     const flatCatgeories = this.dataState.categories.flatMap((c) => c.subCategories || []);

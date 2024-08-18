@@ -17,7 +17,8 @@
             <button class="btn btn-success btn-sm ms-2" (click)="addCategory(category.subCategories)">Add Sub Category</button>
             <button class="btn btn-success btn-sm ms-2" (click)="editIcon(category)">Edit Icon</button>
             <button class="btn btn-success btn-sm ms-2" (click)="toggleType(category)">{{category.type}}</button>
-            <button class="btn btn-success btn-sm ms-2" (click)="category.isDefault = !category.isDefault">{{category.isDefault | json}}</button>
+            <!-- <button class="btn btn-success btn-sm ms-2" (click)="category.isDefault = !category.isDefault">{{category.isDefault | json}}</button> -->
+            <button class="btn btn-danger btn-sm ms-2" (click)="deleteCategory(category)">Delete</button>
         </h2>
         <div class="ms-4" *ngFor="let sub of category.subCategories">
             <ng-container *ngTemplateOutlet="categoryTemplate; context:{category: sub}"> </ng-container>
