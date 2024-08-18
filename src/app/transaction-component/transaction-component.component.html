@@ -6,17 +6,22 @@
         </div>
         <div class="col-md-6">
             {{transaction.purpose}}
-            <span *ngIf="dupllicates.length > 0" class="opacity-50" style="font-weight: 0.6rem;">
+            <span *ngIf="duplicates.length > 0" class="opacity-50" style="font-weight: 0.6rem;">
                 <br/>Auch verbucht am
-                <span *ngFor="let duplicate of dupllicates; let last = last">
+                <span *ngFor="let duplicate of duplicates; let last = last">
                     {{duplicate.bookingDate | date: 'MMMM YY'}}<span *ngIf="!last">, </span>
                 </span> 
             </span>
             
         </div>
         <div class="col-md-3 text-end">
+            <!-- Category -->
             <div class="text-end fw-bold" [ngClass]="{'text-warning': transaction.category?.name === 'Sonstiges'}" (click)="showMatchingKeywords(transaction)">{{transaction.category?.name}}</div>
-            <div><span class="badge" [ngClass]="{'text-bg-success': transaction.amount > 0, 'text-bg-warning': transaction.amount < 0}">{{transaction.amount | currency:'EUR'}}</span></div>
+            <!-- Amount -->
+            <div class="badge {{backgroundColor}}">
+                <i *ngIf="transaction.balancedByDescription" class="fa-solid fa-scale-balanced me-2" triggers="mouseenter:mouseleave" [ngbPopover]="transaction.balancedByDescription"></i>
+                <span>{{transaction.amount | currency:'EUR'}}</span>
+            </div>
         </div>
     </div>
 </div>

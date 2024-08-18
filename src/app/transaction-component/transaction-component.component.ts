@@ -11,7 +11,7 @@ import { CategoryService } from '../services/category-service';
 export class TransactionComponentComponent implements OnInit {
   @Input() transaction: Transaction = {} as Transaction;
   public expand = false; 
-  public dupllicates: Transaction[] = [];
+  public duplicates: Transaction[] = [];
   constructor(public duplicateService: DuplicateService,
     private dataState: DataState,
     private categoryService: CategoryService
@@ -21,7 +21,19 @@ export class TransactionComponentComponent implements OnInit {
     this.findDuplicates();
   }
   findDuplicates() {
-    this.dupllicates = this.duplicateService.foundDuplicates(this.transaction, this.dataState.selectedTransactions);
+    this.duplicates = this.duplicateService.foundDuplicates(this.transaction, this.dataState.selectedTransactions);
+  }
+
+  get backgroundColor(): string {
+    if (this.transaction.balancedByDescription) {
+      return 'bg-secondary'; // Light gray for balanced transactions
+    } else if (this.transaction.amount > 0) {
+      return 'bg-success'; // Light green for positive amounts
+    } else if (this.transaction.amount < 0) {
+      return 'bg-warning'; // Light yellow for negative amounts
+    } else {
+      return ''; // Default background for zero amounts
+    }
   }
 
   showMatchingKeywords(transaction: Transaction){

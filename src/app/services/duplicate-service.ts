@@ -24,4 +24,31 @@ export class DuplicateService {
       (t) => t.amount === transaction.amount && t.payerReceiver === transaction.payerReceiver && t !== transaction
     );
   }
+
+  public setWasBalancedAfterwardsForAllTransaction(transactions: Transaction[]){
+    transactions.forEach((transaction, index) => {
+      if (transaction.amount < 0) {
+        const positiveMatch = this.findPositiveMatch(transaction, transactions);
+        if(!!positiveMatch){
+          transaction.balancedByDescription = `Ausgeglichen mit ${positiveMatch.payerReceiver} ${positiveMatch.purpose} am ${positiveMatch.bookingDate.toLocaleDateString()}`;
+        }
+
+      } else {
+      }
+    });
+  }
+
+  private findPositiveMatch(negativeTransaction: Transaction, transactionPool: Transaction[]): Transaction | undefined {
+    if (negativeTransaction.amount >= 0) {
+      return undefined; // Only process negative transactions
+    }
+
+
+    const matches = transactionPool.find(transaction => 
+      transaction.amount === Math.abs(negativeTransaction.amount) &&
+      transaction.bookingDate >= negativeTransaction.bookingDate &&
+      transaction.category === negativeTransaction.category
+    );
+    return matches;
+  }
 }

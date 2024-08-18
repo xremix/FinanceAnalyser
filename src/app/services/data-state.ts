@@ -44,10 +44,12 @@ export class DataState {
     this.months = this.dateService.getMonths(this._transactions);
     this.monthStarts = this.months.map((m) => m.from);
     this.findDuplicates();
+    this.duplicateService.setWasBalancedAfterwardsForAllTransaction(this._transactions);
   }
   private findDuplicates(){
     this.duplicates = this.duplicateService.findDuplicateTransactions(this.selectedTransactions);
   }
+
 
   // event emitter when selected transactions change
   public selectedTransactionsChanged: EventEmitter<Transaction[]> = new EventEmitter();
@@ -109,6 +111,7 @@ export class DataState {
     }
     this.refresh();
   }
+
   filterByDay(date: Date) {
     let firstOfMonth = new Date(date);
     firstOfMonth.setDate(1);
