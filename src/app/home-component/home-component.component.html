@@ -62,6 +62,7 @@
   <ul class="nav nav-tabs">
     <li class="nav-item" *ngFor="let tab of tabs">
       <a class="nav-link" [ngClass]="{'active': tab == activeTab}" aria-current="page" href="#" (click)="activeTab = tab">{{tab}}</a>
+      <button class="nav-link" [ngClass]="{'active': tab == activeTab}" (click)="activeTab = tab">{{tab}}</button>
     </li>
 
   </ul>

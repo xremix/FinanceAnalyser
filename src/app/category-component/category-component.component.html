@@ -15,13 +15,13 @@
         </div>
     </div>
 
-    <div *ngIf="categorySummary.subCategories?.length" class="ms-3" #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+    <div *ngIf="categorySummary.subCategories?.length" class="ms-md-3" #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
         <div *ngFor="let subCategory of categorySummary.subCategories | orderBy: 'total';">
             <app-category-component [categorySummary]="subCategory" [amountMonths]="amountMonths" *ngIf="subCategory.total != 0"></app-category-component>
         </div>
     </div>
 
-    <div *ngIf="!categorySummary.subCategories?.length" class="ms-4 ps-4" #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
+    <div *ngIf="!categorySummary.subCategories?.length" class="ms-md-4 ps-md-4" #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
         <ng-container *ngFor="let transaction of activeTransactions | orderBy: 'amount'">
             <app-transaction-component [transaction]="transaction"></app-transaction-component>
         </ng-container>
