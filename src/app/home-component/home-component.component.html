@@ -59,13 +59,13 @@
     </div>
   </div>
 
-  <ul class="nav nav-tabs">
+  <div class="overflow-x-hidden  overflow-x-scroll">
+  <ul class="nav nav-tabs" style="width: 100%; min-width: 840px;">
     <li class="nav-item" *ngFor="let tab of tabs">
-      <a class="nav-link" [ngClass]="{'active': tab == activeTab}" aria-current="page" href="#" (click)="activeTab = tab">{{tab}}</a>
       <button class="nav-link" [ngClass]="{'active': tab == activeTab}" (click)="activeTab = tab">{{tab}}</button>
     </li>
-
   </ul>
+</div>
   <div class="border-start border-bottom border-end bg-white py-3 px-4">
     <div *ngIf="activeTab == 'Kategorien'">
       <h2>Kategorien</h2>
