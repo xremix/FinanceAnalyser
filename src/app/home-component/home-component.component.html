@@ -87,7 +87,7 @@
     </div>
 
     <div *ngIf="activeTab == 'Wiederkehrende Buchungen'">
-      <h2>Wiederkehrende Buchungen</h2>
+      <h2>Wiederkehrende Buchungen ({{dataState.duplicates.length}})</h2>
       <div class="row">
         <div class="col">
 
@@ -95,9 +95,18 @@
           </app-transaction-component>
         </div>
       </div>
-
-
     </div>
+
+    <div *ngIf="activeTab == 'Ausgeglichene Buchungen'">
+      <h2>Ausgeglichene Buchungen ({{balancedTransactions.length}})</h2>
+      <div class="row">
+        <div class="col">
+          <app-transaction-component *ngFor="let transaction of balancedTransactions | orderBy: 'amount'" [transaction]="transaction">
+          </app-transaction-component>
+        </div>
+      </div>
+    </div>
+
     <div *ngIf="activeTab == 'Alle'">
       <!-- <app-transaction-overview></app-transaction-overview> -->
       <h2>Alle</h2>
@@ -121,5 +130,5 @@
     </div>
   </div>
 
-
+<app-money-badge [fill]="50" text="xxasdfds"></app-money-badge>
 </div>

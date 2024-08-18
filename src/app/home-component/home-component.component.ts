@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { CategoryService } from '../services/category-service';
 import { DataState, DateFilter } from '../services/data-state';
 import { DateService } from '../services/date-service';
+import { Transaction } from '../models/transaction';
 
 @Component({
   selector: 'app-home-component',
@@ -9,7 +10,7 @@ import { DateService } from '../services/date-service';
   styleUrl: './home-component.component.scss',
 })
 export class HomeComponentComponent {
-  public tabs: string[] = ['Kategorien', 'Wiederkehrende Buchungen', 'Alle', 'Monatliche Bilanz'];
+  public tabs: string[] = ['Kategorien', 'Wiederkehrende Buchungen', 'Ausgeglichene Buchungen', 'Alle', 'Monatliche Bilanz'];
   public activeTab: string = this.tabs[0];
 
   constructor(
@@ -18,6 +19,10 @@ export class HomeComponentComponent {
     protected dateService: DateService,
     private cds: ChangeDetectorRef
   ) {}
+
+  get balancedTransactions(): Transaction[] {
+    return this.dataState.selectedTransactions.filter(transaction => transaction.balancedByDescription !== undefined);
+  }
 
   hasSelectedMonth(): boolean {
     return (
