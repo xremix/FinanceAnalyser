@@ -6,6 +6,8 @@ Try out the [Demo](https://finanz-uhu.xremix.de/) with the [Demo CSV](https://ra
 
 ![Screenshot](./Screenshot.png)
 
+![Screenshot2](./Screenshot2.png)
+
 ## Getting Started
 
 To run you need to have npm, and the ng-cli installed.
