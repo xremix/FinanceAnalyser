@@ -38,6 +38,11 @@ export class SpkImporter implements Importer {
       raw: columns.join(';'),
     };
 
+    if (transaction.bookingDate.toString() === 'Invalid Date' && transaction.valueDate.toString() === 'Invalid Date') {
+      console.warn('Invalid transaction date:', transaction);
+      return undefined;
+    }
+
     if (transaction.bookingDate.getFullYear() < 2000) {
       transaction.bookingDate.setFullYear(transaction.bookingDate.getFullYear() + 2000);
     }
