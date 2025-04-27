@@ -13,7 +13,10 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
   title = 'FinanceAnalyser';
-    constructor(protected dataState: DataState, private importService: ImportService,protected categoryService: CategoryService, protected dateService: DateService,
+    constructor(protected dataState: DataState,
+      private importService: ImportService,
+      protected categoryService: CategoryService, 
+      protected dateService: DateService,
       private router: Router) {
 
     importService.loadFromLocalStorage();

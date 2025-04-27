@@ -31,6 +31,7 @@ export class HomeComponentComponent {
       this.dataState.currentFilter.from.getMonth() === this.dataState.currentFilter.to.getMonth() && this.dataState.currentFilter.from.getFullYear() === this.dataState.currentFilter.to.getFullYear()
     );
   }
+  
   isSelectedMonth(date: DateFilter): boolean {
     if (!this.dataState.currentFilter.from || !this.dataState.currentFilter.to) {
       return false;

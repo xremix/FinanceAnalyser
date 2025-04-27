@@ -46,6 +46,7 @@ export class ImportService {
     }
     let transactions = this.parseCsvToTransactions(fileContent);
     this.categoryService.fillCategoriesToTransactions(transactions);
+
     this.dataState.setTransactions(transactions);
 
     if (transactions.length > 0) {
