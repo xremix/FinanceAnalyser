@@ -22,7 +22,8 @@ export class DuplicateService {
   public foundDuplicates(transaction: Transaction, transactionPool: Transaction[]): Transaction[] {
     return transactionPool.filter(
       (t) => t.amount === transaction.amount && t.payerReceiver === transaction.payerReceiver && t !== transaction
-    );
+    )
+    .sort((a, b) => a.bookingDate.getTime() - b.bookingDate.getTime());
   }
 
   public setWasBalancedAfterwardsForAllTransaction(transactions: Transaction[]){
