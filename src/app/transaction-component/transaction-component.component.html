@@ -17,6 +17,9 @@
         <div class="col-md-3 text-end">
             <!-- Category -->
             <div class="text-end fw-bold" [ngClass]="{'text-warning': transaction.category?.name === 'Sonstiges'}" (click)="showMatchingKeywords(transaction)">{{transaction.category?.name}}</div>
+            <b *ngIf="duplicates.length">
+                {{duplicates.length + 1}}x
+            </b>
             <!-- Amount -->
             <div class="badge {{backgroundColor}}">
                 <i *ngIf="transaction.balancedByDescription || transaction.balancedOfDescription" class="fa-solid fa-scale-balanced me-2" triggers="mouseenter:mouseleave" [ngbPopover]="transaction.balancedByDescription || transaction.balancedOfDescription"></i>
