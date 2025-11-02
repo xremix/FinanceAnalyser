@@ -40,7 +40,17 @@ export class CategorySelectComponent {
     return isCategorySelected &&  !selectedCategoryHasSubCategories && !isSelectedCategoryRootCategory;
   }
   isSelectedCategory(category: Category): boolean {
-    return this.dataState.currentFilter.category === category;
+    // Direkt ausgewählt
+    if (this.dataState.currentFilter.category === category) {
+      return true;
+    }
+    
+    // Eine Unterkategorie dieser Kategorie ist ausgewählt
+    if (this.dataState.currentFilter.category && category.subCategories) {
+      return category.subCategories.includes(this.dataState.currentFilter.category);
+    }
+    
+    return false;
   }
 
   isNothingSelected(): boolean {
