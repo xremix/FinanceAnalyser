@@ -8,6 +8,9 @@ interface Statistics {
   averageExpense: number;
   medianExpense: number;
   totalMonths: number;
+  averageIncomeWithData: number;
+  averageExpenseWithData: number;
+  monthsWithData: number;
 }
 
 @Component({
@@ -25,7 +28,10 @@ export class StatisticsCardComponent implements OnChanges {
     medianIncome: 0,
     averageExpense: 0,
     medianExpense: 0,
-    totalMonths: 1
+    totalMonths: 1,
+    averageIncomeWithData: 0,
+    averageExpenseWithData: 0,
+    monthsWithData: 0
   };
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -42,12 +48,20 @@ export class StatisticsCardComponent implements OnChanges {
     const monthlyIncomes = this.getMonthlyTotals(incomeTransactions);
     const monthlyExpenses = this.getMonthlyTotals(expenseTransactions);
 
+    // Berechne die Anzahl der Monate mit tatsächlichen Daten
+    const monthsWithIncomeData = monthlyIncomes.filter(income => income > 0).length;
+    const monthsWithExpenseData = monthlyExpenses.filter(expense => expense < 0).length;
+    const monthsWithAnyData = Math.max(monthlyIncomes.length, monthlyExpenses.length);
+
     this.statistics = {
       averageIncome: this.calculateAverage(monthlyIncomes),
       medianIncome: this.calculateMedian(monthlyIncomes),
       averageExpense: Math.abs(this.calculateAverage(monthlyExpenses)),
       medianExpense: Math.abs(this.calculateMedian(monthlyExpenses)),
-      totalMonths: Math.max(this.monthsCount, 1)
+      totalMonths: Math.max(this.monthsCount, 1),
+      averageIncomeWithData: this.calculateAverageWithData(monthlyIncomes),
+      averageExpenseWithData: Math.abs(this.calculateAverageWithData(monthlyExpenses)),
+      monthsWithData: monthsWithAnyData
     };
     console.log('Calculated statistics:', this.statistics);
   }
@@ -72,6 +86,12 @@ export class StatisticsCardComponent implements OnChanges {
     if (values.length === 0) return 0;
     const sum = values.reduce((acc, val) => acc + val, 0);
     return sum / Math.max(values.length, this.monthsCount);
+  }
+
+  private calculateAverageWithData(values: number[]): number {
+    if (values.length === 0) return 0;
+    const sum = values.reduce((acc, val) => acc + val, 0);
+    return sum / values.length;
   }
 
   private calculateMedian(values: number[]): number {
