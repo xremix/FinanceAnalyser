@@ -2,6 +2,50 @@ import { Component, inject, Input, OnChanges, OnInit, SimpleChanges } from '@ang
 import { NgbCalendar, NgbDateParserFormatter, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { DataState } from '../services/data-state';
 
+// Custom formatter for "Oct 25" format
+class CustomDateFormatter extends NgbDateParserFormatter {
+  readonly DELIMITER = ' ';
+
+  parse(value: string): NgbDate | null {
+    if (value) {
+      // Handle format like "Oct 25, 25" or "Oct 25"
+      const parts = value.split(',');
+      const monthDay = parts[0].trim().split(this.DELIMITER);
+      
+      if (monthDay.length === 2) {
+        const monthMap: { [key: string]: number } = {
+          'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6,
+          'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12
+        };
+        const month = monthMap[monthDay[0]];
+        const day = parseInt(monthDay[1], 10);
+        
+        let year = new Date().getFullYear();
+        if (parts.length === 2) {
+          const yearShort = parseInt(parts[1].trim(), 10);
+          // Convert 2-digit year to 4-digit year
+          year = yearShort < 50 ? 2000 + yearShort : 1900 + yearShort;
+        }
+        
+        if (month && day) {
+          return new NgbDate(year, month, day);
+        }
+      }
+    }
+    return null;
+  }
+
+  format(date: NgbDate | null): string {
+    if (date) {
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const yearShort = date.year.toString().slice(-2);
+      return `${monthNames[date.month - 1]} ${yearShort}`;
+    }
+    return '';
+  }
+}
+
 @Component({
   selector: 'app-date-range-picker',
   templateUrl: './date-range-picker.component.html',
@@ -9,7 +53,7 @@ import { DataState } from '../services/data-state';
 })
 export class DateRangePickerComponent implements OnInit, OnChanges {
 	calendar = inject(NgbCalendar);
-	formatter = inject(NgbDateParserFormatter);
+	formatter = new CustomDateFormatter();
 
 	hoveredDate: NgbDate | null = null;
 	fromDate: NgbDate | null = this.calendar.getToday();
