@@ -104,7 +104,7 @@ export class DataState {
       return true; // No search term means all transactions match
     }
 
-    const terms = searchTerm.toLowerCase().split(' ').filter(term => term.length > 0);
+    const terms = this.parseSearchTerms(searchTerm);
     console.error(terms);
     const rawText = transaction.raw.toLowerCase();
 
@@ -126,6 +126,47 @@ export class DataState {
     // Check include terms - if ANY include term is found, include the transaction
     const hasIncludedTerm = includeTerms.some(includeTerm => rawText.includes(includeTerm));
     return hasIncludedTerm;
+  }
+
+  private parseSearchTerms(searchTerm: string): string[] {
+    const terms: string[] = [];
+    let currentTerm = '';
+    let inQuotes = false;
+    let quoteChar = '';
+    
+    for (let i = 0; i < searchTerm.length; i++) {
+      const char = searchTerm[i];
+      
+      if (!inQuotes && (char === '"' || char === "'")) {
+        // Start of quoted string
+        inQuotes = true;
+        quoteChar = char;
+      } else if (inQuotes && char === quoteChar) {
+        // End of quoted string
+        inQuotes = false;
+        if (currentTerm.trim()) {
+          terms.push(currentTerm.toLowerCase().trim());
+          currentTerm = '';
+        }
+        quoteChar = '';
+      } else if (!inQuotes && char === ' ') {
+        // Space outside quotes - end current term
+        if (currentTerm.trim()) {
+          terms.push(currentTerm.toLowerCase().trim());
+          currentTerm = '';
+        }
+      } else {
+        // Regular character - add to current term
+        currentTerm += char;
+      }
+    }
+    
+    // Add final term if exists
+    if (currentTerm.trim()) {
+      terms.push(currentTerm.toLowerCase().trim());
+    }
+    
+    return terms.filter(term => term.length > 0);
   }
 
   private refresh() {
