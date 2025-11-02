@@ -21,6 +21,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DateRangePickerComponent } from './date-range-picker/date-range-picker.component';
 import { MonthyBillanceComponent } from "./monthy-billance/monthy-billance.component";
 import { MoneyBadgeComponent } from "./money-badge/money-badge.component";
+import { StatisticsCardComponent } from './statistics-card/statistics-card.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { MoneyBadgeComponent } from "./money-badge/money-badge.component";
     OrderPipe,
     MonthyBillanceComponent,
     DateRangePickerComponent,
+    StatisticsCardComponent,
   ],
   imports: [
     BrowserModule,

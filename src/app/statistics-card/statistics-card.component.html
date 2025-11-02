@@ -1,0 +1,47 @@
+<div class="card mt-3">
+  <div class="card-body">
+    <div class="row">
+      <!-- Income Statistics -->
+      <div class="col-md-6">
+
+        <div class="mb-2">
+          <small class="text-muted">Durchschnitt:</small>
+          <div class="fw-bold text-success">
+            {{ statistics.averageIncome | currency:'EUR':'symbol':'1.2-2' }}
+          </div>
+        </div>
+        <div class="mb-1">
+          <small class="text-muted">Median:</small>
+          <div class="fw-bold text-success">
+            {{ statistics.medianIncome | currency:'EUR':'symbol':'1.2-2' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Expense Statistics -->
+      <div class="col-md-6">
+
+        <div class="mb-2">
+          <small class="text-muted">Durchschnitt:</small>
+          <div class="fw-bold text-danger">
+            {{ statistics.averageExpense | currency:'EUR':'symbol':'1.2-2' }}
+          </div>
+        </div>
+        <div class="mb-1">
+          <small class="text-muted">Median:</small>
+          <div class="fw-bold text-danger">
+            {{ statistics.medianExpense | currency:'EUR':'symbol':'1.2-2' }}
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-12">
+        <small class="text-muted fs-6 text-end">
+          Basiert auf {{ statistics.totalMonths }} Monat{{ statistics.totalMonths !== 1 ? 'en' : '' }}
+        </small>
+      </div>
+    </div>
+  </div>
+</div>

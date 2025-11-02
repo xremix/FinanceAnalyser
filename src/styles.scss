@@ -4,3 +4,10 @@ html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
+
+.fs-6 {
+  font-size: 0.75rem !important;
+}
+.text-end {
+  text-align: right !important;
+}

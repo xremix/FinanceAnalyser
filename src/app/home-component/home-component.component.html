@@ -56,6 +56,11 @@
     </div>
     <div class="col-md-4">
       <app-category-chart [data]="dataState.categories" (triggerRefresh)="refreshPage()"></app-category-chart>
+      <app-statistics-card 
+        [transactions]="dataState.selectedTransactions" 
+        [selectedCategory]="dataState.currentFilter.category"
+        [monthsCount]="dataState.selectedMonthAmountInDataRangeFilter">
+      </app-statistics-card>
     </div>
   </div>
 
