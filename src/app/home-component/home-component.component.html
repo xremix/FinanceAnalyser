@@ -89,7 +89,7 @@
       <h2>Alle Buchungen ({{dataState.selectedTransactions.length}})</h2>
       <div class="row">
         <div class="col">
-          <app-transaction-component *ngFor="let transaction of dataState.selectedTransactions | orderBy: 'amount'" [transaction]="transaction"></app-transaction-component>
+          <app-transaction-component *ngFor="let transaction of dataState.selectedTransactions | amountSort" [transaction]="transaction"></app-transaction-component>
         </div>
       </div>
     </div>
@@ -99,7 +99,7 @@
       <div class="row">
         <div class="col">
 
-          <app-transaction-component *ngFor="let transaction of dataState.duplicates | orderBy: 'amount'" [transaction]="transaction">
+          <app-transaction-component *ngFor="let transaction of dataState.duplicates | amountSort" [transaction]="transaction">
           </app-transaction-component>
         </div>
       </div>
@@ -109,7 +109,7 @@
       <h2>Ausgeglichene Buchungen ({{balancedTransactions.length}})</h2>
       <div class="row">
         <div class="col">
-          <app-transaction-component *ngFor="let transaction of balancedTransactions | orderBy: 'amount'" [transaction]="transaction">
+          <app-transaction-component *ngFor="let transaction of balancedTransactions | amountSort" [transaction]="transaction">
           </app-transaction-component>
         </div>
       </div>

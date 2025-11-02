@@ -17,6 +17,7 @@ import { HomeComponentComponent } from './home-component/home-component.componen
 import { SettingsComponentComponent } from './settings-component/settings-component.component';
 import { provideRouter, RouterOutlet } from '@angular/router';
 import { OrderPipe } from './pipes/order.pipe';
+import { AmountSortPipe } from './pipes/amount-sort.pipe';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DateRangePickerComponent } from './date-range-picker/date-range-picker.component';
 import { MonthyBillanceComponent } from "./monthy-billance/monthy-billance.component";
@@ -36,6 +37,7 @@ import { GlobalSearchComponent } from './global-search/global-search.component';
     SettingsComponentComponent,
     OrderByPipe,
     OrderPipe,
+    AmountSortPipe,
     MonthyBillanceComponent,
     DateRangePickerComponent,
     StatisticsCardComponent,

@@ -22,7 +22,7 @@
     </div>
 
     <div *ngIf="!categorySummary.subCategories?.length" class="ms-md-4 ps-md-4" #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
-        <ng-container *ngFor="let transaction of activeTransactions | orderBy: 'amount'">
+        <ng-container *ngFor="let transaction of activeTransactions | amountSort">
             <app-transaction-component [transaction]="transaction"></app-transaction-component>
         </ng-container>
     </div>
