@@ -16,6 +16,7 @@ export interface DataFilter {
   to: Date;
   category: Category | undefined;
   type: 'all' | 'income' | 'expense';
+  searchTerm: string;
 }
 
 @Injectable({
@@ -59,6 +60,7 @@ export class DataState {
     to: new Date(),
     category: undefined as Category | undefined,
     type: 'all',
+    searchTerm: '',
   };
 
   get selectedMonthAmountInDataRangeFilter(): number {
@@ -81,7 +83,40 @@ export class DataState {
       this.currentFilter.type === 'all' ||
       (this.currentFilter.type === 'expense' && transaction.amount < 0) ||
       (this.currentFilter.type === 'income' && transaction.amount > 0);
-    return isBookingDateInFilter && isCategoryInFilter && isTypeInFilter;
+    
+    // Search filter logic
+    const isSearchTermInFilter = this.matchesSearchTerm(transaction, this.currentFilter.searchTerm);
+    
+    return isBookingDateInFilter && isCategoryInFilter && isTypeInFilter && isSearchTermInFilter;
+  }
+
+  private matchesSearchTerm(transaction: Transaction, searchTerm: string): boolean {
+    if (!searchTerm.trim()) {
+      return true; // No search term means all transactions match
+    }
+
+    const terms = searchTerm.toLowerCase().split(' ').filter(term => term.length > 0);
+    console.error(terms);
+    const rawText = transaction.raw.toLowerCase();
+
+    // Separate include and exclude terms
+    const includeTerms = terms.filter(term => !term.startsWith('-'));
+    const excludeTerms = terms.filter(term => term.startsWith('-')).map(term => term.substring(1));
+
+    // Check exclude terms first - if ANY exclude term is found, exclude the transaction
+    const hasExcludedTerm = excludeTerms.some(excludeTerm => rawText.includes(excludeTerm));
+    if (hasExcludedTerm) {
+      return false;
+    }
+
+    // If there are no include terms, and no excluded terms were found, include the transaction
+    if (includeTerms.length === 0) {
+      return true;
+    }
+
+    // Check include terms - if ANY include term is found, include the transaction
+    const hasIncludedTerm = includeTerms.some(includeTerm => rawText.includes(includeTerm));
+    return hasIncludedTerm;
   }
 
   private refresh() {
@@ -141,6 +176,8 @@ export class DataState {
   resetFilter() {
     this.resetMonth();
     this.resetCategory();
+    this.currentFilter.searchTerm = '';
+    this.refresh();
   }
   resetCategory() {
     this.currentFilter.category = undefined;
@@ -168,6 +205,11 @@ export class DataState {
 
   filterByType(type: 'all' | 'income' | 'expense') {
     this.currentFilter.type = type;
+    this.refresh();
+  }
+
+  filterBySearchTerm(searchTerm: string) {
+    this.currentFilter.searchTerm = searchTerm;
     this.refresh();
   }
 

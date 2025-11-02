@@ -22,6 +22,7 @@ import { DateRangePickerComponent } from './date-range-picker/date-range-picker.
 import { MonthyBillanceComponent } from "./monthy-billance/monthy-billance.component";
 import { MoneyBadgeComponent } from "./money-badge/money-badge.component";
 import { StatisticsCardComponent } from './statistics-card/statistics-card.component';
+import { GlobalSearchComponent } from './global-search/global-search.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { StatisticsCardComponent } from './statistics-card/statistics-card.compo
     CategorySelectComponent,
     RouterOutlet,
     NgbModule,
-    MoneyBadgeComponent
+    MoneyBadgeComponent,
+    GlobalSearchComponent
 ],
   providers: [
     provideAnimationsAsync(),

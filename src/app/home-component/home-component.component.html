@@ -33,6 +33,11 @@
 
 <div *ngIf="dataState.hasLoadedData">
 
+  <!-- Globale Suche -->
+  <div class="mb-4 text-center">
+    <app-global-search></app-global-search>
+  </div>
+
   <div class="mb-3 text-center">
     <app-date-range-picker [from]="dataState.currentFilter.from" [to]="dataState.currentFilter.to"></app-date-range-picker>
 
