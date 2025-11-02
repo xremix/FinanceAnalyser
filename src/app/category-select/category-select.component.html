@@ -1,18 +1,62 @@
-<div class="border-bottom mb-3 text-center">
-    <div>
-        <button class="btn btn-sm me-2 mb-1" [ngClass]="{'btn-outline-primary': !isNothingSelected(), 'btn-primary': isNothingSelected()}"
-            (click)="dataState.resetCategory()">
-            Alle
+<div class="category-filter-container bg-white rounded-2 p-4 border border-light shadow-sm mb-4">
+  <!-- Header with title -->
+  <div class="d-flex align-items-center mb-3">
+    <h6 class="fw-bold text-muted mb-0 text-uppercase tracking-wide">
+      <i class="bi bi-funnel me-2 text-primary"></i>
+      Kategorien filtern
+    </h6>
+  </div>
+
+  <!-- Main categories with "Alle" button integrated -->
+  <div class="main-categories mb-3">
+    <div class="row g-2">
+      <!-- "Alle" button with same styling as categories -->
+      <div class="col-auto">
+        <button 
+          class="btn category-btn rounded-pill px-3 py-2 fw-medium position-relative"
+          [class]="isNothingSelected() ? 'btn-primary shadow-sm' : 'btn-outline-primary'"
+          (click)="dataState.resetCategory()"
+          title="Alle Kategorien anzeigen">
+          <i class="bi bi-arrow-clockwise me-1"></i>
+          <span class="category-name fw-semibold">Alle</span>
         </button>
-        <button class="btn btn-sm me-2 mb-1" [ngClass]="{'btn-outline-primary': !isSelectedCategory(category), 'btn-primary': isSelectedCategory(category)}"
-            (click)="dataState.filterByCategory(category)" *ngFor="let category of categoriesCleaned">
-            {{category.name}}
+      </div>
+      <!-- Category buttons -->
+      <div class="col-auto" *ngFor="let category of categoriesCleaned">
+        <button 
+          class="btn category-btn rounded-pill px-3 py-2 fw-medium position-relative"
+          [class]="isSelectedCategory(category) ? 'btn-primary shadow-sm' : 'btn-outline-primary'"
+          (click)="dataState.filterByCategory(category)"
+          [title]="'Filtern nach ' + category.name">
+          <span class="category-name fw-semibold">{{category.name}}</span>
+          <span class="badge bg-light text-dark ms-2 small rounded-pill" *ngIf="category.total">
+            {{category.total | currency:'EUR':'symbol':'1.0-0'}}
+          </span>
         </button>
+      </div>
     </div>
-    <div>
-        <button class="btn btn-sm me-2 mb-1" [ngClass]="{'btn-link': !isSelectedCategory(category), 'btn-primary': isSelectedCategory(category)}"
-            (click)="dataState.filterByCategory(category)" *ngFor="let category of selectedSubCategoriesCleaned">
-            {{category.name}}
-        </button>
+  </div>
+
+  <!-- Subcategories with Bootstrap styling -->
+  <div class="subcategories border-top border-light pt-3 mt-3" *ngIf="selectedSubCategoriesCleaned.length > 0">
+    <div class="d-flex align-items-center mb-2">
+      <small class="text-muted fw-semibold text-uppercase">
+        <i class="bi bi-arrow-right me-1 text-info"></i>
+        Unterkategorien:
+      </small>
     </div>
+    <div class="d-flex flex-wrap gap-2">
+      <button 
+        class="btn btn-sm subcategory-btn rounded-pill fw-medium"
+        [class]="isSelectedCategory(category) ? 'btn-info' : 'btn-outline-info'"
+        (click)="dataState.filterByCategory(category)" 
+        *ngFor="let category of selectedSubCategoriesCleaned"
+        [title]="'Filtern nach ' + category.name">
+        <span class="subcategory-name">{{category.name}}</span>
+        <span class="badge bg-light text-dark ms-1 small rounded-pill" *ngIf="category.total">
+          {{category.total | currency:'EUR':'symbol':'1.0-0'}}
+        </span>
+      </button>
+    </div>
+  </div>
 </div>
