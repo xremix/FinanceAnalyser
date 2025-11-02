@@ -66,10 +66,19 @@ export class DataState {
   get selectedMonthAmountInDataRangeFilter(): number {
     var startDate = new Date(this.currentFilter.from);
     var endDate = new Date(this.currentFilter.to);
-    var amountMonths =
-      endDate.getMonth() - startDate.getMonth() + 12 * (endDate.getFullYear() - startDate.getFullYear());
-
-    return amountMonths + 1; // Include both start and end month in the count
+    
+    // Calculate the number of complete months between start and end date
+    var yearDiff = endDate.getFullYear() - startDate.getFullYear();
+    var monthDiff = endDate.getMonth() - startDate.getMonth();
+    var totalMonths = yearDiff * 12 + monthDiff;
+    
+    // If the end day is greater than or equal to the start day, 
+    // we have a complete additional month
+    if (endDate.getDate() >= startDate.getDate()) {
+      totalMonths += 1;
+    }
+    
+    return Math.max(1, totalMonths); // Ensure at least 1 month is returned
   }
 
   public showTransaction(transaction: Transaction): boolean {
