@@ -21,6 +21,8 @@ export class SettingsComponentComponent implements OnInit {
   }
   public saveState() {
     this.importService.saveCategoriesToLocalStorage(this.importService.categorisAsJson());
+    // Save timestamp when categories were saved
+    localStorage.setItem('categoriesLastSaved', new Date().toISOString());
     alert('Saved');
   }
 
@@ -123,5 +125,91 @@ export class SettingsComponentComponent implements OnInit {
     } else {
       category.type = 'savings';
     }
+  }
+
+  public getLastSavedDate(): string | null {
+    const lastSaved = localStorage.getItem('categoriesLastSaved');
+    if (lastSaved) {
+      return new Date(lastSaved).toLocaleString('de-DE');
+    }
+    return null;
+  }
+
+  public getAddedCategoriesCount(): number {
+    const flattenCategories = (categories: Category[]): Category[] => {
+      return categories.reduce((acc: Category[], category) => {
+        acc.push(category);
+        if (category.subCategories && category.subCategories.length > 0) {
+          acc.push(...flattenCategories(category.subCategories));
+        }
+        return acc;
+      }, []);
+    };
+
+    const flattenDefaultCategories = (categories: BaseCategory[]): BaseCategory[] => {
+      return categories.reduce((acc: BaseCategory[], category) => {
+        acc.push(category);
+        if (category.subCategories && category.subCategories.length > 0) {
+          acc.push(...flattenDefaultCategories(category.subCategories));
+        }
+        return acc;
+      }, []);
+    };
+
+    const currentCategories = flattenCategories(this.dataState.categories);
+    const defaultCats = flattenDefaultCategories(defaultCategories);
+    
+    // Count categories that are not in defaults (either by name or marked as not default)
+    return currentCategories.filter(cat => 
+      !defaultCats.some(def => def.name === cat.name) || cat.isDefault === false
+    ).length;
+  }
+
+  public getAddedKeywordsCount(): { include: number, exclude: number } {
+    const flattenCategories = (categories: Category[]): Category[] => {
+      return categories.reduce((acc: Category[], category) => {
+        acc.push(category);
+        if (category.subCategories && category.subCategories.length > 0) {
+          acc.push(...flattenCategories(category.subCategories));
+        }
+        return acc;
+      }, []);
+    };
+
+    const flattenDefaultCategories = (categories: BaseCategory[]): BaseCategory[] => {
+      return categories.reduce((acc: BaseCategory[], category) => {
+        acc.push(category);
+        if (category.subCategories && category.subCategories.length > 0) {
+          acc.push(...flattenDefaultCategories(category.subCategories));
+        }
+        return acc;
+      }, []);
+    };
+
+    const currentCategories = flattenCategories(this.dataState.categories);
+    const defaultCats = flattenDefaultCategories(defaultCategories);
+    
+    let addedIncludeKeywords = 0;
+    let addedExcludeKeywords = 0;
+
+    for (const currentCat of currentCategories) {
+      const defaultCat = defaultCats.find(def => def.name === currentCat.name);
+      if (defaultCat) {
+        // Count keywords that are in current but not in default
+        addedIncludeKeywords += currentCat.keywords.filter(keyword => 
+          !defaultCat.keywords.some(defKeyword => defKeyword.toLowerCase() === keyword.toLowerCase())
+        ).length;
+
+        addedExcludeKeywords += currentCat.excludeKeywords.filter(keyword => 
+          !defaultCat.excludeKeywords.some(defKeyword => defKeyword.toLowerCase() === keyword.toLowerCase())
+        ).length;
+      } else {
+        // If category doesn't exist in defaults, count all its keywords as added
+        addedIncludeKeywords += currentCat.keywords.length;
+        addedExcludeKeywords += currentCat.excludeKeywords.length;
+      }
+    }
+
+    return { include: addedIncludeKeywords, exclude: addedExcludeKeywords };
   }
 }

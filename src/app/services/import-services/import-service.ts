@@ -151,6 +151,7 @@ export class ImportService {
   public saveCategoriesToLocalStorage(json: string) {
     
     localStorage.setItem('categories', json);
+    localStorage.setItem('categoriesLastSaved', new Date().toISOString());
   }
   public categorisAsJson(): string {
     let baseCategories: BaseCategory[] = this.dataState.categories.map((c) => mapCategoryToBaseCategory(c));

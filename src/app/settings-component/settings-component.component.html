@@ -4,6 +4,27 @@
     <button class="btn btn-primary ms-2" (click)="fillCategoriesWithDefaults()">Fill with defaults</button>
 </h1>
 
+<!-- Statistics Information -->
+<div class="m-3">
+    <div class="row text-muted small">
+        <div class="col-md-4">
+            Zuletzt gespeichert: 
+            <span *ngIf="getLastSavedDate(); else neverSaved">
+                {{getLastSavedDate()}}
+            </span>
+            <ng-template #neverSaved>
+                Noch nie gespeichert
+            </ng-template>
+        </div>
+        <div class="col-md-4">
+            +{{getAddedCategoriesCount()}} neue Kategorien
+        </div>
+        <div class="col-md-4">
+            +{{getAddedKeywordsCount().include}} Include, +{{getAddedKeywordsCount().exclude}} Exclude Keywords
+        </div>
+    </div>
+</div>
+
 <div *ngFor="let category of dataState.categories">
     <ng-container *ngTemplateOutlet="categoryTemplate; context:{category: category}"> </ng-container>
 </div>
