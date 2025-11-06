@@ -25,6 +25,7 @@ export interface DataFilter {
 export class DataState {
   private _transactions: Transaction[] = [];
   public duplicates: Transaction[] = [];
+  public loadedSources: string[] = []; // Track loaded file sources
 
   public months: DateFilter[] = [];
   public monthStarts: Date[] = [];
@@ -42,11 +43,33 @@ export class DataState {
 
   public setTransactions(value: Transaction[]): void {
     this._transactions = value;
+    this.loadedSources = ['Hauptdatei']; // Reset sources for primary file
     this.months = this.dateService.getMonths(this._transactions);
     this.monthStarts = this.months.map((m) => m.from);
     this.findDuplicates();
     this.duplicateService.setWasBalancedAfterwardsForAllTransaction(this._transactions);
   }
+
+  public addTransactions(newTransactions: Transaction[]): void {
+    // Merge new transactions with existing ones
+    this._transactions = [...this._transactions, ...newTransactions];
+    
+    // Track the source if it has one
+    const source = newTransactions.find(t => t.source)?.source;
+    if (source && !this.loadedSources.includes(source)) {
+      this.loadedSources.push(source);
+    }
+    
+    // Update derived data
+    this.months = this.dateService.getMonths(this._transactions);
+    this.monthStarts = this.months.map((m) => m.from);
+    this.findDuplicates();
+    this.duplicateService.setWasBalancedAfterwardsForAllTransaction(this._transactions);
+    
+    // Update selected transactions based on current filter
+    this.refresh();
+  }
+
   private findDuplicates(){
     this.duplicates = this.duplicateService.findDuplicateTransactions(this.selectedTransactions);
   }
@@ -237,6 +260,7 @@ export class DataState {
     this._transactions = [];
     this.selectedTransactions = [];
     this.months = [];
+    this.loadedSources = [];
     this.resetCategories();
   }
 

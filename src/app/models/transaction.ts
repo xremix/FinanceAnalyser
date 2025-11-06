@@ -15,4 +15,5 @@ export interface Transaction {
   raw: string;
   balancedByDescription?: string;
   balancedOfDescription?: string;
+  source?: string; // Source file name for multiple file support
 }

@@ -1,8 +1,42 @@
 <div class="big" *ngIf="big">
   <input type="file" name="file" id="file" class="inputfile" (change)="fileChanged($event)" />
   <label for="file">Datei wählen</label>
+  
+  <!-- Additional file selector for second document -->
+  <div class="additional-file-section" *ngIf="dataState.hasLoadedData">
+    <input type="file" name="additionalFile" id="additionalFile" class="inputfile" (change)="additionalFileChanged($event)" />
+    <label for="additionalFile" class="additional-file-btn" 
+           title="Zusätzliche Dateien werden jetzt gespeichert und automatisch geladen">
+      <i class="fa-solid fa-plus"></i> Weitere Datei hinzufügen
+    </label>
+    
+    <!-- Clear additional files button -->
+    <button class="clear-additional-btn" 
+            (click)="clearAdditionalFiles()" 
+            *ngIf="dataState.loadedSources.length > 0"
+            title="Alle zusätzlichen Dateien löschen">
+      <i class="fa-solid fa-trash"></i> Zusätzliche Dateien löschen
+    </button>
+  </div>
 </div>
 <div class="small d-inline" *ngIf="!big">
   <input type="file" name="file" id="file" class="inputfile" (change)="fileChanged($event)" />
   <label for="file" class="fw-bold"><i class="fa-solid fa-magnifying-glass"></i></label>
+  
+  <!-- Additional file selector for small version -->
+  <div class="additional-file-small" *ngIf="dataState.hasLoadedData">
+    <input type="file" name="additionalFileSmall" id="additionalFileSmall" class="inputfile" (change)="additionalFileChanged($event)" />
+    <label for="additionalFileSmall" class="additional-file-btn-small"
+           title="✅ Zusätzliche Dateien werden jetzt gespeichert und automatisch geladen">
+      <i class="fa-solid fa-plus"></i>
+    </label>
+    
+    <!-- Clear button for small version -->
+    <button class="clear-additional-btn-small" 
+            (click)="clearAdditionalFiles()" 
+            *ngIf="dataState.loadedSources.length > 0"
+            title="Alle zusätzlichen Dateien löschen">
+      <i class="fa-solid fa-trash"></i>
+    </button>
+  </div>
 </div>

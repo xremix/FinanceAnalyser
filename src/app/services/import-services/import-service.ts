@@ -54,13 +54,93 @@ export class ImportService {
     }
   }
 
+  public async loadAdditionalFile(fileContent: string, fileName: string): Promise<void> {
+    try {
+      let newTransactions = this.parseCsvToTransactions(fileContent);
+      
+      if (newTransactions.length === 0) {
+        throw new Error('No transactions found in the file. Please check the format.');
+      }
+
+      // Fill categories for new transactions
+      this.categoryService.fillCategoriesToTransactions(newTransactions);
+
+      // Add source information to transactions
+      newTransactions.forEach(transaction => {
+        transaction.source = fileName;
+      });
+
+      // Save additional file to localStorage
+      this.saveAdditionalFileToLocalStorage(fileContent, fileName);
+
+      // Add to existing transactions
+      this.dataState.addTransactions(newTransactions);
+
+      console.log(`Successfully loaded ${newTransactions.length} transactions from ${fileName}`);
+    } catch (error) {
+      console.error('Error loading additional file:', error);
+      throw error;
+    }
+  }
+
+  private saveAdditionalFileToLocalStorage(fileContent: string, fileName: string): void {
+    const additionalFiles = this.getAdditionalFilesFromLocalStorage();
+    const fileData = {
+      fileName,
+      content: fileContent,
+      uploadedAt: new Date().toISOString()
+    };
+    
+    // Check if file already exists and replace it, otherwise add new
+    const existingIndex = additionalFiles.findIndex(f => f.fileName === fileName);
+    if (existingIndex >= 0) {
+      additionalFiles[existingIndex] = fileData;
+    } else {
+      additionalFiles.push(fileData);
+    }
+    
+    localStorage.setItem('additionalFiles', JSON.stringify(additionalFiles));
+  }
+
+  private getAdditionalFilesFromLocalStorage(): Array<{fileName: string, content: string, uploadedAt: string}> {
+    const stored = localStorage.getItem('additionalFiles');
+    return stored ? JSON.parse(stored) : [];
+  }
+
+  public loadAdditionalFilesFromLocalStorage(): void {
+    const additionalFiles = this.getAdditionalFilesFromLocalStorage();
+    
+    for (const fileData of additionalFiles) {
+      try {
+        let transactions = this.parseCsvToTransactions(fileData.content);
+        this.categoryService.fillCategoriesToTransactions(transactions);
+        
+        // Add source information to transactions
+        transactions.forEach(transaction => {
+          transaction.source = fileData.fileName;
+        });
+
+        // Add to existing transactions
+        this.dataState.addTransactions(transactions);
+        
+        console.log(`Loaded ${transactions.length} transactions from stored file: ${fileData.fileName}`);
+      } catch (error) {
+        console.error(`Error loading stored additional file ${fileData.fileName}:`, error);
+      }
+    }
+  }
+
+  public clearAdditionalFilesFromLocalStorage(): void {
+    localStorage.removeItem('additionalFiles');
+  }
+
   constructor(private categoryService: CategoryService, private dataState: DataState) {}
 
 
   public loadFromLocalStorage(){
     this.loadCategoriesFromLocalStorage();
     this.loadFileFromLocalStorage();
-
+    this.loadAdditionalFilesFromLocalStorage();
   }
 
   private loadCategoriesFromLocalStorage() {
