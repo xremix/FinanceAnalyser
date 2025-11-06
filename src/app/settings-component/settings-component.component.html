@@ -46,13 +46,13 @@
         </div>
         <div>
             Include<br />
-            <div *ngFor="let keyword of category.keywords | order" class="badge rounded-pill p-2 text-bg-primary" role="button"
+            <div *ngFor="let keyword of category.keywords | order" [class]="getKeywordClass(category, keyword, false)" role="button"
                 (click)="removeKeyWord(category.keywords, keyword)">{{keyword}}</div>
             <button class="btn btn-link text-success" (click)="addKeyWord(category.keywords)" *ngIf="!category.subCategories.length"><i class="fa-solid fa-circle-plus"></i></button>
         </div>
         <div>
             Exclude<br />
-            <div *ngFor="let keyword of category.excludeKeywords | order" class="badge rounded-pill p-2 text-bg-danger" role="button"
+            <div *ngFor="let keyword of category.excludeKeywords | order" [class]="getKeywordClass(category, keyword, true)" role="button"
                 (click)="removeKeyWord(category.excludeKeywords, keyword)">{{keyword}}</div>
             <button class="btn btn-link text-success" (click)="addKeyWord(category.excludeKeywords)" *ngIf="!category.subCategories.length"><i class="fa-solid fa-circle-plus"></i></button>
         </div>

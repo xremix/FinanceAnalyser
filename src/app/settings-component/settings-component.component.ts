@@ -212,4 +212,36 @@ export class SettingsComponentComponent implements OnInit {
 
     return { include: addedIncludeKeywords, exclude: addedExcludeKeywords };
   }
+
+  public isDefaultKeyword(category: Category, keyword: string, isExclude: boolean = false): boolean {
+    const flattenDefaultCategories = (categories: BaseCategory[]): BaseCategory[] => {
+      return categories.reduce((acc: BaseCategory[], category) => {
+        acc.push(category);
+        if (category.subCategories && category.subCategories.length > 0) {
+          acc.push(...flattenDefaultCategories(category.subCategories));
+        }
+        return acc;
+      }, []);
+    };
+
+    const defaultCats = flattenDefaultCategories(defaultCategories);
+    const defaultCat = defaultCats.find(def => def.name === category.name);
+    
+    if (!defaultCat) {
+      return false;
+    }
+
+    const keywordsToCheck = isExclude ? defaultCat.excludeKeywords : defaultCat.keywords;
+    return keywordsToCheck.some(defKeyword => defKeyword.toLowerCase() === keyword.toLowerCase());
+  }
+
+  public getKeywordClass(category: Category, keyword: string, isExclude: boolean = false): string {
+    const isDefault = this.isDefaultKeyword(category, keyword, isExclude);
+    
+    if (isExclude) {
+      return isDefault ? 'badge rounded-pill p-2 text-bg-light border' : 'badge rounded-pill p-2 text-bg-danger';
+    } else {
+      return isDefault ? 'badge rounded-pill p-2 text-bg-light border' : 'badge rounded-pill p-2 text-bg-primary';
+    }
+  }
 }
