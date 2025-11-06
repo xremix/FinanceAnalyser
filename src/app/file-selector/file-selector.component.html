@@ -13,7 +13,7 @@
     <!-- Clear additional files button -->
     <button class="clear-additional-btn" 
             (click)="clearAdditionalFiles()" 
-            *ngIf="dataState.loadedSources.length > 0"
+            *ngIf="dataState.loadedSources.length > 1"
             title="Alle zusätzlichen Dateien löschen">
       <i class="fa-solid fa-trash"></i> Zusätzliche Dateien löschen
     </button>
@@ -34,7 +34,7 @@
     <!-- Clear button for small version -->
     <button class="clear-additional-btn-small" 
             (click)="clearAdditionalFiles()" 
-            *ngIf="dataState.loadedSources.length > 0"
+            *ngIf="dataState.loadedSources.length > 1"
             title="Alle zusätzlichen Dateien löschen">
       <i class="fa-solid fa-trash"></i>
     </button>
