@@ -36,6 +36,7 @@
             <i [class]="category.icon"></i>
             <span>{{category.name}}</span>
             <button class="btn btn-success btn-sm ms-2" (click)="addCategory(category.subCategories)">Add Sub Category</button>
+            <button class="btn btn-success btn-sm ms-2" (click)="renameCategory(category)">Rename</button>
             <button class="btn btn-success btn-sm ms-2" (click)="editIcon(category)">Edit Icon</button>
             <button class="btn btn-success btn-sm ms-2" (click)="toggleType(category)">{{category.type}}</button>
             <!-- <button class="btn btn-success btn-sm ms-2" (click)="category.isDefault = !category.isDefault">{{category.isDefault | json}}</button> -->

@@ -116,6 +116,13 @@ export class SettingsComponentComponent implements OnInit {
       category.icon = icon ?? '';
   }
 
+  public renameCategory(category: Category) {
+    const newName = prompt('Kategorie umbenennen', category.name);
+    if (newName && newName.trim() !== '') {
+      category.name = newName.trim();
+    }
+  }
+
   public toggleType(category: Category){
     // toggle between 'savings' | 'income' | 'expense';
     if(category.type === 'savings'){
