@@ -1,4 +1,10 @@
-.badge.rounded-pill:hover{
-// strike through
-    text-decoration: line-through;
+// Minimal custom styles - using Bootstrap utilities where possible
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+// Legacy hover effect for badges
+.badge.rounded-pill:hover {
+  text-decoration: line-through;
 }

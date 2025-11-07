@@ -1,64 +1,202 @@
-<h1 class="bg-white sticky-top">
-    <span>Settings<span *ngIf="hasUnsavedChanges">*</span></span>
-    <button class="btn btn-primary" (click)="saveState()">Save</button>
-    <button class="btn btn-primary ms-2" (click)="fillCategoriesWithDefaults()">Fill with defaults</button>
-</h1>
-
-<!-- Statistics Information -->
-<div class="m-3">
-    <div class="row text-muted small">
-        <div class="col-md-4">
-            Zuletzt gespeichert: 
-            <span *ngIf="getLastSavedDate(); else neverSaved">
-                {{getLastSavedDate()}}
-            </span>
-            <ng-template #neverSaved>
-                Noch nie gespeichert
-            </ng-template>
-        </div>
-        <div class="col-md-4">
-            +{{getAddedCategoriesCount()}} neue Kategorien
-        </div>
-        <div class="col-md-4">
-            +{{getAddedKeywordsCount().include}} Include, +{{getAddedKeywordsCount().exclude}} Exclude Keywords
+<div class="bg-white sticky-top shadow-sm border-bottom">
+    <div class="container-fluid py-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+            <div>
+                <h1 class="mb-0 fw-bold text-dark d-flex align-items-center">
+                    <i class="fas fa-cog me-2 text-primary"></i>
+                    Settings
+                    <span class="badge bg-warning text-dark ms-2 small" *ngIf="hasUnsavedChanges">Ungespeicherte Änderungen</span>
+                </h1>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-primary" (click)="fillCategoriesWithDefaults()">
+                    <i class="fas fa-magic me-2"></i>Defaults laden
+                </button>
+                <button class="btn btn-primary" (click)="saveState()">
+                    <i class="fas fa-save me-2"></i>Speichern
+                </button>
+            </div>
         </div>
     </div>
 </div>
 
-<div *ngFor="let category of dataState.categories">
-    <ng-container *ngTemplateOutlet="categoryTemplate; context:{category: category}"> </ng-container>
+<!-- Statistics Information -->
+<div class="container-fluid mb-4">
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="bg-light rounded-circle p-3 me-3">
+                        <i class="fas fa-clock text-info fs-4"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small fw-medium">Zuletzt gespeichert</div>
+                        <div class="fw-semibold">
+                            <span *ngIf="getLastSavedDate(); else neverSaved">
+                                {{getLastSavedDate()}}
+                            </span>
+                            <ng-template #neverSaved>
+                                Noch nie gespeichert
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="bg-light rounded-circle p-3 me-3">
+                        <i class="fas fa-plus-circle text-success fs-4"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small fw-medium">Neue Kategorien</div>
+                        <div class="fw-semibold">+{{getAddedCategoriesCount()}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="bg-light rounded-circle p-3 me-3">
+                        <i class="fas fa-tags text-warning fs-4"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="text-muted small fw-medium">Neue Keywords</div>
+                        <div class="fw-semibold small">+{{getAddedKeywordsCount().include}} Include, +{{getAddedKeywordsCount().exclude}} Exclude</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<button class="btn btn-success" (click)="addCategory()"><i class="fa-solid fa-circle-plus"></i> Add Category</button>
+
+<div class="container-fluid">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
+        <h2 class="mb-0 fw-semibold">
+            <i class="fas fa-list me-2 text-primary"></i>
+            Kategorien verwalten
+        </h2>
+        <button class="btn btn-success btn-lg" (click)="addCategory()">
+            <i class="fas fa-plus me-2"></i>Neue Kategorie
+        </button>
+    </div>
+    
+    <div class="row g-3">
+        <div *ngFor="let category of dataState.categories" class="col-12">
+            <ng-container *ngTemplateOutlet="categoryTemplate; context:{category: category}"> </ng-container>
+        </div>
+    </div>
+</div>
 
 <ng-template #categoryTemplate let-category='category'>
-    <div class="bg-light m-3 rounded p-3">
-        <h2>
-            <i [class]="category.icon"></i>
-            <span>{{category.name}}</span>
-            <button class="btn btn-success btn-sm ms-2" (click)="addCategory(category.subCategories)">Add Sub Category</button>
-            <button class="btn btn-success btn-sm ms-2" (click)="renameCategory(category)">Rename</button>
-            <button class="btn btn-success btn-sm ms-2" (click)="editIcon(category)">Edit Icon</button>
-            <button class="btn btn-success btn-sm ms-2" (click)="toggleType(category)">{{category.type}}</button>
-            <!-- <button class="btn btn-success btn-sm ms-2" (click)="category.isDefault = !category.isDefault">{{category.isDefault | json}}</button> -->
-            <button class="btn btn-danger btn-sm ms-2" (click)="deleteCategory(category)">Delete</button>
-        </h2>
-        <div class="ms-4" *ngFor="let sub of category.subCategories">
-            <ng-container *ngTemplateOutlet="categoryTemplate; context:{category: sub}"> </ng-container>
-        </div>
-        <div>
-            Include<br />
-            <div *ngFor="let keyword of category.keywords | order" [class]="getKeywordClass(category, keyword, false)" role="button"
-                (click)="removeKeyWord(category.keywords, keyword)">{{keyword}}</div>
-            <button class="btn btn-link text-success" (click)="addKeyWord(category.keywords)" *ngIf="!category.subCategories.length"><i class="fa-solid fa-circle-plus"></i></button>
-        </div>
-        <div>
-            Exclude<br />
-            <div *ngFor="let keyword of category.excludeKeywords | order" [class]="getKeywordClass(category, keyword, true)" role="button"
-                (click)="removeKeyWord(category.excludeKeywords, keyword)">{{keyword}}</div>
-            <button class="btn btn-link text-success" (click)="addKeyWord(category.excludeKeywords)" *ngIf="!category.subCategories.length"><i class="fa-solid fa-circle-plus"></i></button>
+    <div class="card shadow-sm">
+        <div class="card-header bg-light">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+                <div class="d-flex align-items-center gap-3 flex-grow-1">
+                    <div class="bg-white rounded-circle p-2 shadow-sm">
+                        <i [class]="category.icon" class="fs-4 text-secondary"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h4 class="mb-1 fw-semibold">{{category.name}}</h4>
+                        <span class="badge rounded-pill" 
+                              [class.bg-success]="category.type === 'income'"
+                              [class.bg-danger]="category.type === 'expense'"
+                              [class.bg-info]="category.type === 'savings'">
+                            {{category.type}}
+                        </span>
+                    </div>
+                </div>
+                <div class="btn-group" role="group">
+                    <button class="btn btn-outline-primary btn-sm" 
+                            (click)="addCategory(category.subCategories)"
+                            title="Unterkategorie hinzufügen">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" 
+                            (click)="renameCategory(category)"
+                            title="Umbenennen">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" 
+                            (click)="editIcon(category)"
+                            title="Icon ändern">
+                        <i class="fas fa-icons"></i>
+                    </button>
+                    <button class="btn btn-outline-info btn-sm" 
+                            (click)="toggleType(category)"
+                            title="Typ ändern">
+                        <i class="fas fa-exchange-alt"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" 
+                            (click)="deleteCategory(category)"
+                            title="Löschen">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
         </div>
 
-        <div class="text-center">
+        <div class="card-body bg-light" *ngIf="category.subCategories?.length">
+            <div class="row g-2">
+                <div *ngFor="let sub of category.subCategories" class="col-12">
+                    <ng-container *ngTemplateOutlet="categoryTemplate; context:{category: sub}"> </ng-container>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body" *ngIf="!category.subCategories?.length">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="mb-0 fw-semibold text-success">
+                            <i class="fas fa-check-circle me-2"></i>
+                            Include Keywords
+                        </h6>
+                        <button class="btn btn-sm btn-outline-success" 
+                                (click)="addKeyWord(category.keywords)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span *ngFor="let keyword of category.keywords | order" 
+                              [class]="getKeywordClass(category, keyword, false) + ' cursor-pointer'"
+                              role="button"
+                              (click)="removeKeyWord(category.keywords, keyword)">
+                            {{keyword}}
+                            <i class="fas fa-times ms-2 small"></i>
+                        </span>
+                        <div *ngIf="!category.keywords?.length" class="text-muted small fst-italic">
+                            Keine Include-Keywords definiert
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="mb-0 fw-semibold text-danger">
+                            <i class="fas fa-times-circle me-2"></i>
+                            Exclude Keywords
+                        </h6>
+                        <button class="btn btn-sm btn-outline-danger" 
+                                (click)="addKeyWord(category.excludeKeywords)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <span *ngFor="let keyword of category.excludeKeywords | order" 
+                              [class]="getKeywordClass(category, keyword, true) + ' cursor-pointer'"
+                              role="button"
+                              (click)="removeKeyWord(category.excludeKeywords, keyword)">
+                            {{keyword}}
+                            <i class="fas fa-times ms-2 small"></i>
+                        </span>
+                        <div *ngIf="!category.excludeKeywords?.length" class="text-muted small fst-italic">
+                            Keine Exclude-Keywords definiert
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </ng-template>

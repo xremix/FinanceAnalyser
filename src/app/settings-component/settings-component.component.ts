@@ -27,21 +27,18 @@ export class SettingsComponentComponent implements OnInit, OnDestroy {
   }
 
   @HostListener('window:beforeunload', ['$event'])
-  beforeUnloadHandler(event: any): string | undefined {
+  beforeUnloadHandler(event: BeforeUnloadEvent): void {
     if (this.hasUnsavedChanges) {
       // Standard-Warnung des Browsers anzeigen
       event.preventDefault();
-      event.returnValue = '';
-      return '';
+      // Moderne Browser benötigen returnValue gesetzt
+      event.returnValue = 'Sie haben ungespeicherte Änderungen. Möchten Sie die Seite wirklich verlassen?';
     }
-    return undefined;
   }
 
   private setupChangeDetection(): void {
-    // Überwache Änderungen an den Kategorien durch regelmäßige Überprüfung
-    setInterval(() => {
-      this.checkForChanges();
-    }, 1000);
+    // Keine regelmäßige Überprüfung nötig, da wir bei jeder Änderung markieren
+    // Die Änderungserkennung erfolgt direkt in den entsprechenden Methoden
   }
 
   private checkForChanges(): void {
@@ -51,6 +48,10 @@ export class SettingsComponentComponent implements OnInit, OnDestroy {
 
   private markAsChanged(): void {
     this.hasUnsavedChanges = true;
+  }
+
+  public getUnsavedChangesStatus(): boolean {
+    return this.hasUnsavedChanges;
   }
   public save() {
     this.importService.saveCategoriesToLocalStorage(this.json);
