@@ -33,24 +33,28 @@
 
 <div *ngIf="dataState.hasLoadedData">
 
-  <!-- Filter in einer Zeile -->
-  <div class="mb-3 d-flex justify-content-center align-items-start flex-wrap gap-3">
-    <app-global-search class="flex-grow-1" style="min-width: 300px; max-width: 1000px;"></app-global-search>
-    <app-date-range-picker [from]="dataState.currentFilter.from" [to]="dataState.currentFilter.to"></app-date-range-picker>
+  <div class="card mb-3">
+    <div class="card-body">
+      <!-- Filter in einer Zeile -->
+      <div class="mb-3 d-flex justify-content-center align-items-start flex-wrap gap-3">
+        <app-global-search class="flex-grow-1" style="min-width: 300px; max-width: 1000px;"></app-global-search>
+        <app-date-range-picker [from]="dataState.currentFilter.from" [to]="dataState.currentFilter.to"></app-date-range-picker>
 
-    <div ngbDropdown class="d-inline-block">
-      <button type="button" class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>
-        <span>Ein- / Ausgaben</span>
-      </button>
-      <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-        <button ngbDropdownItem (click)="dataState.filterByType('all')"> Alle </button>
-        <button ngbDropdownItem (click)="dataState.filterByType('income')"> Einnahmen </button>
-        <button ngbDropdownItem (click)="dataState.filterByType('expense')"> Ausgaben </button>
+        <div ngbDropdown class="d-inline-block">
+          <button type="button" class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>
+            <span>Ein- / Ausgaben</span>
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button ngbDropdownItem (click)="dataState.filterByType('all')"> Alle </button>
+            <button ngbDropdownItem (click)="dataState.filterByType('income')"> Einnahmen </button>
+            <button ngbDropdownItem (click)="dataState.filterByType('expense')"> Ausgaben </button>
+          </div>
+        </div>
       </div>
+      
+      <app-category-select></app-category-select>
     </div>
   </div>
-
-  <app-category-select></app-category-select>
 
   <div class="row">
     <div class="col-md-8">
