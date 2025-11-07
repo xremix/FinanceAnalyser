@@ -24,6 +24,7 @@ import { MonthyBillanceComponent } from "./monthy-billance/monthy-billance.compo
 import { MoneyBadgeComponent } from "./money-badge/money-badge.component";
 import { StatisticsCardComponent } from './statistics-card/statistics-card.component';
 import { GlobalSearchComponent } from './global-search/global-search.component';
+import { DailyIncomeExpenseChartComponent } from './daily-income-expense-chart/daily-income-expense-chart.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { GlobalSearchComponent } from './global-search/global-search.component';
     RouterOutlet,
     NgbModule,
     MoneyBadgeComponent,
-    GlobalSearchComponent
+    GlobalSearchComponent,
+    DailyIncomeExpenseChartComponent
 ],
   providers: [
     provideAnimationsAsync(),

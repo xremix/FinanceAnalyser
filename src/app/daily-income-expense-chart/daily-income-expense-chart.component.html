@@ -1,0 +1,42 @@
+<div class="card mb-3">
+  <div class="card-header bg-light border-bottom d-flex justify-content-between align-items-center">
+    <h5 class="mb-0 text-secondary fw-semibold">Tägliche Ein- und Ausgaben</h5>
+    <button 
+      type="button" 
+      class="btn btn-sm btn-outline-secondary"
+      (click)="toggleCollapse()"
+      [attr.aria-expanded]="!isCollapsed"
+      aria-controls="dailyChart">
+      <span *ngIf="isCollapsed">Anzeigen</span>
+      <span *ngIf="!isCollapsed">Verbergen</span>
+    </button>
+  </div>
+  
+  <div 
+    class="collapse card-body" 
+    [class.show]="!isCollapsed" 
+    id="dailyChart">
+    <div *ngIf="series && series.length > 0 && series[0]?.data && series[0].data.length > 0 && categories?.categories && categories.categories.length > 0; else noDataTemplate">
+      <apx-chart
+        #chart
+        [series]="series"
+        [chart]="chartOptions.chart"
+        [xaxis]="chartOptions.xaxis"
+        [yaxis]="chartOptions.yaxis"
+        [title]="chartOptions.title"
+        [dataLabels]="chartOptions.dataLabels"
+        [stroke]="chartOptions.stroke"
+        [markers]="chartOptions.markers"
+        [legend]="chartOptions.legend"
+        [tooltip]="chartOptions.tooltip"
+        [grid]="chartOptions.grid">
+      </apx-chart>
+    </div>
+    
+    <ng-template #noDataTemplate>
+      <div class="text-center py-4 text-muted">
+        <p class="mb-0">Keine Daten für die tägliche Ansicht verfügbar</p>
+      </div>
+    </ng-template>
+  </div>
+</div>

@@ -70,6 +70,12 @@
     </div>
   </div>
 
+  <!-- Daily Income/Expense Chart - Collapsible -->
+  <app-daily-income-expense-chart 
+    [transactions]="dataState.selectedTransactions" 
+    (triggerRefresh)="refreshPage()">
+  </app-daily-income-expense-chart>
+
   <div class="overflow-x-hidden  overflow-x-scroll">
   <ul class="nav nav-tabs" style="width: 100%; min-width: 840px;">
     <li class="nav-item" *ngFor="let tab of tabs">
