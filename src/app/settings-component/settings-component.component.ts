@@ -11,7 +11,7 @@ import { BaseCategory, Category } from '../models/category';
 })
 export class SettingsComponentComponent implements OnInit, OnDestroy {
   public json: string = '';
-  private hasUnsavedChanges: boolean = false;
+  public hasUnsavedChanges: boolean = false;
   private initialCategoriesSnapshot: string = '';
   
   constructor(protected dataState: DataState, private importService: ImportService) {}
