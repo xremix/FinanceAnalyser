@@ -31,6 +31,7 @@ export const defaultCategories: BaseCategory[] = [
       'Fidelity',
       'Fonds',
       'HSBC',
+      'Kontoausgleich',
       'iShares',
       'Kryptowährung',
       'LBS',
@@ -44,6 +45,7 @@ export const defaultCategories: BaseCategory[] = [
       'Volksbank',
       'WisdomTree',
       'Xtrackers',
+      'Zinsen'
     ],
   },
   {
@@ -169,7 +171,7 @@ export const defaultCategories: BaseCategory[] = [
         ],
       },
       {
-        name: 'Freizeit',
+        name: 'Freizeitaktivitäten',
         subCategories: [],
         type: 'expense',
         excludeKeywords: [],
@@ -254,6 +256,7 @@ export const defaultCategories: BaseCategory[] = [
           'Essen',
           'Five Guys',
           'Gasthaus',
+          'Gastro',
           'Gastronomie',
           'Hofpfisterei',
           'Kaffee',
@@ -267,8 +270,10 @@ export const defaultCategories: BaseCategory[] = [
           'Rathauscaf',
           'Restaura',
           'Restaurant',
+          'Ristorante',
           'Subway',
           'Takeaway.com',
+          'Trattoria',
           'Vapiano',
           'Wirtshaus',
         ],
@@ -334,6 +339,8 @@ export const defaultCategories: BaseCategory[] = [
         keywords: [
           'Apple.com',
           'Cyberport',
+          'Computer',
+          'Conrad',
           'Euronics',
           'expert Techno',
           'Media Markt',
@@ -549,7 +556,7 @@ export const defaultCategories: BaseCategory[] = [
         subCategories: [],
         type: 'expense',
         excludeKeywords: [],
-        keywords: ['Kreditkartenabrechnung'],
+        keywords: ['Kreditkartenabrechnung', 'Kreditkarte', 'Credit Card'],
       },
       {
         name: 'PayPal',

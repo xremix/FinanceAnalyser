@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { DataState } from '../services/data-state';
 import { ImportService } from '../services/import-services/import-service';
 import { defaultCategories } from '../default-categories';
@@ -9,20 +9,62 @@ import { BaseCategory, Category } from '../models/category';
   templateUrl: './settings-component.component.html',
   styleUrl: './settings-component.component.scss',
 })
-export class SettingsComponentComponent implements OnInit {
+export class SettingsComponentComponent implements OnInit, OnDestroy {
   public json: string = '';
+  private hasUnsavedChanges: boolean = false;
+  private initialCategoriesSnapshot: string = '';
+  
   constructor(protected dataState: DataState, private importService: ImportService) {}
 
   ngOnInit(): void {
     this.json = this.importService.categorisAsJson();
+    this.initialCategoriesSnapshot = this.json;
+    this.setupChangeDetection();
+  }
+
+  ngOnDestroy(): void {
+    // Cleanup wenn die Komponente zerstört wird
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeUnloadHandler(event: any): string | undefined {
+    if (this.hasUnsavedChanges) {
+      // Standard-Warnung des Browsers anzeigen
+      event.preventDefault();
+      event.returnValue = '';
+      return '';
+    }
+    return undefined;
+  }
+
+  private setupChangeDetection(): void {
+    // Überwache Änderungen an den Kategorien durch regelmäßige Überprüfung
+    setInterval(() => {
+      this.checkForChanges();
+    }, 1000);
+  }
+
+  private checkForChanges(): void {
+    const currentSnapshot = this.importService.categorisAsJson();
+    this.hasUnsavedChanges = currentSnapshot !== this.initialCategoriesSnapshot;
+  }
+
+  private markAsChanged(): void {
+    this.hasUnsavedChanges = true;
   }
   public save() {
     this.importService.saveCategoriesToLocalStorage(this.json);
+    // Aktualisiere den Snapshot nach dem Speichern
+    this.initialCategoriesSnapshot = this.json;
+    this.hasUnsavedChanges = false;
   }
   public saveState() {
     this.importService.saveCategoriesToLocalStorage(this.importService.categorisAsJson());
     // Save timestamp when categories were saved
     localStorage.setItem('categoriesLastSaved', new Date().toISOString());
+    // Aktualisiere den Snapshot nach dem Speichern
+    this.initialCategoriesSnapshot = this.importService.categorisAsJson();
+    this.hasUnsavedChanges = false;
     alert('Saved');
   }
 
@@ -30,12 +72,14 @@ export class SettingsComponentComponent implements OnInit {
     const keyword = prompt('Add new category', 'Category');
     if (keyword) {
       data.push(keyword);
+      this.markAsChanged();
     }
   }
   public removeKeyWord(data: string[], keyword: string) {
     const index = data.indexOf(keyword);
     if (index > -1) {
       data.splice(index, 1);
+      this.markAsChanged();
     }
   }
 
@@ -52,8 +96,8 @@ export class SettingsComponentComponent implements OnInit {
           isDefault: false,
           icon: '',
         });
-      
-    }
+        this.markAsChanged();
+      }
   }
 
   public deleteCategory(category: Category) {
@@ -77,6 +121,7 @@ export class SettingsComponentComponent implements OnInit {
       // Remove the category if found
       if (index !== -1) {
         parentArray.splice(index, 1);
+        this.markAsChanged();
         console.log(`Deleted category: ${category.name}`);
       } else {
         console.error(`Category not found: ${category.name}`);
@@ -87,39 +132,51 @@ export class SettingsComponentComponent implements OnInit {
   public fillCategoriesWithDefaults() {
     const flatDefaults = [...defaultCategories, ...defaultCategories.flatMap((c) => c.subCategories || [])];
     const flatCatgeories = this.dataState.categories.flatMap((c) => c.subCategories || []);
+    let hasChanges = false;
     for (const category of flatCatgeories) {
       for (const defaultCategory of flatDefaults) {
         if (category.name === defaultCategory.name) {
-          this.fillupCategory(category, defaultCategory);
+          if (this.fillupCategory(category, defaultCategory)) {
+            hasChanges = true;
+          }
         }
       }
     }
+    if (hasChanges) {
+      this.markAsChanged();
+    }
   }
 
-  private fillupCategory(category: Category, defaultCategory: BaseCategory) {
+  private fillupCategory(category: Category, defaultCategory: BaseCategory): boolean {
+    let hasChanges = false;
     for (const keyw of defaultCategory.keywords) {
       if (!category.keywords.map(x => x.toLowerCase()).includes(keyw.toLowerCase())) {
         category.keywords.push(keyw);
         console.log('added keyword', keyw, 'to', category.name);
+        hasChanges = true;
       }
     }
     for (const keyw of defaultCategory.excludeKeywords) {
       if (!category.excludeKeywords.map(x => x.toLowerCase()).includes(keyw.toLocaleLowerCase())) {
         category.excludeKeywords.push(keyw);
         console.log('added exclude keyword', keyw, 'to', category.name);
+        hasChanges = true;
       }
     }
+    return hasChanges;
   }
 
   public editIcon(category: Category){
     const icon = prompt('Edit icon', category.icon);
-      category.icon = icon ?? '';
+    category.icon = icon ?? '';
+    this.markAsChanged();
   }
 
   public renameCategory(category: Category) {
     const newName = prompt('Kategorie umbenennen', category.name);
     if (newName && newName.trim() !== '') {
       category.name = newName.trim();
+      this.markAsChanged();
     }
   }
 
@@ -132,6 +189,7 @@ export class SettingsComponentComponent implements OnInit {
     } else {
       category.type = 'savings';
     }
+    this.markAsChanged();
   }
 
   public getLastSavedDate(): string | null {
