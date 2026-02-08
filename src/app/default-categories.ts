@@ -784,6 +784,7 @@ export const defaultCategories: BaseCategory[] = [
         type: 'expense',
         excludeKeywords: [],
         keywords: ['PayPal'],
+        lowPrio: true,
       },
       {
         name: 'Bargeld',

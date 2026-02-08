@@ -9,6 +9,7 @@ export interface BaseCategory{
     subCategories: BaseCategory[];
     isDefault?: boolean;
     icon?: string;
+    lowPrio?: boolean;
 }
 
 export interface Category extends BaseCategory{
@@ -21,6 +22,7 @@ export interface Category extends BaseCategory{
     transactions: Transaction[];
     isDefault?: boolean;
     icon?: string;
+    lowPrio?: boolean;
 }
 export function mapCategoryToBaseCategory(category: Category): BaseCategory{
     var baseCategory: BaseCategory = {
@@ -30,7 +32,8 @@ export function mapCategoryToBaseCategory(category: Category): BaseCategory{
         excludeKeywords: category.excludeKeywords,
         subCategories: category.subCategories.map(mapCategoryToBaseCategory),
         isDefault: category.isDefault,
-        icon: category.icon
+        icon: category.icon,
+        lowPrio: category.lowPrio
     }
     return baseCategory;
 }
@@ -45,7 +48,8 @@ export function mapBaseCategoryToCategory(baseCategory: BaseCategory): Category{
         total: 0,
         transactions: [],
         isDefault: baseCategory.isDefault,
-        icon: baseCategory.icon
+        icon: baseCategory.icon,
+        lowPrio: baseCategory.lowPrio
     }
     return category;
 }

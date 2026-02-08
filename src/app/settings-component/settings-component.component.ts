@@ -10,6 +10,13 @@ import { BaseCategory, Category } from '../models/category';
   styleUrl: './settings-component.component.scss',
 })
 export class SettingsComponentComponent implements OnInit, OnDestroy {
+    /**
+     * Schaltet das lowPrio-Flag für eine Kategorie um
+     */
+    public toggleLowPrio(category: Category | BaseCategory): void {
+      category.lowPrio = !category.lowPrio;
+      this.markAsChanged();
+    }
   public json: string = '';
   public hasUnsavedChanges: boolean = false;
   private initialCategoriesSnapshot: string = '';

@@ -6,6 +6,17 @@ import { DataState } from './data-state';
   providedIn: 'root',
 })
 export class CategoryService {
+  /**
+   * Sortiert Kategorien so, dass lowPrio-Kategorien hinten stehen
+   */
+  private sortLowPrio<T extends { lowPrio?: boolean }>(arr: T[]): T[] {
+    return [...arr].sort((a, b) => {
+      const aPrio = !!a.lowPrio ? 1 : 0;
+      const bPrio = !!b.lowPrio ? 1 : 0;
+        console.log(a.lowPrio, b.lowPrio);
+      return aPrio - bPrio;
+    });
+  }
 
   constructor(private dataState: DataState) {
   }
@@ -20,19 +31,26 @@ export class CategoryService {
     return this.flatCategories.find((c) => c.type === 'income')!;
   }
   private findMatchingCategory(transaction: Transaction): {category: Category, parentCategory?: Category} {
+    // Alle Kategorien und Subkategorien in ein Array laden
+    const allCategories: {category: Category, parentCategory?: Category}[] = [];
     for (const category of this.dataState.categories) {
-      // Überprüfen Sie zuerst die Hauptkategorie
-      if (this.matchesKeywords(category, transaction) && !this.matchesExcludeKeywords(category, transaction)) {
-        return {category};
-      }
-      
-      // Überprüfen Sie dann die Unterkategorien, falls vorhanden
+      allCategories.push({category});
       if (category.subCategories) {
         for (const subCategory of category.subCategories) {
-          if (this.matchesKeywords(subCategory, transaction) && !this.matchesExcludeKeywords(subCategory, transaction)) {
-            return {category: subCategory, parentCategory: category};
-          }
+          allCategories.push({category: subCategory, parentCategory: category});
         }
+      }
+    }
+    // Sortiere nach lowPrio
+    const sortedAll = this.sortLowPrio(allCategories.map(c => c.category)).map(cat => {
+      // Finde parentCategory falls Subkategorie
+      const found = allCategories.find(c => c.category === cat);
+      return found!;
+    });
+    // Suche nach passender Kategorie
+    for (const entry of sortedAll) {
+      if (this.matchesKeywords(entry.category, transaction) && !this.matchesExcludeKeywords(entry.category, transaction)) {
+        return entry;
       }
     }
   

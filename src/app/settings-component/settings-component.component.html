@@ -129,6 +129,12 @@
                             title="Typ ändern">
                         <i class="fas fa-exchange-alt"></i>
                     </button>
+                    <button class="btn btn-outline-warning btn-sm" 
+                            (click)="toggleLowPrio(category)"
+                            [class.active]="category.lowPrio"
+                            title="Low Prio umschalten">
+                        <i class="fas fa-arrow-down"></i>
+                    </button>
                     <button class="btn btn-outline-danger btn-sm" 
                             (click)="deleteCategory(category)"
                             title="Löschen">
