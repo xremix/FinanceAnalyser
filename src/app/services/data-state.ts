@@ -31,7 +31,10 @@ export class DataState {
   public monthStarts: Date[] = [];
   public categories: Category[] = [];
 
-  constructor(private dateService: DateService, private duplicateService: DuplicateService) {}
+  constructor(
+    private dateService: DateService, 
+    private duplicateService: DuplicateService
+  ) {}
 
   get hasLoadedData(): boolean {
     return this._transactions.length > 0;
@@ -195,7 +198,41 @@ export class DataState {
   private refresh() {
     this.selectedTransactions = this.transactions.filter((t) => this.showTransaction(t));
     this.findDuplicates();
+    this.recalculateCategories(this.selectedTransactions);
     this.selectedTransactionsChanged.emit(this.selectedTransactions);
+  }
+
+  /**
+   * Berechnet die Kategorien basierend auf den übergebenen Transaktionen neu
+   * Wird verwendet, um gefilterte Ansichten zu erstellen
+   */
+  private recalculateCategories(transactions: Transaction[]): void {
+    // Reset all category totals and transactions
+    this.categories.forEach((c) => {
+      c.total = 0;
+      c.transactions = [];
+      c.subCategories?.forEach((subCat) => {
+        subCat.total = 0;
+        subCat.transactions = [];
+      });
+    });
+
+    // Recalculate based on filtered transactions
+    for (let transaction of transactions) {
+      // Category already assigned, just update totals
+      if (transaction.category) {
+        transaction.category.transactions.push(transaction);
+        transaction.category.total += transaction.amount;
+
+        // Check if this is a subcategory and update parent
+        const parentCategory = this.categories.find(c => 
+          c.subCategories?.some(sub => sub === transaction.category)
+        );
+        if (parentCategory) {
+          parentCategory.total += transaction.amount;
+        }
+      }
+    }
   }
 
   filterByRange(from: Date, to: Date) {
