@@ -25,6 +25,8 @@ import { MoneyBadgeComponent } from "./money-badge/money-badge.component";
 import { StatisticsCardComponent } from './statistics-card/statistics-card.component';
 import { GlobalSearchComponent } from './global-search/global-search.component';
 import { DailyIncomeExpenseChartComponent } from './daily-income-expense-chart/daily-income-expense-chart.component';
+import { PopupComponent } from './popup/popup.component';
+import { SankeyChartComponent } from './sankey-chart/sankey-chart.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +56,9 @@ import { DailyIncomeExpenseChartComponent } from './daily-income-expense-chart/d
     NgbModule,
     MoneyBadgeComponent,
     GlobalSearchComponent,
-    DailyIncomeExpenseChartComponent
+    DailyIncomeExpenseChartComponent,
+    PopupComponent,
+    SankeyChartComponent
 ],
   providers: [
     provideAnimationsAsync(),

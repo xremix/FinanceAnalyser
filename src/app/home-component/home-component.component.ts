@@ -12,6 +12,17 @@ import { Transaction } from '../models/transaction';
 export class HomeComponentComponent {
   public tabs: string[] = ['Kategorien', 'Alle Buchungen', 'Wiederkehrende Buchungen', 'Ausgeglichene Buchungen', 'Monatliche Bilanz'];
   public activeTab: string = this.tabs[0];
+  public isSankeyPopupOpen = false;
+  public sankeyType: 'expense' | 'income' = 'expense';
+
+  openSankeyChart(type: 'expense' | 'income' = 'expense'): void {
+    this.sankeyType = type;
+    this.isSankeyPopupOpen = true;
+  }
+
+  closeSankeyPopup(): void {
+    this.isSankeyPopupOpen = false;
+  }
 
   constructor(
     protected dataState: DataState,
