@@ -12,6 +12,9 @@ import { BaseCategory, mapBaseCategoryToCategory, mapCategoryToBaseCategory } fr
 })
 export class ImportService {
   private importServices: Importer[] = [new SpkImporter(), new IngImporter()];
+  private readonly categoriesFileDbName = 'FinanceAnalyser';
+  private readonly categoriesFileStoreName = 'fileHandles';
+  private readonly categoriesFileHandleKey = 'categoriesFileHandle';
 
   public async getFileContent(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -137,8 +140,11 @@ export class ImportService {
   constructor(private categoryService: CategoryService, private dataState: DataState) {}
 
 
-  public loadFromLocalStorage(){
-    this.loadCategoriesFromLocalStorage();
+  public async loadFromLocalStorage(){
+    const loadedFromFile = await this.loadCategoriesFromLinkedFile();
+    if (!loadedFromFile) {
+      this.loadCategoriesFromLocalStorage();
+    }
     this.loadFileFromLocalStorage();
     this.loadAdditionalFilesFromLocalStorage();
   }
@@ -153,6 +159,227 @@ export class ImportService {
     localStorage.setItem('categories', json);
     localStorage.setItem('categoriesLastSaved', new Date().toISOString());
   }
+
+  public supportsCategoriesFileSync(): boolean {
+    const fileWindow = window as any;
+    return !!fileWindow.showOpenFilePicker && !!fileWindow.showSaveFilePicker;
+  }
+
+  public async hasLinkedCategoriesFile(): Promise<boolean> {
+    const handle = await this.getStoredCategoriesFileHandle();
+    return !!handle;
+  }
+
+  public async getLinkedCategoriesFileName(): Promise<string | null> {
+    const handle = await this.getStoredCategoriesFileHandle();
+    return handle?.name ?? null;
+  }
+
+  public async loadCategoriesFromUserSelectedFile(): Promise<boolean> {
+    if (!this.supportsCategoriesFileSync()) {
+      return false;
+    }
+
+    const fileWindow = window as any;
+    const handles = await fileWindow.showOpenFilePicker({
+      multiple: false,
+      types: [
+        {
+          description: 'JSON settings file',
+          accept: {
+            'application/json': ['.json'],
+          },
+        },
+      ],
+    });
+
+    const handle = handles?.[0];
+    if (!handle) {
+      return false;
+    }
+
+    const loaded = await this.loadCategoriesFromFileHandle(handle, true);
+    if (loaded) {
+      await this.storeCategoriesFileHandle(handle);
+    }
+
+    return loaded;
+  }
+
+  public async saveCategoriesToFile(json: string): Promise<boolean> {
+    if (!this.supportsCategoriesFileSync()) {
+      return false;
+    }
+
+    let handle = await this.getStoredCategoriesFileHandle();
+    if (!handle) {
+      handle = await this.selectCategoriesFileForSaving();
+      if (!handle) {
+        return false;
+      }
+      await this.storeCategoriesFileHandle(handle);
+    }
+
+    const writeSuccessful = await this.writeCategoriesToFileHandle(handle, json, true);
+    if (!writeSuccessful) {
+      return false;
+    }
+
+    this.saveCategoriesToLocalStorage(json);
+    return true;
+  }
+
+  public async saveCategoriesToLocalStorageAndLinkedFile(json: string): Promise<boolean> {
+    this.saveCategoriesToLocalStorage(json);
+    const handle = await this.getStoredCategoriesFileHandle();
+    if (!handle) {
+      return true;
+    }
+
+    return this.writeCategoriesToFileHandle(handle, json, true);
+  }
+
+  public async loadCategoriesFromLinkedFile(): Promise<boolean> {
+    const handle = await this.getStoredCategoriesFileHandle();
+    if (!handle) {
+      return false;
+    }
+
+    const loaded = await this.loadCategoriesFromFileHandle(handle, false);
+    if (!loaded) {
+      return false;
+    }
+
+    const categoriesJson = this.categorisAsJson();
+    this.saveCategoriesToLocalStorage(categoriesJson);
+    return true;
+  }
+
+  private async loadCategoriesFromFileHandle(handle: any, requestPermission: boolean): Promise<boolean> {
+    const canRead = await this.ensurePermission(handle, 'read', requestPermission);
+    if (!canRead) {
+      return false;
+    }
+
+    try {
+      const file = await handle.getFile();
+      const content = await file.text();
+      const baseCategories: BaseCategory[] = JSON.parse(content);
+
+      if (!Array.isArray(baseCategories)) {
+        throw new Error('The selected file does not contain a valid settings array.');
+      }
+
+      this.dataState.categories = baseCategories.map((c) => mapBaseCategoryToCategory(c));
+      return true;
+    } catch (error) {
+      console.error('Error while loading categories from file:', error);
+      return false;
+    }
+  }
+
+  private async writeCategoriesToFileHandle(handle: any, json: string, requestPermission: boolean): Promise<boolean> {
+    const canWrite = await this.ensurePermission(handle, 'readwrite', requestPermission);
+    if (!canWrite) {
+      return false;
+    }
+
+    try {
+      const writable = await handle.createWritable();
+      await writable.write(json);
+      await writable.close();
+      return true;
+    } catch (error) {
+      console.error('Error while writing categories to file:', error);
+      return false;
+    }
+  }
+
+  private async selectCategoriesFileForSaving(): Promise<any | null> {
+    const fileWindow = window as any;
+    if (!fileWindow.showSaveFilePicker) {
+      return null;
+    }
+
+    return fileWindow.showSaveFilePicker({
+      suggestedName: 'financeanalyser-settings.json',
+      types: [
+        {
+          description: 'JSON settings file',
+          accept: {
+            'application/json': ['.json'],
+          },
+        },
+      ],
+    });
+  }
+
+  private async ensurePermission(handle: any, mode: 'read' | 'readwrite', requestPermission: boolean): Promise<boolean> {
+    const options = { mode } as any;
+
+    if (handle.queryPermission) {
+      const permission = await handle.queryPermission(options);
+      if (permission === 'granted') {
+        return true;
+      }
+    }
+
+    if (!requestPermission || !handle.requestPermission) {
+      return false;
+    }
+
+    const requestedPermission = await handle.requestPermission(options);
+    return requestedPermission === 'granted';
+  }
+
+  private async openCategoriesFileDb(): Promise<IDBDatabase> {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(this.categoriesFileDbName, 1);
+
+      request.onupgradeneeded = () => {
+        const db = request.result;
+        if (!db.objectStoreNames.contains(this.categoriesFileStoreName)) {
+          db.createObjectStore(this.categoriesFileStoreName);
+        }
+      };
+
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  }
+
+  private async storeCategoriesFileHandle(handle: any): Promise<void> {
+    const db = await this.openCategoriesFileDb();
+
+    await new Promise<void>((resolve, reject) => {
+      const tx = db.transaction(this.categoriesFileStoreName, 'readwrite');
+      tx.objectStore(this.categoriesFileStoreName).put(handle, this.categoriesFileHandleKey);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+
+    db.close();
+  }
+
+  private async getStoredCategoriesFileHandle(): Promise<any | null> {
+    try {
+      const db = await this.openCategoriesFileDb();
+
+      const handle = await new Promise<any | null>((resolve, reject) => {
+        const tx = db.transaction(this.categoriesFileStoreName, 'readonly');
+        const request = tx.objectStore(this.categoriesFileStoreName).get(this.categoriesFileHandleKey);
+        request.onsuccess = () => resolve(request.result ?? null);
+        request.onerror = () => reject(request.error);
+      });
+
+      db.close();
+      return handle;
+    } catch (error) {
+      console.error('Error while reading stored categories file handle:', error);
+      return null;
+    }
+  }
+
   public categorisAsJson(): string {
     let baseCategories: BaseCategory[] = this.dataState.categories.map((c) => mapCategoryToBaseCategory(c));
     return JSON.stringify(baseCategories, null, 2);

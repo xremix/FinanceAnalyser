@@ -19,13 +19,17 @@ export class SettingsComponentComponent implements OnInit, OnDestroy {
     }
   public json: string = '';
   public hasUnsavedChanges: boolean = false;
+  public supportsFileSync: boolean = false;
+  public linkedSettingsFileName: string | null = null;
   private initialCategoriesSnapshot: string = '';
   
   constructor(protected dataState: DataState, private importService: ImportService) {}
 
   ngOnInit(): void {
+    this.supportsFileSync = this.importService.supportsCategoriesFileSync();
     this.json = this.importService.categorisAsJson();
     this.initialCategoriesSnapshot = this.json;
+    this.refreshLinkedFileInfo();
     this.setupChangeDetection();
   }
 
@@ -60,20 +64,70 @@ export class SettingsComponentComponent implements OnInit, OnDestroy {
   public getUnsavedChangesStatus(): boolean {
     return this.hasUnsavedChanges;
   }
-  public save() {
-    this.importService.saveCategoriesToLocalStorage(this.json);
-    // Aktualisiere den Snapshot nach dem Speichern
-    this.initialCategoriesSnapshot = this.json;
-    this.hasUnsavedChanges = false;
-  }
-  public saveState() {
-    this.importService.saveCategoriesToLocalStorage(this.importService.categorisAsJson());
-    // Save timestamp when categories were saved
-    localStorage.setItem('categoriesLastSaved', new Date().toISOString());
+  public async save() {
+    const linkedFileSynced = await this.importService.saveCategoriesToLocalStorageAndLinkedFile(this.importService.categorisAsJson());
     // Aktualisiere den Snapshot nach dem Speichern
     this.initialCategoriesSnapshot = this.importService.categorisAsJson();
     this.hasUnsavedChanges = false;
-    alert('Saved');
+
+    if (!linkedFileSynced) {
+      alert('Browser-Speicher wurde gespeichert, die verknüpfte Datei konnte aber nicht aktualisiert werden.');
+    }
+  }
+  public async saveState() {
+    const linkedFileSynced = await this.importService.saveCategoriesToLocalStorageAndLinkedFile(this.importService.categorisAsJson());
+    // Aktualisiere den Snapshot nach dem Speichern
+    this.initialCategoriesSnapshot = this.importService.categorisAsJson();
+    this.hasUnsavedChanges = false;
+
+    if (linkedFileSynced) {
+      alert('Saved');
+    } else {
+      alert('Im Browser gespeichert, aber die verknüpfte Datei konnte nicht aktualisiert werden.');
+    }
+  }
+
+  public async saveDatabaseInFile(): Promise<void> {
+    if (!this.supportsFileSync) {
+      alert('Die Browser-API für direkten Dateizugriff wird hier nicht unterstützt.');
+      return;
+    }
+
+    const saved = await this.importService.saveCategoriesToFile(this.importService.categorisAsJson());
+    if (!saved) {
+      alert('Speichern in Datei wurde abgebrochen oder ist fehlgeschlagen.');
+      return;
+    }
+
+    this.initialCategoriesSnapshot = this.importService.categorisAsJson();
+    this.hasUnsavedChanges = false;
+    await this.refreshLinkedFileInfo();
+    alert('Einstellungen wurden in Datei und Browser-Speicher gespeichert.');
+  }
+
+  public async loadSettingsFromFile(): Promise<void> {
+    if (!this.supportsFileSync) {
+      alert('Die Browser-API für direkten Dateizugriff wird hier nicht unterstützt.');
+      return;
+    }
+
+    const loaded = await this.importService.loadCategoriesFromUserSelectedFile();
+    if (!loaded) {
+      alert('Laden aus Datei wurde abgebrochen oder ist fehlgeschlagen.');
+      return;
+    }
+
+    const loadedJson = this.importService.categorisAsJson();
+    this.importService.saveCategoriesToLocalStorage(loadedJson);
+    this.json = loadedJson;
+    this.initialCategoriesSnapshot = loadedJson;
+    this.hasUnsavedChanges = false;
+    await this.refreshLinkedFileInfo();
+    alert('Einstellungen wurden aus Datei geladen und Browser-Speicher überschrieben.');
+  }
+
+  private async refreshLinkedFileInfo(): Promise<void> {
+    this.linkedSettingsFileName = await this.importService.getLinkedCategoriesFileName();
   }
 
   public addKeyWord(data: string[]) {
