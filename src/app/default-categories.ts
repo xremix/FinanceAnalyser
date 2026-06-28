@@ -2,6 +2,19 @@ import { BaseCategory } from './models/category';
 
 export const defaultCategories: BaseCategory[] = [
   {
+    name: 'Berufliches',
+    icon: 'fa-solid fa-briefcase',
+    subCategories: [],
+    type: 'expense',
+    excludeKeywords: [],
+    keywords: [
+      'Schulung',
+      'Fortbildung',
+      'Seminar',
+      'Kurs'
+    ],
+  },
+  {
     name: 'Einkommen',
     icon: 'fa-solid fa-money-bill-trend-up',
     subCategories: [],
@@ -61,7 +74,7 @@ export const defaultCategories: BaseCategory[] = [
     icon: 'fa-solid fa-person-hiking',
     subCategories: [
       {
-        name: 'Urlaub, Reisen, Auflüge',
+        name: 'Urlaub, Reisen, Ausflüge',
         subCategories: [],
         type: 'expense',
         keywords: [
@@ -260,7 +273,6 @@ export const defaultCategories: BaseCategory[] = [
           'Steiff',
           'Tiffany',
           'Toys',
-          'Parfum',
           'Saal Digital',
         ],
       },
@@ -530,6 +542,22 @@ export const defaultCategories: BaseCategory[] = [
         keywords: ['Amazon'],
         excludeKeywords: ['Prime Video'],
       },
+      {
+        name: 'Friseur / Kosmetik',
+        subCategories: [],
+        type: 'expense',
+        keywords: [
+          'Friseur',
+          'Frisör',
+          'Friseursalon',
+          'Kosmetik',
+          'Nagelstudio',
+          'Parfümerie',
+          'Parfum',
+          'PARFUEMERI',
+        ],
+        excludeKeywords: [],
+      }
     ],
     type: 'expense',
     keywords: [],

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { DataState } from '../services/data-state';
 import { ImportService } from '../services/import-services/import-service';
 import { defaultCategories } from '../default-categories';
-import { BaseCategory, Category } from '../models/category';
+import { BaseCategory, Category, mapBaseCategoryToCategory } from '../models/category';
 
 @Component({
   selector: 'app-settings-component',
@@ -126,6 +126,26 @@ export class SettingsComponentComponent implements OnInit, OnDestroy {
     alert('Einstellungen wurden aus Datei geladen und Browser-Speicher überschrieben.');
   }
 
+  public async reloadSettingsFromLinkedFile(): Promise<void> {
+    if (!this.supportsFileSync) {
+      alert('Die Browser-API für direkten Dateizugriff wird hier nicht unterstützt.');
+      return;
+    }
+
+    const loaded = await this.importService.loadCategoriesFromLinkedFile();
+    if (!loaded) {
+      alert('Die verknüpfte Einstellungsdatei konnte nicht geladen werden. Bitte Datei erneut auswählen.');
+      return;
+    }
+
+    const loadedJson = this.importService.categorisAsJson();
+    this.json = loadedJson;
+    this.initialCategoriesSnapshot = loadedJson;
+    this.hasUnsavedChanges = false;
+    await this.refreshLinkedFileInfo();
+    alert('Einstellungen wurden aus der verknüpften Datei neu geladen.');
+  }
+
   private async refreshLinkedFileInfo(): Promise<void> {
     this.linkedSettingsFileName = await this.importService.getLinkedCategoriesFileName();
   }
@@ -192,18 +212,51 @@ export class SettingsComponentComponent implements OnInit, OnDestroy {
   }
 
   public fillCategoriesWithDefaults() {
-    const flatDefaults = this.getFlatDefaultCategories();
-    const flatCatgeories = this.dataState.categories.flatMap((c) => c.subCategories || []);
-    let hasChanges = false;
-    for (const category of flatCatgeories) {
-      const defaultCategory = this.findDefaultCategoryByName(category.name, flatDefaults);
-      if (defaultCategory && this.fillupCategory(category, defaultCategory)) {
-        hasChanges = true;
-      }
-    }
+    const hasChanges = this.mergeCategoriesWithDefaults(this.dataState.categories, defaultCategories);
     if (hasChanges) {
       this.markAsChanged();
     }
+  }
+
+  private mergeCategoriesWithDefaults(currentCategories: Category[], defaultCategoriesToMerge: BaseCategory[]): boolean {
+    let hasChanges = false;
+
+    for (const defaultCategory of defaultCategoriesToMerge) {
+      const existingCategory = currentCategories.find(
+        (cat) => this.normalizeCategoryName(cat.name) === this.normalizeCategoryName(defaultCategory.name)
+      );
+
+      if (!existingCategory) {
+        currentCategories.push(mapBaseCategoryToCategory(defaultCategory));
+        hasChanges = true;
+        continue;
+      }
+
+      if (this.fillupCategory(existingCategory, defaultCategory)) {
+        hasChanges = true;
+      }
+
+      if (!existingCategory.icon && defaultCategory.icon) {
+        existingCategory.icon = defaultCategory.icon;
+        hasChanges = true;
+      }
+
+      if (existingCategory.isDefault === undefined && defaultCategory.isDefault !== undefined) {
+        existingCategory.isDefault = defaultCategory.isDefault;
+        hasChanges = true;
+      }
+
+      if (existingCategory.lowPrio === undefined && defaultCategory.lowPrio !== undefined) {
+        existingCategory.lowPrio = defaultCategory.lowPrio;
+        hasChanges = true;
+      }
+
+      if (this.mergeCategoriesWithDefaults(existingCategory.subCategories, defaultCategory.subCategories || [])) {
+        hasChanges = true;
+      }
+    }
+
+    return hasChanges;
   }
 
   private getFlatDefaultCategories(): BaseCategory[] {

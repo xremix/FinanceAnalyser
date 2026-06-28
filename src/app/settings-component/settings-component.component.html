@@ -24,11 +24,14 @@
                         <button ngbDropdownItem (click)="loadSettingsFromFile()" [disabled]="!supportsFileSync">
                             <i class="fas fa-folder-open me-2"></i>Einstellungen aus Datei laden
                         </button>
+                        <button ngbDropdownItem (click)="reloadSettingsFromLinkedFile()" [disabled]="!supportsFileSync || !linkedSettingsFileName">
+                            <i class="fas fa-rotate me-2"></i>Verknüpfte Datei nachladen
+                        </button>
                         <button ngbDropdownItem (click)="saveDatabaseInFile()" [disabled]="!supportsFileSync">
                             <i class="fas fa-file-export me-2"></i>Datenbank in Datei speichern
                         </button>
                         <button ngbDropdownItem (click)="fillCategoriesWithDefaults()">
-                            <i class="fas fa-magic me-2"></i>Neue Standardeinstellungen nachladen
+                            <i class="fas fa-magic me-2"></i>App-Standardeinstellungen nachladen
                         </button>
                     </div>
                 </div>
