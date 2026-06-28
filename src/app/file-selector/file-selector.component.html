@@ -21,22 +21,27 @@
 </div>
 <div class="small d-inline" *ngIf="!big">
   <input type="file" name="file" id="file" class="inputfile" (change)="fileChanged($event)" />
-  <label for="file" class="fw-bold"><i class="fa-solid fa-magnifying-glass"></i></label>
+  <label for="file" class="btn btn-light btn-sm d-inline-flex align-items-center gap-2" title="Load CSV file">
+    <i class="fa-solid fa-upload"></i>
+    <span class="d-none d-md-inline">Load</span>
+  </label>
   
   <!-- Additional file selector for small version -->
-  <div class="additional-file-small" *ngIf="dataState.hasLoadedData">
+  <div class="additional-file-small d-inline-flex gap-2" *ngIf="dataState.hasLoadedData">
     <input type="file" name="additionalFileSmall" id="additionalFileSmall" class="inputfile" (change)="additionalFileChanged($event)" />
-    <label for="additionalFileSmall" class="additional-file-btn-small"
-           title="✅ Zusätzliche Dateien werden jetzt gespeichert und automatisch geladen">
+    <label for="additionalFileSmall" class="btn btn-light btn-sm d-inline-flex align-items-center gap-2"
+           title="Add additional CSV file (auto-saved and loaded)">
       <i class="fa-solid fa-plus"></i>
+      <span class="d-none d-md-inline">Add</span>
     </label>
     
     <!-- Clear button for small version -->
-    <button class="clear-additional-btn-small" 
+    <button class="btn btn-light btn-sm d-inline-flex align-items-center gap-2" 
             (click)="clearAdditionalFiles()" 
             *ngIf="dataState.loadedSources.length > 1"
-            title="Alle zusätzlichen Dateien löschen">
+            title="Clear all additional files">
       <i class="fa-solid fa-trash"></i>
+      <span class="d-none d-md-inline">Clear</span>
     </button>
   </div>
 </div>

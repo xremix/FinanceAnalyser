@@ -6,11 +6,11 @@
  </a>
   <div class="spacer"></div>
 
-  <div class="me-4">
-    <button (click)="openSettings()" class="btn btn-link text-white">
+  <div class="me-4 d-flex gap-2 align-items-center">
+    <button (click)="openSettings()" class="btn btn-light btn-sm d-flex align-items-center gap-2" title="Open Settings">
       <i class="fa-solid fa-gear"></i>
+      <span class="d-none d-md-inline fw-500">Settings</span>
     </button>
-    <!-- <button class="btn text-white fw-bold" (click)="dataState.resetState()">⃠</button> -->
     <app-file-selector [big]="false"></app-file-selector>
   </div>
 </div>
