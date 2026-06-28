@@ -192,21 +192,45 @@ export class SettingsComponentComponent implements OnInit, OnDestroy {
   }
 
   public fillCategoriesWithDefaults() {
-    const flatDefaults = [...defaultCategories, ...defaultCategories.flatMap((c) => c.subCategories || [])];
+    const flatDefaults = this.getFlatDefaultCategories();
     const flatCatgeories = this.dataState.categories.flatMap((c) => c.subCategories || []);
     let hasChanges = false;
     for (const category of flatCatgeories) {
-      for (const defaultCategory of flatDefaults) {
-        if (category.name === defaultCategory.name) {
-          if (this.fillupCategory(category, defaultCategory)) {
-            hasChanges = true;
-          }
-        }
+      const defaultCategory = this.findDefaultCategoryByName(category.name, flatDefaults);
+      if (defaultCategory && this.fillupCategory(category, defaultCategory)) {
+        hasChanges = true;
       }
     }
     if (hasChanges) {
       this.markAsChanged();
     }
+  }
+
+  private getFlatDefaultCategories(): BaseCategory[] {
+    const flattenDefaultCategories = (categories: BaseCategory[]): BaseCategory[] => {
+      return categories.reduce((acc: BaseCategory[], category) => {
+        acc.push(category);
+        if (category.subCategories && category.subCategories.length > 0) {
+          acc.push(...flattenDefaultCategories(category.subCategories));
+        }
+        return acc;
+      }, []);
+    };
+
+    return flattenDefaultCategories(defaultCategories);
+  }
+
+  private normalizeCategoryName(name: string): string {
+    return name
+      .toLocaleLowerCase()
+      .replace(/[&/]+/g, ' und ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  private findDefaultCategoryByName(name: string, defaultCats: BaseCategory[] = this.getFlatDefaultCategories()): BaseCategory | undefined {
+    const normalizedName = this.normalizeCategoryName(name);
+    return defaultCats.find((def) => this.normalizeCategoryName(def.name) === normalizedName);
   }
 
   private fillupCategory(category: Category, defaultCategory: BaseCategory): boolean {
@@ -273,22 +297,12 @@ export class SettingsComponentComponent implements OnInit, OnDestroy {
       }, []);
     };
 
-    const flattenDefaultCategories = (categories: BaseCategory[]): BaseCategory[] => {
-      return categories.reduce((acc: BaseCategory[], category) => {
-        acc.push(category);
-        if (category.subCategories && category.subCategories.length > 0) {
-          acc.push(...flattenDefaultCategories(category.subCategories));
-        }
-        return acc;
-      }, []);
-    };
-
     const currentCategories = flattenCategories(this.dataState.categories);
-    const defaultCats = flattenDefaultCategories(defaultCategories);
+    const defaultCats = this.getFlatDefaultCategories();
     
     // Count categories that are not in defaults (either by name or marked as not default)
     return currentCategories.filter(cat => 
-      !defaultCats.some(def => def.name === cat.name) || cat.isDefault === false
+      !this.findDefaultCategoryByName(cat.name, defaultCats) || cat.isDefault === false
     ).length;
   }
 
@@ -303,24 +317,14 @@ export class SettingsComponentComponent implements OnInit, OnDestroy {
       }, []);
     };
 
-    const flattenDefaultCategories = (categories: BaseCategory[]): BaseCategory[] => {
-      return categories.reduce((acc: BaseCategory[], category) => {
-        acc.push(category);
-        if (category.subCategories && category.subCategories.length > 0) {
-          acc.push(...flattenDefaultCategories(category.subCategories));
-        }
-        return acc;
-      }, []);
-    };
-
     const currentCategories = flattenCategories(this.dataState.categories);
-    const defaultCats = flattenDefaultCategories(defaultCategories);
+    const defaultCats = this.getFlatDefaultCategories();
     
     let addedIncludeKeywords = 0;
     let addedExcludeKeywords = 0;
 
     for (const currentCat of currentCategories) {
-      const defaultCat = defaultCats.find(def => def.name === currentCat.name);
+      const defaultCat = this.findDefaultCategoryByName(currentCat.name, defaultCats);
       if (defaultCat) {
         // Count keywords that are in current but not in default
         addedIncludeKeywords += currentCat.keywords.filter(keyword => 
@@ -341,18 +345,7 @@ export class SettingsComponentComponent implements OnInit, OnDestroy {
   }
 
   public isDefaultKeyword(category: Category, keyword: string, isExclude: boolean = false): boolean {
-    const flattenDefaultCategories = (categories: BaseCategory[]): BaseCategory[] => {
-      return categories.reduce((acc: BaseCategory[], category) => {
-        acc.push(category);
-        if (category.subCategories && category.subCategories.length > 0) {
-          acc.push(...flattenDefaultCategories(category.subCategories));
-        }
-        return acc;
-      }, []);
-    };
-
-    const defaultCats = flattenDefaultCategories(defaultCategories);
-    const defaultCat = defaultCats.find(def => def.name === category.name);
+    const defaultCat = this.findDefaultCategoryByName(category.name);
     
     if (!defaultCat) {
       return false;
