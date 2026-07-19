@@ -92,6 +92,7 @@ export const defaultCategories: BaseCategory[] = [
           'Air France',
           'Airbnb.de',
           'Airbnb',
+          'Airport',
           'Avis',
           'Best Western',
           'BlaBlaCar',
@@ -178,7 +179,7 @@ export const defaultCategories: BaseCategory[] = [
         name: 'Kleidung',
         subCategories: [],
         type: 'expense',
-        excludeKeywords: [],
+        excludeKeywords: ['Mangopay'],
         keywords: [
           '&OTHER STORIES',
           'Abercrombie',
@@ -241,10 +242,16 @@ export const defaultCategories: BaseCategory[] = [
           'Tom Tailor',
           'Under Armour',
           'Vero Moda',
-          'Vinted',
           'Zalando',
           'Zara',
         ],
+      },
+      {
+        name: 'Second Hand / Marktplätze',
+        subCategories: [],
+        type: 'expense',
+        excludeKeywords: [],
+        keywords: ['eBay', 'Kleinanzeigen', 'Vinted'],
       },
       {
         name: 'Freizeitaktivitäten',
@@ -397,6 +404,7 @@ export const defaultCategories: BaseCategory[] = [
           'RATSTUBEN',
           'Restaura',
           'Restaurant',
+          'RSTAURANTS',
           'Ristorante',
           'Steakhouse',
           'Subway',
@@ -816,13 +824,6 @@ export const defaultCategories: BaseCategory[] = [
     name: 'Sonstiges',
     icon: 'fa-solid fa-rectangle-list',
     subCategories: [
-      {
-        name: 'Second Hand / Marktplätze',
-        subCategories: [],
-        type: 'expense',
-        excludeKeywords: [],
-        keywords: ['eBay', 'Kleinanzeigen', 'Vinted'],
-      },
       {
         name: 'Sonstiges',
         subCategories: [],
