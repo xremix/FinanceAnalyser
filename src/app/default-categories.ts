@@ -288,7 +288,7 @@ export const defaultCategories: BaseCategory[] = [
         ],
       },
       {
-        name: 'Apps und Programme',
+        name: 'Software & Abos',
         subCategories: [],
         type: 'expense',
         keywords: [
@@ -499,7 +499,7 @@ export const defaultCategories: BaseCategory[] = [
     icon: 'fa-solid fa-bed',
     subCategories: [
       {
-        name: 'Elektronik Geschäfte',
+        name: 'Elektronik',
         subCategories: [],
         type: 'expense',
         keywords: [
@@ -522,7 +522,7 @@ export const defaultCategories: BaseCategory[] = [
         excludeKeywords: [],
       },
       {
-        name: 'Garten- und Möbelhäuser',
+        name: 'Möbel & Garten',
         subCategories: [],
         type: 'expense',
         keywords: [
@@ -685,7 +685,7 @@ export const defaultCategories: BaseCategory[] = [
         ],
       },
       {
-        name: 'Steuer etc.',
+        name: 'Autoabgaben',
         subCategories: [],
         type: 'expense',
         excludeKeywords: [],
