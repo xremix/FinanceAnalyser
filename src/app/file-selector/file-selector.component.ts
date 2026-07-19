@@ -2,6 +2,16 @@ import { Component, Input } from '@angular/core';
 import { DataState } from '../services/data-state';
 import { ImportService } from '../services/import-services/import-service';
 
+interface FileTimelineEntry {
+  fileName: string;
+  hasRange: boolean;
+  startEpoch: number;
+  leftPct: number;
+  widthPct: number;
+  startLabel: string;
+  endLabel: string;
+}
+
 @Component({
   selector: 'app-file-selector',
   templateUrl: './file-selector.component.html',
@@ -10,6 +20,8 @@ import { ImportService } from '../services/import-services/import-service';
 export class FileSelectorComponent {
   @Input() public big: boolean = false;
   private readonly maxFileNameLength = 26;
+  private timelineCacheKey: string = '';
+  private timelineCache: FileTimelineEntry[] = [];
 
   constructor(
     private importService: ImportService,
@@ -59,6 +71,121 @@ export class FileSelectorComponent {
     }
 
     return `${fileName.substring(0, this.maxFileNameLength - 1)}...`;
+  }
+
+  getFileTimeline(fileName: string): FileTimelineEntry | undefined {
+    return this.fileTimelines.find((timeline) => timeline.fileName === fileName);
+  }
+
+  get sortedStoredFilesForPopup(): Array<{ fileName: string; content: string; uploadedAt: string }> {
+    const timelinesByFile = new Map(this.fileTimelines.map((timeline) => [timeline.fileName, timeline]));
+
+    return [...this.storedFiles].sort((a, b) => {
+      const aTimeline = timelinesByFile.get(a.fileName);
+      const bTimeline = timelinesByFile.get(b.fileName);
+      const aEpoch = aTimeline?.hasRange ? aTimeline.startEpoch : Number.POSITIVE_INFINITY;
+      const bEpoch = bTimeline?.hasRange ? bTimeline.startEpoch : Number.POSITIVE_INFINITY;
+
+      if (aEpoch !== bEpoch) {
+        return aEpoch - bEpoch;
+      }
+
+      return a.fileName.localeCompare(b.fileName, 'de-DE');
+    });
+  }
+
+  private get fileTimelines(): FileTimelineEntry[] {
+    const files = this.storedFiles;
+    const cacheKey = files.map((file) => `${file.fileName}|${file.uploadedAt}|${file.content.length}`).join('||');
+
+    if (cacheKey === this.timelineCacheKey) {
+      return this.timelineCache;
+    }
+
+    this.timelineCacheKey = cacheKey;
+    this.timelineCache = this.buildFileTimelines(files);
+    return this.timelineCache;
+  }
+
+  private buildFileTimelines(files: Array<{ fileName: string; content: string; uploadedAt: string }>): FileTimelineEntry[] {
+    const fileRanges = files.map((file) => {
+      const transactions = this.importService.parseCsvToTransactions(file.content);
+      const dates = transactions
+        .map((transaction) => transaction.bookingDate)
+        .filter((date): date is Date => date instanceof Date && !Number.isNaN(date.getTime()));
+
+      if (dates.length === 0) {
+        return {
+          fileName: file.fileName,
+          hasRange: false,
+          minDate: null as Date | null,
+          maxDate: null as Date | null,
+        };
+      }
+
+      let minDate = dates[0];
+      let maxDate = dates[0];
+      for (const date of dates) {
+        if (date < minDate) {
+          minDate = date;
+        }
+        if (date > maxDate) {
+          maxDate = date;
+        }
+      }
+
+      return {
+        fileName: file.fileName,
+        hasRange: true,
+        minDate,
+        maxDate,
+      };
+    });
+
+    const validRanges = fileRanges.filter((range) => range.hasRange && range.minDate && range.maxDate);
+    if (validRanges.length === 0) {
+      return fileRanges.map((range) => ({
+        fileName: range.fileName,
+        hasRange: false,
+        startEpoch: Number.POSITIVE_INFINITY,
+        leftPct: 0,
+        widthPct: 0,
+        startLabel: '-',
+        endLabel: '-',
+      }));
+    }
+
+    const globalMin = validRanges.reduce((min, current) => (current.minDate! < min ? current.minDate! : min), validRanges[0].minDate!);
+    const globalMax = validRanges.reduce((max, current) => (current.maxDate! > max ? current.maxDate! : max), validRanges[0].maxDate!);
+    const globalSpanMs = Math.max(1, globalMax.getTime() - globalMin.getTime());
+
+    return fileRanges.map((range) => {
+      if (!range.hasRange || !range.minDate || !range.maxDate) {
+        return {
+          fileName: range.fileName,
+          hasRange: false,
+          startEpoch: Number.POSITIVE_INFINITY,
+          leftPct: 0,
+          widthPct: 0,
+          startLabel: '-',
+          endLabel: '-',
+        };
+      }
+
+      const leftPct = ((range.minDate.getTime() - globalMin.getTime()) / globalSpanMs) * 100;
+      const rawWidthPct = ((range.maxDate.getTime() - range.minDate.getTime()) / globalSpanMs) * 100;
+      const widthPct = Math.min(100 - leftPct, Math.max(rawWidthPct, 1.5));
+
+      return {
+        fileName: range.fileName,
+        hasRange: true,
+        startEpoch: range.minDate.getTime(),
+        leftPct,
+        widthPct,
+        startLabel: range.minDate.toLocaleDateString('de-DE'),
+        endLabel: range.maxDate.toLocaleDateString('de-DE'),
+      };
+    });
   }
 
 }

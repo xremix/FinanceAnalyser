@@ -37,11 +37,28 @@
     </div>
 
     <div class="file-popover-list" *ngIf="storedFiles.length > 0; else noFilesTemplate">
-      <div class="file-popover-item" *ngFor="let file of storedFiles">
-        <span class="file-popover-name" [title]="file.fileName">{{ truncateFileName(file.fileName) }}</span>
-        <button class="file-popover-remove" (click)="removeFile(file.fileName)" title="Datei entfernen" aria-label="Datei entfernen">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+      <div class="file-popover-item" *ngFor="let file of sortedStoredFilesForPopup">
+        <div class="file-popover-main">
+          <div class="file-popover-head">
+            <span class="file-popover-name" [title]="file.fileName">{{ truncateFileName(file.fileName) }}</span>
+            <button class="file-popover-remove" (click)="removeFile(file.fileName)" title="Datei entfernen" aria-label="Datei entfernen">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <div class="file-range" *ngIf="getFileTimeline(file.fileName) as timeline">
+            <div class="file-range-track" *ngIf="timeline.hasRange; else noDateRange">
+              <span class="file-range-line" [style.left.%]="timeline.leftPct" [style.width.%]="timeline.widthPct"></span>
+            </div>
+            <ng-template #noDateRange>
+              <div class="file-range-track empty"></div>
+            </ng-template>
+            <div class="file-range-labels">
+              <span>{{ timeline.startLabel }}</span>
+              <span>{{ timeline.endLabel }}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 

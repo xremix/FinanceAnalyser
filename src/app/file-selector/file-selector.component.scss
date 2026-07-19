@@ -148,6 +148,7 @@
 .file-popover-menu {
   min-width: 280px;
   max-width: 340px;
+  min-height: 320px;
   padding: 10px;
 }
 
@@ -189,18 +190,28 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  max-height: 220px;
+  max-height: 300px;
   overflow-y: auto;
 }
 
 .file-popover-item {
+  display: block;
+  border: 1px solid #e5eaef;
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+
+.file-popover-main {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.file-popover-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  border: 1px solid #e5eaef;
-  border-radius: 8px;
-  padding: 6px 8px;
 }
 
 .file-popover-name {
@@ -234,6 +245,48 @@
   color: #6a7682;
   font-size: 0.84rem;
   padding: 8px 4px 4px;
+}
+
+.file-range {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.file-range-track {
+  position: relative;
+  height: 6px;
+  border-radius: 999px;
+  background: #e9eef3;
+  overflow: hidden;
+}
+
+.file-range-track.empty::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(167, 179, 192, 0.35),
+    rgba(167, 179, 192, 0.35) 4px,
+    rgba(233, 238, 243, 0.65) 4px,
+    rgba(233, 238, 243, 0.65) 8px
+  );
+}
+
+.file-range-line {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #2f80ed, #56ccf2);
+}
+
+.file-range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: #6a7682;
 }
 
 @media (max-width: 575px) {
