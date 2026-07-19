@@ -87,6 +87,7 @@ export class ImportService {
     for (const transaction of transactions) {
       const signature = this.buildTransactionSignature(transaction);
       if (seen.has(signature)) {
+        console.log(`Duplicate transaction found and removed: ${signature}`);
         continue;
       }
 
@@ -98,7 +99,28 @@ export class ImportService {
   }
 
   private buildTransactionSignature(transaction: Transaction): string {
-    return transaction.raw.trim();
+    const normalizedRaw = transaction.raw.trim();
+
+    return [
+      this.formatDate(transaction.bookingDate),
+      this.formatDate(transaction.valueDate),
+      this.normalizeField(transaction.payerReceiver),
+      this.normalizeField(transaction.purpose),
+      this.normalizeNumber(transaction.amount),
+      this.normalizeField(transaction.amountCurrency),
+    ].join('|');
+  }
+
+  private formatDate(date: Date): string {
+    return date.toISOString().slice(0, 10);
+  }
+
+  private normalizeField(value: string): string {
+    return value.trim().replace(/\s+/g, ' ');
+  }
+
+  private normalizeNumber(value: number): string {
+    return value.toFixed(2);
   }
 
   public async addOrReplaceFile(file: File): Promise<void> {
