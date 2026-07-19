@@ -320,7 +320,6 @@ export const defaultCategories: BaseCategory[] = [
           'Playstore',
           'Shopify',
           'Slack',
-          'Spotify',
           'Squarespace',
           'Steam',
           'TeamViewer',
