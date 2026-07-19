@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Category } from '../models/category';
+import { Transaction } from '../models/transaction';
 
 export interface SankeyNode {
   name: string;
@@ -22,6 +23,119 @@ export interface SankeyData {
 export class SankeyDataService {
 
   constructor() { }
+
+  /**
+   * Konvertiert gefilterte Transaktionen in Sankey-Chart-Daten.
+   * Dadurch folgt das Sankey-Diagramm allen aktiven Filtern
+   * (Zeitraum, Suche, Kategorie, Ein-/Ausgaben).
+   */
+  transformTransactionsToSankeyData(
+    transactions: Transaction[],
+    categories: Category[],
+    type: 'expense' | 'income' = 'expense'
+  ): SankeyData {
+    const nodes: SankeyNode[] = [];
+    const links: SankeyLink[] = [];
+    const nodeSet = new Set<string>();
+
+    const rootName = type === 'expense' ? 'Gesamtausgaben' : 'Gesamteinnahmen';
+    const parentTotals = new Map<string, number>();
+    const subTotals = new Map<string, number>();
+
+    const matchesType = (transaction: Transaction): boolean => {
+      if (type === 'expense') {
+        return transaction.amount < 0;
+      }
+      return transaction.amount > 0;
+    };
+
+    const addToMap = (map: Map<string, number>, key: string, value: number): void => {
+      map.set(key, (map.get(key) ?? 0) + value);
+    };
+
+    transactions
+      .filter(matchesType)
+      .forEach((transaction) => {
+        const amount = Math.abs(transaction.amount);
+        if (amount <= 0) {
+          return;
+        }
+
+        if (!transaction.category) {
+          addToMap(parentTotals, 'Unkategorisiert', amount);
+          return;
+        }
+
+        const parentCategory = categories.find((category) =>
+          category === transaction.category || category.subCategories?.some((subCategory) => subCategory === transaction.category)
+        );
+
+        const parentName = parentCategory?.name ?? transaction.category.name;
+        addToMap(parentTotals, parentName, amount);
+
+        const isSubCategory = !!parentCategory && parentCategory !== transaction.category;
+        if (isSubCategory) {
+          const subName = `${parentName} - ${transaction.category.name}`;
+          addToMap(subTotals, subName, amount);
+        }
+      });
+
+    if (parentTotals.size === 0) {
+      return { nodes: [], links: [] };
+    }
+
+    nodes.push({ name: rootName });
+    nodeSet.add(rootName);
+
+    parentTotals.forEach((parentTotal, parentName) => {
+      if (!nodeSet.has(parentName)) {
+        nodes.push({ name: parentName });
+        nodeSet.add(parentName);
+      }
+
+      links.push({
+        source: rootName,
+        target: parentName,
+        value: parentTotal,
+      });
+
+      let subTotal = 0;
+      subTotals.forEach((value, subName) => {
+        if (!subName.startsWith(`${parentName} - `)) {
+          return;
+        }
+
+        subTotal += value;
+        if (!nodeSet.has(subName)) {
+          nodes.push({ name: subName });
+          nodeSet.add(subName);
+        }
+
+        links.push({
+          source: parentName,
+          target: subName,
+          value,
+        });
+      });
+
+      const remainingValue = parentTotal - subTotal;
+      if (remainingValue > 1 && subTotal > 0) {
+        const otherName = `${parentName} - Sonstige`;
+        if (!nodeSet.has(otherName)) {
+          nodes.push({ name: otherName });
+          nodeSet.add(otherName);
+        }
+
+        links.push({
+          source: parentName,
+          target: otherName,
+          value: remainingValue,
+        });
+      }
+    });
+
+    return { nodes, links };
+  }
 
   /**
    * Konvertiert Kategorien in Sankey-Chart-Daten

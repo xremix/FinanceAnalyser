@@ -152,6 +152,7 @@
         </div>
       </div>
       <app-sankey-chart 
+        [transactions]="dataState.selectedTransactions"
         [categories]="dataState.categories" 
         [type]="sankeyType"
         height="1200px">

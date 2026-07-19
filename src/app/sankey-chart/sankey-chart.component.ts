@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgxEchartsDirective, provideEcharts } from 'ngx-echarts';
 import { EChartsOption } from 'echarts';
 import { Category } from '../models/category';
+import { Transaction } from '../models/transaction';
 import { SankeyDataService } from '../services/sankey-data.service';
 
 @Component({
@@ -14,6 +15,7 @@ import { SankeyDataService } from '../services/sankey-data.service';
   styleUrls: ['./sankey-chart.component.scss']
 })
 export class SankeyChartComponent implements OnInit, OnChanges {
+  @Input() transactions: Transaction[] = [];
   @Input() categories: Category[] = [];
   @Input() type: 'expense' | 'income' = 'expense';
   @Input() height = '600px';
@@ -27,13 +29,14 @@ export class SankeyChartComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['categories'] || changes['type']) {
+    if (changes['transactions'] || changes['categories'] || changes['type']) {
       this.updateChart();
     }
   }
 
   private updateChart(): void {
-    const sankeyData = this.sankeyDataService.transformCategoriesToSankeyData(
+    const sankeyData = this.sankeyDataService.transformTransactionsToSankeyData(
+      this.transactions,
       this.categories,
       this.type
     );
