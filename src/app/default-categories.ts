@@ -817,6 +817,13 @@ export const defaultCategories: BaseCategory[] = [
     icon: 'fa-solid fa-rectangle-list',
     subCategories: [
       {
+        name: 'Second Hand / Marktplätze',
+        subCategories: [],
+        type: 'expense',
+        excludeKeywords: [],
+        keywords: ['eBay', 'Kleinanzeigen', 'Vinted'],
+      },
+      {
         name: 'Sonstiges',
         subCategories: [],
         type: 'expense',
