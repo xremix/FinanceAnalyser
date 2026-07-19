@@ -49,7 +49,14 @@ export class DataState {
 
   public setTransactions(value: Transaction[]): void {
     this._transactions = value;
-    this.loadedSources = ['Hauptdatei']; // Reset sources for primary file
+    const sources = Array.from(
+      new Set(
+        value
+          .map((transaction) => transaction.source)
+          .filter((source): source is string => !!source && source.trim().length > 0)
+      )
+    );
+    this.loadedSources = sources;
     this.months = this.dateService.getMonths(this._transactions);
     this.monthStarts = this.months.map((m) => m.from);
     this.findDuplicates();

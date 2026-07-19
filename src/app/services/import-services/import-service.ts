@@ -15,6 +15,15 @@ export class ImportService {
   private readonly categoriesFileDbName = 'FinanceAnalyser';
   private readonly categoriesFileStoreName = 'fileHandles';
   private readonly categoriesFileHandleKey = 'categoriesFileHandle';
+  private readonly filesStorageKey = 'files';
+
+  private typeStoredFile(fileName: string, content: string) {
+    return {
+      fileName,
+      content,
+      uploadedAt: new Date().toISOString(),
+    };
+  }
 
   public async getFileContent(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -40,15 +49,27 @@ export class ImportService {
     return transactions;
   }
 
-  public loadFileFromLocalStorage() {
+  public loadFilesFromLocalStorage() {
     this.dataState.resetState();
-    const fileContent = localStorage.getItem('fileContent');
-    if (!fileContent) {
-      console.error('No file content found in local storage');
+
+    const storedFiles = this.getFilesFromLocalStorage();
+    if (storedFiles.length === 0) {
       return;
     }
-    let transactions = this.parseCsvToTransactions(fileContent);
-    this.categoryService.fillCategoriesToTransactions(transactions);
+
+    const transactions: Transaction[] = [];
+    for (const storedFile of storedFiles) {
+      try {
+        let parsedTransactions = this.parseCsvToTransactions(storedFile.content);
+        this.categoryService.fillCategoriesToTransactions(parsedTransactions);
+        parsedTransactions.forEach((transaction) => {
+          transaction.source = storedFile.fileName;
+        });
+        transactions.push(...parsedTransactions);
+      } catch (error) {
+        console.error(`Error loading stored file ${storedFile.fileName}:`, error);
+      }
+    }
 
     this.dataState.setTransactions(transactions);
 
@@ -57,84 +78,40 @@ export class ImportService {
     }
   }
 
-  public async loadAdditionalFile(fileContent: string, fileName: string): Promise<void> {
-    try {
-      let newTransactions = this.parseCsvToTransactions(fileContent);
-      
-      if (newTransactions.length === 0) {
-        throw new Error('No transactions found in the file. Please check the format.');
-      }
-
-      // Fill categories for new transactions
-      this.categoryService.fillCategoriesToTransactions(newTransactions);
-
-      // Add source information to transactions
-      newTransactions.forEach(transaction => {
-        transaction.source = fileName;
-      });
-
-      // Save additional file to localStorage
-      this.saveAdditionalFileToLocalStorage(fileContent, fileName);
-
-      // Add to existing transactions
-      this.dataState.addTransactions(newTransactions);
-
-      console.log(`Successfully loaded ${newTransactions.length} transactions from ${fileName}`);
-    } catch (error) {
-      console.error('Error loading additional file:', error);
-      throw error;
-    }
+  public async addOrReplaceFile(file: File): Promise<void> {
+    const fileContent = await this.getFileContent(file);
+    this.upsertStoredFile(file.name, fileContent);
+    this.loadFilesFromLocalStorage();
   }
 
-  private saveAdditionalFileToLocalStorage(fileContent: string, fileName: string): void {
-    const additionalFiles = this.getAdditionalFilesFromLocalStorage();
-    const fileData = {
-      fileName,
-      content: fileContent,
-      uploadedAt: new Date().toISOString()
-    };
-    
-    // Check if file already exists and replace it, otherwise add new
-    const existingIndex = additionalFiles.findIndex(f => f.fileName === fileName);
+  public removeFile(fileName: string): void {
+    const files = this.getFilesFromLocalStorage().filter((file) => file.fileName !== fileName);
+    localStorage.setItem(this.filesStorageKey, JSON.stringify(files));
+    this.loadFilesFromLocalStorage();
+  }
+
+  public clearFiles(): void {
+    localStorage.removeItem(this.filesStorageKey);
+    this.dataState.resetState();
+  }
+
+  private upsertStoredFile(fileName: string, fileContent: string): void {
+    const files = this.getFilesFromLocalStorage();
+    const fileData = this.typeStoredFile(fileName, fileContent);
+
+    const existingIndex = files.findIndex((f) => f.fileName === fileName);
     if (existingIndex >= 0) {
-      additionalFiles[existingIndex] = fileData;
+      files[existingIndex] = fileData;
     } else {
-      additionalFiles.push(fileData);
+      files.push(fileData);
     }
-    
-    localStorage.setItem('additionalFiles', JSON.stringify(additionalFiles));
+
+    localStorage.setItem(this.filesStorageKey, JSON.stringify(files));
   }
 
-  private getAdditionalFilesFromLocalStorage(): Array<{fileName: string, content: string, uploadedAt: string}> {
-    const stored = localStorage.getItem('additionalFiles');
+  public getFilesFromLocalStorage(): Array<{ fileName: string; content: string; uploadedAt: string }> {
+    const stored = localStorage.getItem(this.filesStorageKey);
     return stored ? JSON.parse(stored) : [];
-  }
-
-  public loadAdditionalFilesFromLocalStorage(): void {
-    const additionalFiles = this.getAdditionalFilesFromLocalStorage();
-    
-    for (const fileData of additionalFiles) {
-      try {
-        let transactions = this.parseCsvToTransactions(fileData.content);
-        this.categoryService.fillCategoriesToTransactions(transactions);
-        
-        // Add source information to transactions
-        transactions.forEach(transaction => {
-          transaction.source = fileData.fileName;
-        });
-
-        // Add to existing transactions
-        this.dataState.addTransactions(transactions);
-        
-        console.log(`Loaded ${transactions.length} transactions from stored file: ${fileData.fileName}`);
-      } catch (error) {
-        console.error(`Error loading stored additional file ${fileData.fileName}:`, error);
-      }
-    }
-  }
-
-  public clearAdditionalFilesFromLocalStorage(): void {
-    localStorage.removeItem('additionalFiles');
   }
 
   constructor(private categoryService: CategoryService, private dataState: DataState) {}
@@ -145,8 +122,45 @@ export class ImportService {
     if (!loadedFromFile) {
       this.loadCategoriesFromLocalStorage();
     }
-    this.loadFileFromLocalStorage();
-    this.loadAdditionalFilesFromLocalStorage();
+    this.migrateLegacyFilesToUnifiedFiles();
+    this.loadFilesFromLocalStorage();
+  }
+
+  private migrateLegacyFilesToUnifiedFiles(): void {
+    const existingFiles = this.getFilesFromLocalStorage();
+    if (existingFiles.length > 0) {
+      return;
+    }
+
+    const migratedFiles: Array<{ fileName: string; content: string; uploadedAt: string }> = [];
+
+    const legacyMainFileContent = localStorage.getItem('fileContent');
+    if (legacyMainFileContent) {
+      migratedFiles.push(this.typeStoredFile('Hauptdatei', legacyMainFileContent));
+    }
+
+    const legacyAdditionalFiles = localStorage.getItem('additionalFiles');
+    if (legacyAdditionalFiles) {
+      try {
+        const parsedLegacyFiles: Array<{ fileName: string; content: string; uploadedAt?: string }> = JSON.parse(legacyAdditionalFiles);
+        parsedLegacyFiles.forEach((legacyFile) => {
+          migratedFiles.push({
+            fileName: legacyFile.fileName,
+            content: legacyFile.content,
+            uploadedAt: legacyFile.uploadedAt ?? new Date().toISOString(),
+          });
+        });
+      } catch (error) {
+        console.error('Could not migrate legacy additional files:', error);
+      }
+    }
+
+    if (migratedFiles.length > 0) {
+      localStorage.setItem(this.filesStorageKey, JSON.stringify(migratedFiles));
+    }
+
+    localStorage.removeItem('fileContent');
+    localStorage.removeItem('additionalFiles');
   }
 
   private loadCategoriesFromLocalStorage() {

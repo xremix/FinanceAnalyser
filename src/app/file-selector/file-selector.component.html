@@ -1,47 +1,40 @@
 <div class="big" *ngIf="big">
-  <input type="file" name="file" id="file" class="inputfile" (change)="fileChanged($event)" />
-  <label for="file">Datei wählen</label>
-  
-  <!-- Additional file selector for second document -->
-  <div class="additional-file-section" *ngIf="dataState.hasLoadedData">
-    <input type="file" name="additionalFile" id="additionalFile" class="inputfile" (change)="additionalFileChanged($event)" />
-    <label for="additionalFile" class="additional-file-btn" 
-           title="Zusätzliche Dateien werden jetzt gespeichert und automatisch geladen">
-      <i class="fa-solid fa-plus"></i> Weitere Datei hinzufügen
-    </label>
-    
-    <!-- Clear additional files button -->
-    <button class="clear-additional-btn" 
-            (click)="clearAdditionalFiles()" 
-            *ngIf="dataState.loadedSources.length > 1"
-            title="Alle zusätzlichen Dateien löschen">
-      <i class="fa-solid fa-trash"></i> Zusätzliche Dateien löschen
+  <input type="file" name="file" [id]="inputId" class="inputfile" multiple (change)="fileChanged($event)" />
+  <label [for]="inputId">Dateien wählen</label>
+
+  <div class="file-list" *ngIf="storedFiles.length > 0">
+    <div class="file-item" *ngFor="let file of storedFiles">
+      <span class="file-name" [title]="file.fileName">{{ file.fileName }}</span>
+      <button class="file-remove-btn" (click)="removeFile(file.fileName)" title="Datei entfernen" aria-label="Datei entfernen">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <button class="clear-files-btn" (click)="clearFiles()" title="Alle Dateien löschen">
+      <i class="fa-solid fa-trash"></i> Alle löschen
     </button>
   </div>
 </div>
 <div class="small d-inline" *ngIf="!big">
-  <input type="file" name="file" id="file" class="inputfile" (change)="fileChanged($event)" />
-  <label for="file" class="btn btn-light btn-sm d-inline-flex align-items-center gap-2" title="Load CSV file">
+  <input type="file" name="file" [id]="inputId" class="inputfile" multiple (change)="fileChanged($event)" />
+  <label [for]="inputId" class="btn btn-light btn-sm d-inline-flex align-items-center gap-2" title="CSV-Dateien laden">
     <i class="fa-solid fa-upload"></i>
-    <span class="d-none d-md-inline">Load</span>
+    <span class="d-none d-md-inline">Dateien</span>
   </label>
-  
-  <!-- Additional file selector for small version -->
-  <div class="additional-file-small d-inline-flex gap-2" *ngIf="dataState.hasLoadedData">
-    <input type="file" name="additionalFileSmall" id="additionalFileSmall" class="inputfile" (change)="additionalFileChanged($event)" />
-    <label for="additionalFileSmall" class="btn btn-light btn-sm d-inline-flex align-items-center gap-2"
-           title="Add additional CSV file (auto-saved and loaded)">
-      <i class="fa-solid fa-plus"></i>
-      <span class="d-none d-md-inline">Add</span>
-    </label>
-    
-    <!-- Clear button for small version -->
-    <button class="btn btn-light btn-sm d-inline-flex align-items-center gap-2" 
-            (click)="clearAdditionalFiles()" 
-            *ngIf="dataState.loadedSources.length > 1"
-            title="Clear all additional files">
+
+  <div class="small-file-actions d-inline-flex gap-2" *ngIf="storedFiles.length > 0">
+    <button class="btn btn-light btn-sm d-inline-flex align-items-center gap-2" (click)="clearFiles()" title="Alle Dateien löschen">
       <i class="fa-solid fa-trash"></i>
-      <span class="d-none d-md-inline">Clear</span>
+      <span class="d-none d-md-inline">Alle löschen</span>
     </button>
+  </div>
+
+  <div class="small-file-list" *ngIf="storedFiles.length > 0">
+    <div class="small-file-item" *ngFor="let file of storedFiles">
+      <span class="small-file-name" [title]="file.fileName">{{ file.fileName }}</span>
+      <button class="small-file-remove" (click)="removeFile(file.fileName)" title="Datei entfernen" aria-label="Datei entfernen">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
   </div>
 </div>
