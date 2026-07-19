@@ -71,11 +71,34 @@ export class ImportService {
       }
     }
 
-    this.dataState.setTransactions(transactions);
+    const uniqueTransactions = this.removeExactDuplicateTransactions(transactions);
 
-    if (transactions.length > 0) {
+    this.dataState.setTransactions(uniqueTransactions);
+
+    if (uniqueTransactions.length > 0) {
       this.dataState.resetFilter(false);
     }
+  }
+
+  private removeExactDuplicateTransactions(transactions: Transaction[]): Transaction[] {
+    const seen = new Set<string>();
+    const uniqueTransactions: Transaction[] = [];
+
+    for (const transaction of transactions) {
+      const signature = this.buildTransactionSignature(transaction);
+      if (seen.has(signature)) {
+        continue;
+      }
+
+      seen.add(signature);
+      uniqueTransactions.push(transaction);
+    }
+
+    return uniqueTransactions;
+  }
+
+  private buildTransactionSignature(transaction: Transaction): string {
+    return transaction.raw.trim();
   }
 
   public async addOrReplaceFile(file: File): Promise<void> {
