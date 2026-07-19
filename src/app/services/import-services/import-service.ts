@@ -112,6 +112,10 @@ export class ImportService {
   }
 
   private formatDate(date: Date): string {
+    if (!date || Number.isNaN(date.getTime())) {
+      return '';
+    }
+
     return date.toISOString().slice(0, 10);
   }
 
