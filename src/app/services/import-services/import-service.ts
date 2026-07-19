@@ -53,7 +53,7 @@ export class ImportService {
     this.dataState.setTransactions(transactions);
 
     if (transactions.length > 0) {
-      this.dataState.resetFilter();
+      this.dataState.resetFilter(false);
     }
   }
 

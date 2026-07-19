@@ -23,6 +23,7 @@ export interface DataFilter {
   providedIn: 'root',
 })
 export class DataState {
+  private readonly searchTermStorageKey = 'searchTerm';
   private _transactions: Transaction[] = [];
   public duplicates: Transaction[] = [];
   public loadedSources: string[] = []; // Track loaded file sources
@@ -34,7 +35,9 @@ export class DataState {
   constructor(
     private dateService: DateService, 
     private duplicateService: DuplicateService
-  ) {}
+  ) {
+    this.currentFilter.searchTerm = this.loadSearchTerm();
+  }
 
   get hasLoadedData(): boolean {
     return this._transactions.length > 0;
@@ -195,6 +198,22 @@ export class DataState {
     return terms.filter(term => term.length > 0);
   }
 
+  private loadSearchTerm(): string {
+    try {
+      return localStorage.getItem(this.searchTermStorageKey) ?? '';
+    } catch {
+      return '';
+    }
+  }
+
+  private saveSearchTerm(searchTerm: string): void {
+    try {
+      localStorage.setItem(this.searchTermStorageKey, searchTerm);
+    } catch {
+      // Ignore storage errors (e.g. private mode or disabled storage)
+    }
+  }
+
   private refresh() {
     this.selectedTransactions = this.transactions.filter((t) => this.showTransaction(t));
     this.findDuplicates();
@@ -283,10 +302,13 @@ export class DataState {
       this.refresh();
     }
   }
-  resetFilter() {
+  resetFilter(resetSearchTerm: boolean = true) {
     this.resetMonth();
     this.resetCategory();
-    this.currentFilter.searchTerm = '';
+    if (resetSearchTerm) {
+      this.currentFilter.searchTerm = '';
+      this.saveSearchTerm('');
+    }
     this.refresh();
   }
   resetCategory() {
@@ -321,6 +343,7 @@ export class DataState {
 
   filterBySearchTerm(searchTerm: string) {
     this.currentFilter.searchTerm = searchTerm;
+    this.saveSearchTerm(searchTerm);
     this.refresh();
   }
 
