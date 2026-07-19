@@ -134,15 +134,14 @@ export class DataState {
     }
 
     const terms = this.parseSearchTerms(searchTerm);
-    console.error(terms);
-    const rawText = transaction.raw.toLowerCase();
+    const searchableText = this.buildSearchableText(transaction);
 
     // Separate include and exclude terms
     const includeTerms = terms.filter(term => !term.startsWith('-'));
     const excludeTerms = terms.filter(term => term.startsWith('-')).map(term => term.substring(1));
 
     // Check exclude terms first - if ANY exclude term is found, exclude the transaction
-    const hasExcludedTerm = excludeTerms.some(excludeTerm => rawText.includes(excludeTerm));
+    const hasExcludedTerm = excludeTerms.some(excludeTerm => searchableText.includes(excludeTerm));
     if (hasExcludedTerm) {
       return false;
     }
@@ -153,8 +152,30 @@ export class DataState {
     }
 
     // Check include terms - if ANY include term is found, include the transaction
-    const hasIncludedTerm = includeTerms.some(includeTerm => rawText.includes(includeTerm));
+    const hasIncludedTerm = includeTerms.some(includeTerm => searchableText.includes(includeTerm));
     return hasIncludedTerm;
+  }
+
+  private buildSearchableText(transaction: Transaction): string {
+    const rawText = (transaction.raw ?? '').toLowerCase();
+    const categoryName = (transaction.category?.name ?? '').toLowerCase();
+    const parentCategoryName = this.getParentCategoryName(transaction);
+
+    return [rawText, categoryName, parentCategoryName]
+      .filter(Boolean)
+      .join(' ');
+  }
+
+  private getParentCategoryName(transaction: Transaction): string {
+    if (!transaction.category) {
+      return '';
+    }
+
+    const parentCategory = this.categories.find((category) =>
+      category.subCategories?.some((subCategory) => subCategory === transaction.category)
+    );
+
+    return (parentCategory?.name ?? '').toLowerCase();
   }
 
   private parseSearchTerms(searchTerm: string): string[] {
