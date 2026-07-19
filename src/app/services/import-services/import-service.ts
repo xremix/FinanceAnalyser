@@ -85,30 +85,58 @@ export class ImportService {
     const uniqueTransactions: Transaction[] = [];
 
     for (const transaction of transactions) {
-      const signature = this.buildTransactionSignature(transaction);
-      if (seen.has(signature)) {
-        console.log(`Duplicate transaction found and removed: ${signature}`);
+      const signatures = this.buildTransactionSignatures(transaction);
+      const isKnownDuplicate = signatures.some((signature) => seen.has(signature));
+
+      if (isKnownDuplicate) {
+        console.log('Duplicate transaction found and removed');
         continue;
       }
 
-      seen.add(signature);
+      signatures.forEach((signature) => seen.add(signature));
       uniqueTransactions.push(transaction);
     }
 
     return uniqueTransactions;
   }
 
-  private buildTransactionSignature(transaction: Transaction): string {
-    const normalizedRaw = transaction.raw.trim();
+  private buildTransactionSignatures(transaction: Transaction): string[] {
+    const date = this.resolveComparableDate(transaction);
+    const amount = this.normalizeNumber(transaction.amount);
+    const currency = this.normalizeField(transaction.amountCurrency);
+    const payerReceiver = this.normalizeField(transaction.payerReceiver);
+    const bookingText = this.normalizeField(transaction.bookingText);
+    const purpose = this.normalizeField(transaction.purpose);
+
+    const strictSignature = [
+      date,
+      payerReceiver,
+      bookingText,
+      purpose,
+      amount,
+      currency,
+    ].join('|');
+
+    const relaxedSignature = [
+      date,
+      purpose,
+      amount,
+      currency,
+    ].join('|');
 
     return [
-      this.formatDate(transaction.bookingDate),
-      this.formatDate(transaction.valueDate),
-      this.normalizeField(transaction.payerReceiver),
-      this.normalizeField(transaction.purpose),
-      this.normalizeNumber(transaction.amount),
-      this.normalizeField(transaction.amountCurrency),
-    ].join('|');
+      strictSignature,
+      relaxedSignature,
+    ];
+  }
+
+  private resolveComparableDate(transaction: Transaction): string {
+    const bookingDate = this.formatDate(transaction.bookingDate);
+    if (bookingDate) {
+      return bookingDate;
+    }
+
+    return this.formatDate(transaction.valueDate);
   }
 
   private formatDate(date: Date): string {
@@ -120,7 +148,7 @@ export class ImportService {
   }
 
   private normalizeField(value: string): string {
-    return value.trim().replace(/\s+/g, ' ');
+    return (value ?? '').trim().replace(/\s+/g, ' ').toLowerCase();
   }
 
   private normalizeNumber(value: number): string {
