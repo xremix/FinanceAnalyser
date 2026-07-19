@@ -1,33 +1,45 @@
-<div class="border-bottom mb-3 text-center" *ngIf="!dataState.hasLoadedData">
+<div class="welcome-shell border-bottom mb-3" *ngIf="!dataState.hasLoadedData">
+  <div class="text-center pt-4">
+    <h2 class="mb-2">Datei laden und loslegen</h2>
+    <p class="text-muted mb-3">Importiere deine CSV aus Sparkasse oder ING.<br/>Die Auswertung läuft komplett <b>lokal in deinem Browser</b>.</p>
+    <app-file-selector [big]="true"></app-file-selector>
+  </div>
 
-  <div class="card m-auto my-4 w-100" style="max-width: 400px;">
+  <div class="card m-auto my-4 w-100 intro-card">
     <div class="card-body">
-      <h5 class="card-title">Finanz Uhu</h5>
-      <p class="card-text">Das datenschutzfreundliche Tool um deine Finanzdateien auf deinem Computer zu analysieren</p>
- 
+      <h5 class="card-title">So geht's:</h5>
+      <div class="tutorial-grid mt-3">
+        <div class="tutorial-step">
+          <span class="step-badge">1</span>
+          <p class="step-text mb-0">Im Online-Banking der Sparkasse oder ING den Bereich <strong>Umsätze</strong> öffnen und den gewünschten Zeitraum wählen.</p>
+        </div>
+        <div class="tutorial-step">
+          <span class="step-badge">2</span>
+          <p class="step-text mb-0">Bei <strong>Export</strong> oder <strong>Download</strong> das Format <strong>CSV</strong> auswählen und speichern.</p>
+        </div>
+        <div class="tutorial-step">
+          <span class="step-badge">3</span>
+          <p class="step-text mb-0">Die gespeicherte Datei hier hochladen.</p>
+        </div>
+      </div>
+
       <hr class="my-4">
 
       <h5>Funktionen</h5>
       <ul class="list-group">
         <li class="list-group-item">Kategorisiert deine Ein- und Ausgaben</li>
-        <li class="list-group-item">Analysiere deine  Kategorien mithilfe der Filter</li>
-        <li class="list-group-item">Einblick in wiederkehrende Ausgaben, wie Versicherungen oder Bankgebühren</li>
-        <li class="list-group-item">Monatliche Bilanzen</li>
+        <li class="list-group-item">Analysiere deine Kategorien mit flexiblen Filtern</li>
+        <li class="list-group-item">Einblick in wiederkehrende Ausgaben wie Versicherungen oder Bankgebühren</li>
+        <li class="list-group-item">Monatliche Bilanzen und Verlauf</li>
       </ul>
 
       <h5 class="mt-4">Umsetzung</h5>
       <ul class="list-group">
         <li class="list-group-item">Alle Daten werden auf deinem Computer verarbeitet</li>
         <li class="list-group-item">Open Source</li>
-        <li class="list-group-item">Unterstützt ING und Sparkassen Dateien</li>
+        <li class="list-group-item">Unterstützt ING und Sparkassen-Dateien</li>
       </ul>
     </div>
-  </div>
-
-  <h2>Wähle eine Datei</h2>
-  <app-file-selector [big]="true"></app-file-selector>  
-  <div class="text-center">
-    <caption class="m-auto d-inline-block">Wähle eine <i>.csv</i> Datei von der Sparkasse oder ING aus.</caption>
   </div>
 </div>
 
