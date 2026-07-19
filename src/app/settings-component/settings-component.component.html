@@ -1,51 +1,65 @@
-<div class="bg-white sticky-top shadow-sm border-bottom">
-    <div class="container-fluid py-4">
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
-            <div>
-                <h1 class="mb-0 fw-bold text-dark d-flex align-items-center">
-                    <i class="fas fa-cog me-2 text-primary"></i>
-                    Einstellungen
-                    <span class="badge bg-warning text-dark ms-2 small" *ngIf="hasUnsavedChanges">Ungespeicherte Änderungen</span>
-                </h1>
-            </div>
-            <div class="d-flex gap-2 align-items-center">
-                <div ngbDropdown class="d-inline-block">
-                    <button
-                        type="button"
-                        class="btn btn-outline-secondary"
-                        id="settingsMoreActions"
-                        ngbDropdownToggle
-                        aria-label="Weitere Aktionen"
-                        title="Weitere Aktionen"
-                    >
-                        More
-                    </button>
-                    <div ngbDropdownMenu aria-labelledby="settingsMoreActions">
-                        <button ngbDropdownItem (click)="loadSettingsFromFile()" [disabled]="!supportsFileSync">
-                            <i class="fas fa-folder-open me-2"></i>Einstellungen aus Datei laden
-                        </button>
-                        <button ngbDropdownItem (click)="reloadSettingsFromLinkedFile()" [disabled]="!supportsFileSync || !linkedSettingsFileName">
-                            <i class="fas fa-rotate me-2"></i>Verknüpfte Datei nachladen
-                        </button>
-                        <button ngbDropdownItem (click)="saveDatabaseInFile()" [disabled]="!supportsFileSync">
-                            <i class="fas fa-file-export me-2"></i>Datenbank in Datei speichern
-                        </button>
-                        <button ngbDropdownItem (click)="fillCategoriesWithDefaults()">
-                            <i class="fas fa-magic me-2"></i>App-Standardeinstellungen nachladen
-                        </button>
-                    </div>
+<div class="settings-sticky-shell">
+    <div class="bg-white shadow-sm border rounded-3 settings-main-header">
+        <div class="container-fluid py-3">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+                <div>
+                    <h1 class="mb-0 fw-bold text-dark d-flex align-items-center">
+                        <i class="fas fa-cog me-2 text-primary"></i>
+                        Einstellungen
+                        <span class="badge bg-warning text-dark ms-2 small" *ngIf="hasUnsavedChanges">Ungespeicherte Änderungen</span>
+                    </h1>
                 </div>
-                <button class="btn btn-primary" (click)="saveState()">
-                    <i class="fas fa-save me-2"></i>Speichern
-                </button>
+                <div class="d-flex gap-2 align-items-center settings-action-buttons">
+                    <div ngbDropdown class="d-inline-block">
+                        <button
+                            type="button"
+                            class="btn btn-outline-secondary"
+                            id="settingsMoreActions"
+                            ngbDropdownToggle
+                            aria-label="Weitere Aktionen"
+                            title="Weitere Aktionen"
+                        >
+                            More
+                        </button>
+                        <div ngbDropdownMenu aria-labelledby="settingsMoreActions">
+                            <button ngbDropdownItem (click)="loadSettingsFromFile()" [disabled]="!supportsFileSync">
+                                <i class="fas fa-folder-open me-2"></i>Einstellungen aus Datei laden
+                            </button>
+                            <button ngbDropdownItem (click)="reloadSettingsFromLinkedFile()" [disabled]="!supportsFileSync || !linkedSettingsFileName">
+                                <i class="fas fa-rotate me-2"></i>Verknüpfte Datei nachladen
+                            </button>
+                            <button ngbDropdownItem (click)="saveDatabaseInFile()" [disabled]="!supportsFileSync">
+                                <i class="fas fa-file-export me-2"></i>Datenbank in Datei speichern
+                            </button>
+                            <button ngbDropdownItem (click)="fillCategoriesWithDefaults()">
+                                <i class="fas fa-magic me-2"></i>App-Standardeinstellungen nachladen
+                            </button>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" (click)="saveState()">
+                        <i class="fas fa-save me-2"></i>Speichern
+                    </button>
+                </div>
+            </div>
+            <div class="mt-2 small text-muted" *ngIf="supportsFileSync && linkedSettingsFileName">
+                Verknüpfte Einstellungsdatei: <strong>{{ linkedSettingsFileName }}</strong>
+            </div>
+            <div class="mt-2 small text-warning" *ngIf="!supportsFileSync">
+                Direkter Dateizugriff wird von diesem Browser nicht unterstützt.
             </div>
         </div>
-        <div class="mt-2 small text-muted" *ngIf="supportsFileSync && linkedSettingsFileName">
-            Verknüpfte Einstellungsdatei: <strong>{{ linkedSettingsFileName }}</strong>
-        </div>
-        <div class="mt-2 small text-warning" *ngIf="!supportsFileSync">
-            Direkter Dateizugriff wird von diesem Browser nicht unterstützt.
-        </div>
+    </div>
+</div>
+
+<div class="container-fluid settings-sub-header bg-white border rounded-3 mt-2">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center py-3 gap-3">
+        <h2 class="mb-0 fw-semibold">
+            <i class="fas fa-list me-2 text-primary"></i>
+            Kategorien verwalten
+        </h2>
+        <button class="btn btn-success btn-lg" (click)="addCategory()">
+            <i class="fas fa-plus me-2"></i>Neue Kategorie
+        </button>
     </div>
 </div>
 
@@ -101,17 +115,7 @@
     </div>
 </div>
 
-<div class="container-fluid">
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
-        <h2 class="mb-0 fw-semibold">
-            <i class="fas fa-list me-2 text-primary"></i>
-            Kategorien verwalten
-        </h2>
-        <button class="btn btn-success btn-lg" (click)="addCategory()">
-            <i class="fas fa-plus me-2"></i>Neue Kategorie
-        </button>
-    </div>
-    
+<div class="container-fluid mt-3">
     <div class="row g-3">
         <div *ngFor="let category of dataState.categories" class="col-12">
             <ng-container *ngTemplateOutlet="categoryTemplate; context:{category: category}"> </ng-container>

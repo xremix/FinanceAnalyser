@@ -1,5 +1,27 @@
 // Minimal custom styles - using Bootstrap utilities where possible
 
+:host {
+  display: block;
+}
+
+$app-toolbar-offset-desktop: 78px;
+$app-toolbar-offset-mobile: 120px;
+
+.settings-sticky-shell {
+  position: sticky;
+  top: $app-toolbar-offset-desktop;
+  z-index: 1000;
+  margin-bottom: 1rem;
+}
+
+.settings-main-header {
+  backdrop-filter: blur(3px);
+}
+
+.settings-action-buttons {
+  flex-wrap: wrap;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
@@ -7,4 +29,26 @@
 // Legacy hover effect for badges
 .badge.rounded-pill:hover {
   text-decoration: line-through;
+}
+
+@media (max-width: 991.98px) {
+  .settings-sticky-shell {
+    top: $app-toolbar-offset-mobile;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .settings-main-header .container-fluid,
+  .settings-sub-header {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .settings-main-header h1 {
+    font-size: 1.4rem;
+  }
+
+  .settings-sub-header h2 {
+    font-size: 1.2rem;
+  }
 }
