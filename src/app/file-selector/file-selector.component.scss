@@ -109,39 +109,113 @@
 .small {
   display: inline-flex;
   align-items: center;
-  flex-wrap: wrap;
+}
+
+.small .top-nav-btn {
+  display: inline-flex;
+  align-items: center;
   gap: 8px;
-}
-
-.small-file-list {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-}
-
-.small-file-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
   background-color: rgba(255, 255, 255, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #fff;
   border-radius: 999px;
-  padding: 3px 8px;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.875rem;
+  line-height: 1;
 }
 
-.small-file-name {
-  color: #ffffff;
-  font-size: 0.8rem;
+.small .top-nav-btn:hover,
+.small .top-nav-btn:focus {
+  background-color: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #fff;
+  outline: none;
+}
+
+.file-counter {
+  background-color: rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  min-width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0 5px;
+}
+
+.file-popover-menu {
+  min-width: 280px;
+  max-width: 340px;
+  padding: 10px;
+}
+
+.file-popover-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.file-popover-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #d6dde3;
+  color: #1f2933;
+  background: #fff;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.file-popover-btn:hover,
+.file-popover-btn:focus {
+  background-color: #f3f6f8;
+}
+
+.file-popover-btn.danger {
+  border-color: #efc3ca;
+  color: #a12c3a;
+}
+
+.file-popover-btn.danger[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.file-popover-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.file-popover-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 1px solid #e5eaef;
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+
+.file-popover-name {
+  font-size: 0.84rem;
+  color: #1f2933;
+  max-width: 230px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.small-file-remove {
+.file-popover-remove {
   border: none;
   background: transparent;
-  color: #ffffff;
+  color: #6c757d;
   width: 20px;
   height: 20px;
   border-radius: 50%;
@@ -150,8 +224,21 @@
 
   &:hover,
   &:focus {
-    background-color: rgba(220, 53, 69, 0.3);
+    color: #dc3545;
+    background-color: #fdebed;
     outline: none;
+  }
+}
+
+.file-popover-empty {
+  color: #6a7682;
+  font-size: 0.84rem;
+  padding: 8px 4px 4px;
+}
+
+@media (max-width: 575px) {
+  .small .top-nav-btn span {
+    display: none;
   }
 }
 

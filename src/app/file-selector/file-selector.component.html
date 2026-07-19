@@ -15,26 +15,38 @@
     </button>
   </div>
 </div>
-<div class="small d-inline" *ngIf="!big">
-  <input type="file" name="file" [id]="inputId" class="inputfile" multiple (change)="fileChanged($event)" />
-  <label [for]="inputId" class="btn btn-light btn-sm d-inline-flex align-items-center gap-2" title="CSV-Dateien laden">
-    <i class="fa-solid fa-upload"></i>
-    <span class="d-none d-md-inline">Dateien</span>
-  </label>
+<div class="small d-inline" *ngIf="!big" ngbDropdown placement="bottom-end" autoClose="outside" container="body">
+  <button class="top-nav-btn" ngbDropdownToggle title="Dateien verwalten">
+    <i class="fa-solid fa-folder-open"></i>
+    <span>Dateien</span>
+    <span class="file-counter" *ngIf="storedFiles.length > 0">{{ storedFiles.length }}</span>
+  </button>
 
-  <div class="small-file-actions d-inline-flex gap-2" *ngIf="storedFiles.length > 0">
-    <button class="btn btn-light btn-sm d-inline-flex align-items-center gap-2" (click)="clearFiles()" title="Alle Dateien löschen">
-      <i class="fa-solid fa-trash"></i>
-      <span class="d-none d-md-inline">Alle löschen</span>
-    </button>
-  </div>
+  <div ngbDropdownMenu class="file-popover-menu">
+    <div class="file-popover-actions">
+      <input type="file" name="file" [id]="inputId" class="inputfile" multiple (change)="fileChanged($event)" />
+      <label [for]="inputId" class="file-popover-btn" title="CSV-Dateien laden">
+        <i class="fa-solid fa-upload"></i>
+        <span>Datei hinzufügen</span>
+      </label>
 
-  <div class="small-file-list" *ngIf="storedFiles.length > 0">
-    <div class="small-file-item" *ngFor="let file of storedFiles">
-      <span class="small-file-name" [title]="file.fileName">{{ file.fileName }}</span>
-      <button class="small-file-remove" (click)="removeFile(file.fileName)" title="Datei entfernen" aria-label="Datei entfernen">
-        <i class="fa-solid fa-xmark"></i>
+      <button class="file-popover-btn danger" (click)="clearFiles()" [disabled]="storedFiles.length === 0" title="Alle Dateien löschen">
+        <i class="fa-solid fa-trash"></i>
+        <span>Alle löschen</span>
       </button>
     </div>
+
+    <div class="file-popover-list" *ngIf="storedFiles.length > 0; else noFilesTemplate">
+      <div class="file-popover-item" *ngFor="let file of storedFiles">
+        <span class="file-popover-name" [title]="file.fileName">{{ truncateFileName(file.fileName) }}</span>
+        <button class="file-popover-remove" (click)="removeFile(file.fileName)" title="Datei entfernen" aria-label="Datei entfernen">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+
+    <ng-template #noFilesTemplate>
+      <div class="file-popover-empty">Keine Dateien geladen</div>
+    </ng-template>
   </div>
 </div>

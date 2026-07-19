@@ -1,15 +1,15 @@
 <!-- Toolbar -->
 <div class="toolbar sticky-top" role="banner">
- <a href="/">
-  <img src="/assets/Owl.svg" alt="" srcset="" height="40px">
-  <span  class="text-white">Finanz Uhu</span>
+ <a href="/" class="brand-link">
+  <img src="/assets/Owl.svg" alt="Finanz Uhu Logo" height="40">
+  <span class="text-white">Finanz Uhu</span>
  </a>
   <div class="spacer"></div>
 
-  <div class="me-4 d-flex gap-2 align-items-center">
-    <button (click)="openSettings()" class="btn btn-light btn-sm d-flex align-items-center gap-2" title="Open Settings">
+  <div class="toolbar-actions me-4">
+    <button (click)="openSettings()" class="top-nav-btn" title="Einstellungen öffnen">
       <i class="fa-solid fa-gear"></i>
-      <span class="d-none d-md-inline fw-500">Settings</span>
+      <span>Settings</span>
     </button>
     <app-file-selector [big]="false"></app-file-selector>
   </div>

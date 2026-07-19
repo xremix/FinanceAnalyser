@@ -9,6 +9,7 @@ import { ImportService } from '../services/import-services/import-service';
 })
 export class FileSelectorComponent {
   @Input() public big: boolean = false;
+  private readonly maxFileNameLength = 26;
 
   constructor(
     private importService: ImportService,
@@ -50,6 +51,14 @@ export class FileSelectorComponent {
     if (confirm('Möchten Sie wirklich alle Dateien löschen?')) {
       this.importService.clearFiles();
     }
+  }
+
+  truncateFileName(fileName: string): string {
+    if (fileName.length <= this.maxFileNameLength) {
+      return fileName;
+    }
+
+    return `${fileName.substring(0, this.maxFileNameLength - 1)}...`;
   }
 
 }
