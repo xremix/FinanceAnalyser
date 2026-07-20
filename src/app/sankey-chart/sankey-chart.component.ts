@@ -5,6 +5,7 @@ import { EChartsOption } from 'echarts';
 import { Category } from '../models/category';
 import { Transaction } from '../models/transaction';
 import { SankeyDataService } from '../services/sankey-data.service';
+import { DataState } from '../services/data-state';
 
 @Component({
   selector: 'app-sankey-chart',
@@ -19,17 +20,18 @@ export class SankeyChartComponent implements OnInit, OnChanges {
   @Input() categories: Category[] = [];
   @Input() type: 'expense' | 'income' = 'expense';
   @Input() height = '600px';
+  @Input() amountMonths: number = 1;
 
   chartOptions: EChartsOption = {};
 
-  constructor(private sankeyDataService: SankeyDataService) {}
+  constructor(private sankeyDataService: SankeyDataService, protected dataState: DataState) {}
 
   ngOnInit(): void {
     this.updateChart();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['transactions'] || changes['categories'] || changes['type']) {
+    if (changes['transactions'] || changes['categories'] || changes['type'] || changes['amountMonths']) {
       this.updateChart();
     }
   }
@@ -38,7 +40,8 @@ export class SankeyChartComponent implements OnInit, OnChanges {
     const sankeyData = this.sankeyDataService.transformTransactionsToSankeyData(
       this.transactions,
       this.categories,
-      this.type
+      this.type,
+      this.dataState.showAverage ? this.amountMonths : 1
     );
 
     if (sankeyData.nodes.length === 0) {

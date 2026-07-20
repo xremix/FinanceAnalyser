@@ -24,9 +24,16 @@ export interface DataFilter {
 })
 export class DataState {
   private readonly searchTermStorageKey = 'searchTerm';
+  private readonly showAverageStorageKey = 'showAverage';
   private _transactions: Transaction[] = [];
   public duplicates: Transaction[] = [];
-  public showAverage: boolean = false;
+
+  private _showAverage: boolean = localStorage.getItem(this.showAverageStorageKey) === 'true';
+  get showAverage(): boolean { return this._showAverage; }
+  set showAverage(value: boolean) {
+    this._showAverage = value;
+    localStorage.setItem(this.showAverageStorageKey, String(value));
+  }
   public loadedSources: string[] = []; // Track loaded file sources
 
   public months: DateFilter[] = [];

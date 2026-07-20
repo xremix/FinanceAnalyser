@@ -32,7 +32,8 @@ export class SankeyDataService {
   transformTransactionsToSankeyData(
     transactions: Transaction[],
     categories: Category[],
-    type: 'expense' | 'income' = 'expense'
+    type: 'expense' | 'income' = 'expense',
+    divideByMonths: number = 1
   ): SankeyData {
     const nodes: SankeyNode[] = [];
     const links: SankeyLink[] = [];
@@ -96,7 +97,7 @@ export class SankeyDataService {
       links.push({
         source: rootName,
         target: parentName,
-        value: parentTotal,
+        value: divideByMonths > 1 ? parentTotal / divideByMonths : parentTotal,
       });
 
       let subTotal = 0;
@@ -114,7 +115,7 @@ export class SankeyDataService {
         links.push({
           source: parentName,
           target: subName,
-          value,
+          value: divideByMonths > 1 ? value / divideByMonths : value,
         });
       });
 
