@@ -30,7 +30,7 @@
           [title]="'Filtern nach ' + category.name">
           <span class="category-name fw-semibold">{{category.name}}</span>
           <span class="badge bg-light text-dark ms-2 small rounded-pill" *ngIf="category.total">
-            {{category.total | currency:'EUR':'symbol':'1.0-0'}}
+            {{ (dataState.showAverage ? category.total / dataState.selectedMonthAmountInDataRangeFilter : category.total) | currency:'EUR':'symbol':'1.0-0' }}
           </span>
         </button>
       </div>
@@ -54,7 +54,7 @@
         [title]="'Filtern nach ' + category.name">
         <span class="subcategory-name">{{category.name}}</span>
         <span class="badge bg-light text-dark ms-1 small rounded-pill" *ngIf="category.total">
-          {{category.total | currency:'EUR':'symbol':'1.0-0'}}
+          {{ (dataState.showAverage ? category.total / dataState.selectedMonthAmountInDataRangeFilter : category.total) | currency:'EUR':'symbol':'1.0-0' }}
         </span>
       </button>
     </div>

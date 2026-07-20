@@ -26,6 +26,7 @@ export class DataState {
   private readonly searchTermStorageKey = 'searchTerm';
   private _transactions: Transaction[] = [];
   public duplicates: Transaction[] = [];
+  public showAverage: boolean = false;
   public loadedSources: string[] = []; // Track loaded file sources
 
   public months: DateFilter[] = [];

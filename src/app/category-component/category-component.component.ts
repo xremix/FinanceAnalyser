@@ -11,6 +11,7 @@ export class CategoryComponentComponent {
   @Input() public categorySummary: Category = {} as any;
   @Input() public collapsed: boolean = true;
   @Input() amountMonths: number = 1;
+  @Input() showAverage: boolean = false;
   constructor(protected dataState: DataState
 
   ) { }

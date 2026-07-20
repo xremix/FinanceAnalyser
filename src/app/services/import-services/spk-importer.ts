@@ -72,7 +72,21 @@ export class SpkImporter implements Importer {
       return new Date(NaN);
     }
 
-    return new Date(year, month - 1, day);
+    const parsedDate = new Date(year, month - 1, day);
+    if (
+      parsedDate.getFullYear() !== year ||
+      parsedDate.getMonth() !== month - 1 ||
+      parsedDate.getDate() !== day
+    ) {
+      console.warn(`Invalid calendar date: "${dateString}"`);
+      return new Date(NaN);
+    }
+
+    return parsedDate;
+  }
+
+  private isValidDate(date: Date): boolean {
+    return date instanceof Date && !Number.isNaN(date.getTime());
   }
 
   /**
@@ -164,21 +178,28 @@ export class SpkImporter implements Importer {
     const bookingDate = this.parseDate(cleanCols[this.columnMap.get('BOOKING_DATE')!]);
     const valueDate = this.parseDate(cleanCols[this.columnMap.get('VALUE_DATE')!]);
 
-    // Skip invalid transactions
-    if (bookingDate.toString() === 'Invalid Date' && valueDate.toString() === 'Invalid Date') {
+    const hasValidBookingDate = this.isValidDate(bookingDate);
+    const hasValidValueDate = this.isValidDate(valueDate);
+
+    // Skip rows where both dates are invalid
+    if (!hasValidBookingDate && !hasValidValueDate) {
       console.warn('Transaction has invalid dates, skipping:', cleanCols);
       return undefined;
     }
 
+    // Ensure no invalid date reaches UI date pipes.
+    const safeBookingDate = hasValidBookingDate ? bookingDate : valueDate;
+    const safeValueDate = hasValidValueDate ? valueDate : safeBookingDate;
+
     // Determine month (use booking date, fallback to value date)
-    const effectiveDate = bookingDate.toString() !== 'Invalid Date' ? bookingDate : valueDate;
+    const effectiveDate = this.isValidDate(safeBookingDate) ? safeBookingDate : safeValueDate;
     const monthAndYear = new Date(effectiveDate);
     monthAndYear.setDate(1);
 
     const transaction: Transaction = {
       month: monthAndYear,
-      bookingDate,
-      valueDate,
+      bookingDate: safeBookingDate,
+      valueDate: safeValueDate,
       payerReceiver: cleanCols[this.columnMap.get('PAYER_RECEIVER')!],
       bookingText: cleanCols[this.columnMap.get('BOOKING_TEXT')!],
       purpose: cleanCols[this.columnMap.get('PURPOSE')!],

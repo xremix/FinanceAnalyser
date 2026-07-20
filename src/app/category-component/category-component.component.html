@@ -8,16 +8,17 @@
         </div>
 
         <div class="col text-end">            
-            <span ngbTooltip="Durchschnittliche Kosten für {{amountMonths}} Monate" class="opacity-25 fs-5 me-2" *ngIf="amountMonths > 1">⌀ {{(calculatedTotal / amountMonths) | currency:'EUR'}}</span>
-            <span class="badge" [ngClass]="{'text-bg-success': calculatedTotal > 0, 'text-bg-warning': calculatedTotal < 0}">{{calculatedTotal |
-                currency:'EUR'}}</span>
+            <span ngbTooltip="Gesamtbetrag" class="opacity-25 fs-5 me-2" *ngIf="showAverage && amountMonths > 1">∑ {{calculatedTotal | currency:'EUR'}}</span>
+            <span class="badge" [ngClass]="{'text-bg-success': (showAverage ? calculatedTotal / amountMonths : calculatedTotal) > 0, 'text-bg-warning': (showAverage ? calculatedTotal / amountMonths : calculatedTotal) < 0}">
+              {{ (showAverage ? calculatedTotal / amountMonths : calculatedTotal) | currency:'EUR' }}
+            </span>
             <i class="fa-solid fa-chevron-right ms-3"></i>
         </div>
     </div>
 
     <div *ngIf="categorySummary.subCategories?.length" class="ms-md-3" #collapse="ngbCollapse" [(ngbCollapse)]="collapsed">
         <div *ngFor="let subCategory of categorySummary.subCategories | orderBy: 'total';">
-            <app-category-component [categorySummary]="subCategory" [amountMonths]="amountMonths" *ngIf="subCategory.total != 0"></app-category-component>
+            <app-category-component [categorySummary]="subCategory" [amountMonths]="amountMonths" [showAverage]="showAverage" *ngIf="subCategory.total != 0"></app-category-component>
         </div>
     </div>
 

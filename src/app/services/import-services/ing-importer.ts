@@ -14,21 +14,69 @@ export class IngImporter implements Importer {
     }
 
   private parseDate(dateString: string): Date {
-    const dateParts = dateString.split('.');
-    const day = parseInt(dateParts[0]);
-    const month = parseInt(dateParts[1]);
-    const year = parseInt(dateParts[2]);
-    return new Date(year, month - 1, day);
+    if (!dateString || dateString.trim() === '') {
+      return new Date(NaN);
+    }
+
+    const dateParts = dateString.trim().split('.');
+    if (dateParts.length !== 3) {
+      return new Date(NaN);
+    }
+
+    const day = parseInt(dateParts[0], 10);
+    const month = parseInt(dateParts[1], 10);
+    let year = parseInt(dateParts[2], 10);
+
+    if (Number.isNaN(day) || Number.isNaN(month) || Number.isNaN(year)) {
+      return new Date(NaN);
+    }
+
+    // Support two-digit years in exports.
+    if (year < 100) {
+      year += year < 30 ? 2000 : 1900;
+    }
+
+    if (day < 1 || day > 31 || month < 1 || month > 12) {
+      return new Date(NaN);
+    }
+
+    const parsedDate = new Date(year, month - 1, day);
+    if (
+      parsedDate.getFullYear() !== year ||
+      parsedDate.getMonth() !== month - 1 ||
+      parsedDate.getDate() !== day
+    ) {
+      return new Date(NaN);
+    }
+
+    return parsedDate;
+  }
+
+  private isValidDate(date: Date): boolean {
+    return date instanceof Date && !Number.isNaN(date.getTime());
   }
 
   private parseLine(columns: string[]): Transaction | undefined {
-    let monthAndYear = this.parseDate(columns[0]);
+    const bookingDate = this.parseDate(columns[0]);
+    const valueDate = this.parseDate(columns[1]);
+    const hasValidBookingDate = this.isValidDate(bookingDate);
+    const hasValidValueDate = this.isValidDate(valueDate);
+
+    if (!hasValidBookingDate && !hasValidValueDate) {
+      console.warn('Invalid transaction date:', columns);
+      return undefined;
+    }
+
+    const safeBookingDate = hasValidBookingDate ? bookingDate : valueDate;
+    const safeValueDate = hasValidValueDate ? valueDate : safeBookingDate;
+
+    let monthAndYear = new Date(safeBookingDate);
     monthAndYear.setDate(1);
 
     const transaction: Transaction = {
       month: monthAndYear, // Monat
-      bookingDate: this.parseDate(columns[0]), // Buchung
-      valueDate: this.parseDate(columns[1]), // Valuta
+      bookingDate: safeBookingDate, // Buchung
+      valueDate: safeValueDate, // Valuta
       payerReceiver: columns[2], // auftraggeberEmpfaenger
       bookingText: columns[3], // buchungstext
       purpose: columns[4], // verwendungszweck
@@ -38,11 +86,6 @@ export class IngImporter implements Importer {
       amountCurrency: columns[8], // betragWaehrung
       raw: columns.join(';'),
     };
-
-    if(transaction.bookingDate.toString() === 'Invalid Date' && transaction.valueDate.toString() === 'Invalid Date') {
-      console.warn('Invalid transaction date:', transaction);
-      return undefined;
-    }
 
     return transaction;
   }
