@@ -10,7 +10,7 @@ export class DuplicateService {
     const duplicates = [];
     const transactions = selectedTransactions;
     for (let i = 0; i < transactions.length; i++) {
-      if (this.foundDuplicates(transactions[i], transactions).length >= 3) {
+      if (this.foundDuplicates(transactions[i], transactions).length >= 2) {
         // check if is already in duplicates
         if (this.foundDuplicates(transactions[i], duplicates).length == 0) {
           duplicates.push(transactions[i]);
