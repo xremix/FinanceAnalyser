@@ -18,6 +18,7 @@
 
     <div class="collapse pt-3" [class.show]="!isCollapsed" id="dailyChart">
       <div *ngIf="series && series.length > 0 && series[0]?.data && series[0].data.length > 0 && categories?.categories && categories.categories.length > 0; else noDataTemplate">
+        <div role="img" aria-label="Liniendiagramm: tägliche Einnahmen und Ausgaben im gewählten Zeitraum. Einzelbuchungen stehen im Tab Alle Buchungen.">
         <apx-chart
           #chart
           [series]="series"
@@ -31,6 +32,7 @@
           [tooltip]="chartOptions.tooltip"
           [grid]="chartOptions.grid">
         </apx-chart>
+        </div>
       </div>
 
       <ng-template #noDataTemplate>

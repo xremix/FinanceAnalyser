@@ -6,8 +6,10 @@
                 <p class="chart-subtitle mb-0">Segment anklicken, um zu filtern</p>
             </div>
         </div>
+        <div role="img" [attr.aria-label]="ariaSummary">
         <apx-chart [series]="series" [chart]="chartOptions.chart" [labels]="labels" [legend]="chartOptions.legend"
             [colors]="chartOptions.colors" [dataLabels]="chartOptions.dataLabels" [stroke]="chartOptions.stroke"
             [tooltip]="chartOptions.tooltip" [plotOptions]="chartOptions.plotOptions"></apx-chart>
+        </div>
     </div>
 </div>

@@ -6,15 +6,16 @@
 
   <!-- Main categories with "Alle" button integrated -->
   <div class="main-categories mb-3">
-    <div class="row g-2">
+    <div class="row g-2" role="group" aria-label="Nach Kategorie filtern">
       <!-- "Alle" button with same styling as categories -->
       <div class="col-auto">
         <button 
           class="btn category-btn rounded-pill px-3 py-2 fw-medium position-relative"
           [class]="isNothingSelected() ? 'btn-primary shadow-sm' : 'btn-outline-primary'"
+          type="button"
+          [attr.aria-pressed]="isNothingSelected()"
           (click)="dataState.resetCategory()"
           title="Alle Kategorien anzeigen">
-          <i class="bi bi-arrow-clockwise me-1"></i>
           <span class="category-name fw-semibold">Alle</span>
         </button>
       </div>
@@ -23,6 +24,8 @@
         <button 
           class="btn category-btn rounded-pill px-3 py-2 fw-medium position-relative"
           [class]="isSelectedCategory(category) ? 'btn-primary shadow-sm' : 'btn-outline-primary'"
+          type="button"
+          [attr.aria-pressed]="isSelectedCategory(category)"
           (click)="dataState.filterByCategory(category)"
           [title]="'Filtern nach ' + category.name">
           <span class="category-name fw-semibold">{{category.name}}</span>
@@ -38,14 +41,15 @@
   <div class="subcategories border-top border-light pt-3 mt-3" *ngIf="selectedSubCategoriesCleaned.length > 0">
     <div class="d-flex align-items-center mb-2">
       <small class="text-muted fw-semibold text-uppercase">
-        <i class="bi bi-arrow-right me-1 text-info"></i>
         Unterkategorien:
       </small>
     </div>
-    <div class="d-flex flex-wrap gap-2">
+    <div class="d-flex flex-wrap gap-2" role="group" aria-label="Nach Unterkategorie filtern">
       <button 
+        type="button"
+        [attr.aria-pressed]="isSelectedCategory(category)"
         class="btn btn-sm subcategory-btn rounded-pill fw-medium"
-        [class]="isSelectedCategory(category) ? 'btn-info' : 'btn-outline-info'"
+        [class]="isSelectedCategory(category) ? 'btn-secondary' : 'btn-outline-secondary'"
         (click)="dataState.filterByCategory(category)" 
         *ngFor="let category of selectedSubCategoriesCleaned"
         [title]="'Filtern nach ' + category.name">

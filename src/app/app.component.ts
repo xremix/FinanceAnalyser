@@ -27,4 +27,9 @@ export class AppComponent implements OnInit {
   openSettings() {
     this.router.navigate(['settings']);
   }
+
+  skipToMain(event: Event) {
+    event.preventDefault();
+    document.getElementById('main-content')?.focus();
+  }
 }

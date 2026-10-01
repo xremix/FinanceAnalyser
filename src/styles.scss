@@ -1,9 +1,9 @@
 // Keep Bootstrap components aligned with the app's shared visual foundation.
 $primary: #315b52;
-$secondary: #64736f;
+$secondary: #5b6a66;
 $success: #287a5c;
-$danger: #b64f54;
-$warning: #b8792e;
+$danger: #a8464b;
+$warning: #8f6024;
 $body-bg: #f5f7f5;
 $body-color: #20312f;
 $border-color: #e1e8e4;
@@ -35,12 +35,12 @@ body {
   color-scheme: light;
   --app-ink: #20312f;
   --app-ink-strong: #172824;
-  --app-muted: #64736f;
+  --app-muted: #5b6a66;
   --app-primary: #315b52;
   --app-primary-hover: #24483f;
   --app-success: #287a5c;
-  --app-danger: #b64f54;
-  --app-warning: #b8792e;
+  --app-danger: #a8464b;
+  --app-warning: #8f6024;
   --app-canvas: #f5f7f5;
   --app-surface: #fff;
   --app-surface-muted: #f8faf8;
@@ -159,4 +159,38 @@ body {
 .chart-subtitle {
   color: var(--app-muted);
   font-size: 0.8rem;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 2000;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  color: #fff;
+  background: var(--app-primary);
+  font-weight: 600;
+  transform: translateY(-200%);
+
+  &:focus {
+    color: #fff;
+    transform: none;
+  }
+}
+
+.inputfile:focus-visible + label {
+  outline: 3px solid var(--app-primary);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }

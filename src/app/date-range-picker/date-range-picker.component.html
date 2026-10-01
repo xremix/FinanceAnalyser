@@ -2,7 +2,7 @@
     <div class="dp-hidden position-absolute">
         <div class="input-group">
             <input name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker" [autoClose]="'outside'" (dateSelect)="onDateSelection($event)"
-                [displayMonths]="2" [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1" />
+                [displayMonths]="2" [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1" aria-hidden="true" />
             <ng-template #t let-date let-focused="focused">
                 <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)" [class.faded]="isHovered(date) || isInside(date)"
                     (mouseenter)="hoveredDate = date" (mouseleave)="hoveredDate = null">
@@ -11,11 +11,11 @@
             </ng-template>
         </div>
     </div>
-    <div class="input-group" style="max-width: 200px">
-        <input #dpFromDate class="form-control" placeholder="Oct 25, 25" name="dpFromDate" [value]="formatter.format(fromDate)"
+    <div class="input-group" style="max-width: 200px" role="group" aria-label="Ausgewählter Zeitraum">
+        <input #dpFromDate class="form-control" placeholder="Von" aria-label="Von" name="dpFromDate" [value]="formatter.format(fromDate)"
             (input)="fromDate = validateInput(fromDate, dpFromDate.value)" disabled />
-        <input #dpToDate class="form-control" placeholder="Nov 15, 25" name="dpToDate" [value]="formatter.format(toDate)"
+        <input #dpToDate class="form-control" placeholder="Bis" aria-label="Bis" name="dpToDate" [value]="formatter.format(toDate)"
             (input)="toDate = validateInput(toDate, dpToDate.value)" disabled />
-        <button class="btn btn-outline-primary bi bi-calendar3" (click)="datepicker.toggle()" type="button"><i class="fa-solid fa-calendar"></i></button>
+        <button class="btn btn-outline-primary" (click)="datepicker.toggle()" type="button" aria-label="Zeitraum im Kalender wählen" title="Zeitraum wählen"><i class="fa-solid fa-calendar" aria-hidden="true"></i></button>
     </div>
 </div>

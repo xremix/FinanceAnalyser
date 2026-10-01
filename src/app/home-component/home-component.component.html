@@ -151,7 +151,7 @@
 
       <div class="filter-grid">
         <div class="filter-search">
-          <span class="filter-label">Suche</span>
+          <label class="filter-label d-block" for="globalSearchInput">Suche</label>
           <app-global-search></app-global-search>
         </div>
         <div>
@@ -197,13 +197,15 @@
   </app-daily-income-expense-chart>
 
   <div class="overflow-x-hidden  overflow-x-scroll">
-  <ul class="nav nav-tabs" style="width: 100%; min-width: 840px;">
-    <li class="nav-item" *ngFor="let tab of tabs">
-      <button class="nav-link" [ngClass]="{'active': tab == activeTab}" (click)="activeTab = tab">{{tab}}</button>
+  <ul class="nav nav-tabs" style="width: 100%; min-width: 840px;" role="tablist" aria-label="Detailansichten" (keydown)="onTabKeydown($event)">
+    <li class="nav-item" role="presentation" *ngFor="let tab of tabs; let i = index">
+      <button type="button" class="nav-link" role="tab" [id]="'tab-' + i" [ngClass]="{'active': tab == activeTab}"
+        [attr.aria-selected]="tab == activeTab" aria-controls="detail-tabpanel" [attr.tabindex]="tab == activeTab ? 0 : -1"
+        (click)="activeTab = tab">{{tab}}</button>
     </li>
   </ul>
 </div>
-  <div class="tab-panel">
+  <div class="tab-panel" id="detail-tabpanel" role="tabpanel" [attr.aria-labelledby]="'tab-' + tabs.indexOf(activeTab)">
     <div *ngIf="activeTab == 'Kategorien'">
       <h2 class="section-title mb-3">Kategorien</h2>
       <app-category-overview-component *ngIf="!dataState.currentFilter.category" [amountMonths]="dataState.selectedMonthAmountInDataRangeFilter"

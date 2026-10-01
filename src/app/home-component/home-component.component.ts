@@ -12,6 +12,22 @@ import { Transaction } from '../models/transaction';
 export class HomeComponentComponent {
   public tabs: string[] = ['Kategorien', 'Alle Buchungen', 'Wiederkehrende Buchungen', 'Ausgeglichene Buchungen', 'Monatliche Bilanz', 'Ausgaben-Fluss'];
   public activeTab: string = this.tabs[0];
+
+  onTabKeydown(event: KeyboardEvent) {
+    const keys = ['ArrowLeft', 'ArrowRight', 'Home', 'End'];
+    if (!keys.includes(event.key)) {
+      return;
+    }
+    event.preventDefault();
+    const current = this.tabs.indexOf(this.activeTab);
+    let next = current;
+    if (event.key === 'ArrowRight') next = (current + 1) % this.tabs.length;
+    if (event.key === 'ArrowLeft') next = (current - 1 + this.tabs.length) % this.tabs.length;
+    if (event.key === 'Home') next = 0;
+    if (event.key === 'End') next = this.tabs.length - 1;
+    this.activeTab = this.tabs[next];
+    setTimeout(() => document.getElementById('tab-' + next)?.focus());
+  }
   public sankeyType: 'expense' | 'income' = 'expense';
 
   constructor(

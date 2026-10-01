@@ -22,7 +22,7 @@
     <div class="transaction-amount" [ngClass]="amountClass">
         <i *ngIf="transaction.balancedByDescription || transaction.balancedOfDescription" class="fa-solid fa-scale-balanced me-1"
             triggers="mouseenter:mouseleave" [ngbPopover]="transaction.balancedByDescription || transaction.balancedOfDescription"
-            aria-label="Ausgeglichene Buchung"></i>
+            aria-hidden="true"></i><span class="visually-hidden">Ausgeglichen: </span>
         {{ transaction.amount | currency:'EUR' }}
     </div>
 </div>

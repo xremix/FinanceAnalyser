@@ -21,6 +21,11 @@ export class CategoryChartComponent implements OnChanges, OnInit {
   public labels: string[] = [];
   public series: number[] = [];
 
+  get ariaSummary(): string {
+    const parts = this.labels.slice(0, 5).map((label, i) => `${label} ${formatCurrency(this.series[i])}`);
+    return `Ringdiagramm: Ausgaben nach Kategorie. Größte Posten: ${parts.join(', ')}.`;
+  }
+
   private arraysAreEqual(array1: any[], array2: any[]): boolean {
     return array1.length === array2.length && array1.every((value, index) => value === array2[index]);
   }

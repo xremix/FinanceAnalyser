@@ -2,7 +2,7 @@
     Du hast <b>{{monthsWithPositiveBillance}} Monate</b> mit einer positiven Bilanz.
 </div>
 
-<button class="btn btn-primary" (click)="toggleSavings()">
+<button type="button" class="btn btn-primary" (click)="toggleSavings()">
     <span *ngIf="!includeSavings">Sparen nicht berücksichtigen</span>
     <span *ngIf="includeSavings">Sparen berücksichtigen</span>
 </button>
@@ -13,14 +13,15 @@
             <th scope="col">Name</th>
             <th scope="col">Einnahmen</th>
             <th scope="col">Ausgaben</th>
-            <th scope="col text-end">Differenz</th>
+            <th scope="col" class="text-end">Differenz</th>
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let x of monthlyData">
             <td>
-                <i class="fa-regular fa-circle-xmark text-danger" *ngIf="x.income - x.expenses <= 0"></i>
-                <i class="fa-regular fa-circle-check text-success" *ngIf="x.income - x.expenses > 0"></i>
+                <i class="fa-regular fa-circle-xmark text-danger" *ngIf="x.income - x.expenses <= 0" aria-hidden="true"></i>
+                <span class="visually-hidden">{{ x.income - x.expenses > 0 ? 'Überschuss:' : 'Defizit:' }}</span>
+                <i class="fa-regular fa-circle-check text-success" *ngIf="x.income - x.expenses > 0" aria-hidden="true"></i>
                 {{x.name}}</td>
             <td>{{x.income}}</td>
             <td>{{x.expenses}}</td>

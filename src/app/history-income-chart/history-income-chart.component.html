@@ -6,6 +6,7 @@
                 <p class="chart-subtitle mb-0">Pro Monat · Balken anklicken, um den Monat zu filtern</p>
             </div>
         </div>
+        <div role="img" aria-label="Balkendiagramm: Einnahmen und Ausgaben pro Monat. Die Werte stehen auch in den Kennzahlen und im Tab Monatliche Bilanz.">
         <apx-chart *ngIf="series && categories"
             [series]="series"
             [chart]="chartOptions.chart"
@@ -19,5 +20,6 @@
             [fill]="chartOptions.fill"
             [dataLabels]="chartOptions.dataLabels"
         ></apx-chart>
+        </div>
     </div>
 </div>
