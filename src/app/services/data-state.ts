@@ -3,6 +3,7 @@ import { Transaction } from '../models/transaction';
 import { DateService } from './date-service';
 import { Category  } from '../models/category';
 
+import { RecurringService, RecurringSeries } from './recurring-service';
 import { DuplicateService } from './duplicate-service';
 
 export interface DateFilter {
@@ -26,7 +27,10 @@ export class DataState {
   private readonly searchTermStorageKey = 'searchTerm';
   private readonly showAverageStorageKey = 'showAverage';
   private _transactions: Transaction[] = [];
-  public duplicates: Transaction[] = [];
+  public recurringSeries: RecurringSeries[] = [];
+  private recurringByTransaction = new Map<Transaction, RecurringSeries>();
+  /** Recurring series with at least one booking matching the current filter */
+  public selectedRecurringSeries: RecurringSeries[] = [];
 
   private _showAverage: boolean = localStorage.getItem(this.showAverageStorageKey) === 'true';
   get showAverage(): boolean { return this._showAverage; }
@@ -44,7 +48,8 @@ export class DataState {
 
   constructor(
     private dateService: DateService, 
-    private duplicateService: DuplicateService
+    private duplicateService: DuplicateService,
+    private recurringService: RecurringService
   ) {
     this.currentFilter.searchTerm = this.loadSearchTerm();
   }
@@ -73,7 +78,7 @@ export class DataState {
     this.loadedSources = sources;
     this.months = this.dateService.getMonths(this._transactions);
     this.monthStarts = this.months.map((m) => m.from);
-    this.findDuplicates();
+    this.detectRecurring();
     this.duplicateService.setWasBalancedAfterwardsForAllTransaction(this._transactions);
   }
 
@@ -90,15 +95,21 @@ export class DataState {
     // Update derived data
     this.months = this.dateService.getMonths(this._transactions);
     this.monthStarts = this.months.map((m) => m.from);
-    this.findDuplicates();
+    this.detectRecurring();
     this.duplicateService.setWasBalancedAfterwardsForAllTransaction(this._transactions);
     
     // Update selected transactions based on current filter
     this.refresh();
   }
 
-  private findDuplicates(){
-    this.duplicates = this.duplicateService.findDuplicateTransactions(this.selectedTransactions);
+  private detectRecurring() {
+    this.recurringSeries = this.recurringService.detect(this._transactions, this.categories);
+    this.recurringByTransaction = new Map();
+    this.recurringSeries.forEach((series) => series.transactions.forEach((t) => this.recurringByTransaction.set(t, series)));
+  }
+
+  getRecurringSeries(transaction: Transaction): RecurringSeries | undefined {
+    return this.recurringByTransaction.get(transaction);
   }
 
 
@@ -258,7 +269,8 @@ export class DataState {
 
   private refresh() {
     this.selectedTransactions = this.transactions.filter((t) => this.showTransaction(t));
-    this.findDuplicates();
+    const selected = new Set(this.selectedTransactions);
+    this.selectedRecurringSeries = this.recurringSeries.filter((series) => series.transactions.some((t) => selected.has(t)));
     this.recalculateCategories(this.selectedTransactions);
     this.selectedTransactionsChanged.emit(this.selectedTransactions);
   }
@@ -361,6 +373,9 @@ export class DataState {
     this._transactions = [];
     this.selectedTransactions = [];
     this.months = [];
+    this.recurringSeries = [];
+    this.recurringByTransaction = new Map();
+    this.selectedRecurringSeries = [];
     this.loadedSources = [];
     this.resetCategories();
   }

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Transaction } from '../models/transaction';
-import { DuplicateService } from '../services/duplicate-service';
+import { RecurringSeries } from '../services/recurring-service';
 import { DataState } from '../services/data-state';
 import { CategoryService } from '../services/category-service';
 
@@ -12,17 +12,14 @@ import { CategoryService } from '../services/category-service';
 export class TransactionComponentComponent implements OnInit {
   @Input() transaction: Transaction = {} as Transaction;
   public expand = false; 
-  public duplicates: Transaction[] = [];
-  constructor(public duplicateService: DuplicateService,
+  public recurring?: RecurringSeries;
+  constructor(
     private dataState: DataState,
     private categoryService: CategoryService
   ) { }
 
   ngOnInit(): void {
-    this.findDuplicates();
-  }
-  findDuplicates() {
-    this.duplicates = this.duplicateService.foundDuplicates(this.transaction, this.dataState.selectedTransactions);
+    this.recurring = this.dataState.getRecurringSeries(this.transaction);
   }
 
   get dayLabel(): string {

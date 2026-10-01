@@ -1,3 +1,4 @@
+import { RecurringOverviewComponent } from './recurring-overview/recurring-overview.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
@@ -49,6 +50,7 @@ import { SpendingInsightComponent } from './spending-insight/spending-insight.co
     ImpressumComponent,
     DatenschutzComponent,
     SpendingInsightComponent,
+    RecurringOverviewComponent,
   ],
   imports: [
     BrowserModule,
