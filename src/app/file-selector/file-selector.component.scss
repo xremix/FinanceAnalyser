@@ -9,38 +9,33 @@
 
 .inputfile+label:hover,
 .inputfile+label:focus {
-  /* Darker blue on hover/focus */
-  outline: none;
-  /* Remove outline */
   cursor: pointer;
-  /* "hand" cursor */
 }
 .big {
   .inputfile+label {
     font-size: 1.25em;
     font-weight: 700;
-    color: white;
-    background-color: #007bff;
-    /* Bootstrap primary blue */
-    padding: 20px 25px;
-    border-radius: 5px;
-    /* Rounded corners */
+    color: #fff;
+    background-color: var(--app-primary);
+    padding: 1rem 1.5rem;
+    border-radius: 0.75rem;
     display: inline-block;
     margin: 5px;
-    /* Add some space around the label */
+    border: 2px solid var(--app-primary);
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 
-    border: 4px dashed #0b69cd;
-    transition: background-color 0.3s ease;
-    /* Smooth background color change */
     &:hover, &:focus {
-      background-color: #0056b3;
+      background-color: var(--app-primary-hover);
+      border-color: var(--app-primary-hover);
+      box-shadow: 0 0.25rem 0.75rem rgba(25, 47, 42, 0.16);
     }
   }
   
 
   .inputfile:focus+label,
   .inputfile+label:hover {
-    background-color: #0b69cd;
+    background-color: var(--app-primary-hover);
+    border-color: var(--app-primary-hover);
   }
 }
 
@@ -294,4 +289,3 @@
     display: none;
   }
 }
-
