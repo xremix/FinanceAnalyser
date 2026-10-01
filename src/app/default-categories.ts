@@ -707,7 +707,7 @@ export const defaultCategories: BaseCategory[] = [
         name: 'Tanken',
         subCategories: [],
         type: 'expense',
-        excludeKeywords: [],
+        excludeKeywords: ['SWM'],
         keywords: [
         'AGIP',
         'Allguth',
