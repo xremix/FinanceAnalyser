@@ -4,6 +4,8 @@ import { Transaction } from '../models/transaction';
 
 export interface SankeyNode {
   name: string;
+  /** Anzeigename, falls abweichend von der (eindeutigen) internen ID */
+  label?: string;
 }
 
 export interface SankeyLink {
@@ -88,6 +90,8 @@ export class SankeyDataService {
     nodes.push({ name: rootName });
     nodeSet.add(rootName);
 
+    const scale = (value: number): number => divideByMonths > 1 ? value / divideByMonths : value;
+
     parentTotals.forEach((parentTotal, parentName) => {
       if (!nodeSet.has(parentName)) {
         nodes.push({ name: parentName });
@@ -97,7 +101,7 @@ export class SankeyDataService {
       links.push({
         source: rootName,
         target: parentName,
-        value: divideByMonths > 1 ? parentTotal / divideByMonths : parentTotal,
+        value: scale(parentTotal),
       });
 
       let subTotal = 0;
@@ -108,22 +112,22 @@ export class SankeyDataService {
 
         subTotal += value;
         if (!nodeSet.has(subName)) {
-          nodes.push({ name: subName });
+          nodes.push({ name: subName, label: subName.substring(parentName.length + 3) });
           nodeSet.add(subName);
         }
 
         links.push({
           source: parentName,
           target: subName,
-          value: divideByMonths > 1 ? value / divideByMonths : value,
+          value: scale(value),
         });
       });
 
-      const remainingValue = parentTotal - subTotal;
+      const remainingValue = scale(parentTotal - subTotal);
       if (remainingValue > 1 && subTotal > 0) {
         const otherName = `${parentName} - Sonstige`;
         if (!nodeSet.has(otherName)) {
-          nodes.push({ name: otherName });
+          nodes.push({ name: otherName, label: 'Sonstige' });
           nodeSet.add(otherName);
         }
 

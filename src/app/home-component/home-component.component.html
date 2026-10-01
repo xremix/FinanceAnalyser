@@ -244,7 +244,7 @@
     </div>
 
     <div *ngIf="activeTab == 'Ausgaben-Fluss'">
-      <h2 class="section-title mb-3">Ausgaben-Fluss (Sankey Diagramm)</h2>
+      <h2 class="section-title mb-3">Ausgaben-Fluss (Sankey Diagramm) <small class="text-muted fs-6" *ngIf="dataState.showAverage">Ø pro Monat</small></h2>
       <div class="mb-3">
         <div class="btn-group" role="group">
           <button type="button" class="btn" [ngClass]="{'btn-danger': sankeyType === 'expense', 'btn-outline-danger': sankeyType !== 'expense'}" (click)="sankeyType = 'expense'">
@@ -260,6 +260,7 @@
         [categories]="dataState.categories" 
         [type]="sankeyType"
         [amountMonths]="dataState.selectedMonthAmountInDataRangeFilter"
+        [showAverage]="dataState.showAverage"
         height="1200px">
       </app-sankey-chart>
     </div>

@@ -5,7 +5,6 @@ import { EChartsOption } from 'echarts';
 import { Category } from '../models/category';
 import { Transaction } from '../models/transaction';
 import { SankeyDataService } from '../services/sankey-data.service';
-import { DataState } from '../services/data-state';
 
 @Component({
   selector: 'app-sankey-chart',
@@ -21,17 +20,18 @@ export class SankeyChartComponent implements OnInit, OnChanges {
   @Input() type: 'expense' | 'income' = 'expense';
   @Input() height = '600px';
   @Input() amountMonths: number = 1;
+  @Input() showAverage: boolean = false;
 
   chartOptions: EChartsOption = {};
 
-  constructor(private sankeyDataService: SankeyDataService, protected dataState: DataState) {}
+  constructor(private sankeyDataService: SankeyDataService) {}
 
   ngOnInit(): void {
     this.updateChart();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['transactions'] || changes['categories'] || changes['type'] || changes['amountMonths']) {
+    if (changes['transactions'] || changes['categories'] || changes['type'] || changes['amountMonths'] || changes['showAverage']) {
       this.updateChart();
     }
   }
@@ -41,8 +41,12 @@ export class SankeyChartComponent implements OnInit, OnChanges {
       this.transactions,
       this.categories,
       this.type,
-      this.dataState.showAverage ? this.amountMonths : 1
+      this.showAverage ? this.amountMonths : 1
     );
+    const valueSuffix = this.showAverage && this.amountMonths > 1 ? ' Ø/Monat' : '';
+    const format = (value: number) => this.sankeyDataService.formatCurrency(value) + valueSuffix;
+    const labels = new Map(sankeyData.nodes.map(node => [node.name, node.label ?? node.name]));
+    const displayName = (name: string) => labels.get(name) ?? name;
 
     if (sankeyData.nodes.length === 0) {
       this.chartOptions = {};
@@ -63,10 +67,10 @@ export class SankeyChartComponent implements OnInit, OnChanges {
         triggerOn: 'mousemove',
         formatter: (params: any) => {
           if (params.dataType === 'edge') {
-            return `${params.data.source} → ${params.data.target}<br/>
-                    <strong>${this.sankeyDataService.formatCurrency(params.data.value)}</strong>`;
+            return `${displayName(params.data.source)} → ${displayName(params.data.target)}<br/>
+                    <strong>${format(params.data.value)}</strong>`;
           }
-          return `<strong>${params.name}</strong>`;
+          return `<strong>${displayName(params.name)}</strong>`;
         }
       },
       series: [
@@ -101,9 +105,9 @@ export class SankeyChartComponent implements OnInit, OnChanges {
                 }, 0);
               
               if (nodeValue > 0) {
-                return `${params.name}\n${this.sankeyDataService.formatCurrency(nodeValue)}`;
+                return `${displayName(params.name)}\n${format(nodeValue)}`;
               }
-              return params.name;
+              return displayName(params.name);
             },
             fontSize: 11,
             rich: {}
