@@ -28,6 +28,7 @@ import { DailyIncomeExpenseChartComponent } from './daily-income-expense-chart/d
 import { SankeyChartComponent } from './sankey-chart/sankey-chart.component';
 import { ImpressumComponent } from './impressum/impressum.component';
 import { DatenschutzComponent } from './datenschutz/datenschutz.component';
+import { SpendingInsightComponent } from './spending-insight/spending-insight.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { DatenschutzComponent } from './datenschutz/datenschutz.component';
     StatisticsCardComponent,
     ImpressumComponent,
     DatenschutzComponent,
+    SpendingInsightComponent,
   ],
   imports: [
     BrowserModule,

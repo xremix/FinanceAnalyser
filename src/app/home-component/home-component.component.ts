@@ -30,6 +30,11 @@ export class HomeComponentComponent {
   }
   public sankeyType: 'expense' | 'income' = 'expense';
 
+  showInsightTransactions(): void {
+    this.activeTab = 'Alle Buchungen';
+    setTimeout(() => document.getElementById('detail-tabpanel')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+  }
+
   constructor(
     protected dataState: DataState,
     protected categoryService: CategoryService,

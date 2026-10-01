@@ -53,6 +53,10 @@ export class DataState {
     return this._transactions.length > 0;
   }
 
+  get allTransactions(): readonly Transaction[] {
+    return this._transactions;
+  }
+
   private get transactions(): Transaction[] {
     return this._transactions;
   }

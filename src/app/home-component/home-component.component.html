@@ -86,7 +86,7 @@
 
 <div *ngIf="dataState.hasLoadedData">
 
-  <section class="dashboard-header mb-3" aria-labelledby="dashboardTitle">
+  <section class="dashboard-header d-flex flex-wrap justify-content-between align-items-end gap-2 mb-3" aria-labelledby="dashboardTitle">
     <div>
       <p class="eyebrow mb-1">Finanzübersicht</p>
       <h1 id="dashboardTitle" class="dashboard-title mb-1">
@@ -96,6 +96,7 @@
         {{ dataState.currentFilter.category?.name || 'Alle Kategorien' }} · {{ typeFilterLabel }}
       </p>
     </div>
+    <app-spending-insight (openTransactions)="showInsightTransactions()"></app-spending-insight>
   </section>
 
   <section class="row g-3 mb-3" aria-label="Kennzahlen">
