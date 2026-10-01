@@ -55,9 +55,89 @@ body {
 }
 
 .card {
+  background-color: var(--app-surface);
   border-color: var(--app-border);
   border-radius: var(--app-radius);
   box-shadow: var(--app-shadow);
+}
+
+.eyebrow,
+.metric-label,
+.filter-label {
+  color: var(--app-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.dashboard-title {
+  color: var(--app-ink-strong);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.section-title {
+  color: var(--app-ink-strong);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.metric-card .card-body {
+  padding: 1rem 1.25rem;
+}
+
+.metric-value {
+  margin-top: 0.25rem;
+  color: var(--app-ink-strong);
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.metric-hint {
+  color: var(--app-muted);
+  font-size: 0.8rem;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: minmax(16rem, 1fr) auto auto;
+  gap: 1rem;
+  align-items: start;
+}
+
+.filter-label {
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.filter-search .input-group {
+  margin-bottom: 0.5rem !important;
+}
+
+.filter-divider {
+  height: 1px;
+  margin: 1rem 0;
+  background: var(--app-border);
+}
+
+@media (max-width: 991px) {
+  .filter-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 575px) {
+  .metric-card .card-body {
+    padding: 0.85rem 1rem;
+  }
+
+  .metric-value {
+    font-size: 1.2rem;
+  }
 }
 
 .fs-6 {

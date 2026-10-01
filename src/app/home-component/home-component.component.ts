@@ -25,6 +25,27 @@ export class HomeComponentComponent {
     return this.dataState.selectedTransactions.filter(transaction => transaction.balancedByDescription !== undefined);
   }
 
+  get incomeTotal(): number {
+    return this.getDisplayAmount(this.sumTransactions(transaction => transaction.amount > 0));
+  }
+
+  get expenseTotal(): number {
+    return this.getDisplayAmount(Math.abs(this.sumTransactions(transaction => transaction.amount < 0 && !this.isSavingsTransaction(transaction))));
+  }
+
+  get netTotal(): number {
+    return this.incomeTotal - this.expenseTotal;
+  }
+
+  get amountLabel(): string {
+    return this.dataState.showAverage ? 'Ø pro Monat' : 'Im Zeitraum';
+  }
+
+  get typeFilterLabel(): string {
+    const labels = { all: 'Alle Buchungen', income: 'Nur Einnahmen', expense: 'Nur Ausgaben' };
+    return labels[this.dataState.currentFilter.type];
+  }
+
   hasSelectedMonth(): boolean {
     return (
       this.dataState.currentFilter.from !== undefined &&
@@ -46,5 +67,28 @@ export class HomeComponentComponent {
 
   refreshPage(){
     this.cds.detectChanges();
+  }
+
+  private sumTransactions(predicate: (transaction: Transaction) => boolean): number {
+    return this.dataState.selectedTransactions
+      .filter(predicate)
+      .reduce((total, transaction) => total + transaction.amount, 0);
+  }
+
+  private getDisplayAmount(amount: number): number {
+    return this.dataState.showAverage ? amount / this.dataState.selectedMonthAmountInDataRangeFilter : amount;
+  }
+
+  private isSavingsTransaction(transaction: Transaction): boolean {
+    const category = transaction.category;
+    if (!category) {
+      return false;
+    }
+
+    if (category.type === 'savings') {
+      return true;
+    }
+
+    return this.dataState.categories.some(parent => parent.type === 'savings' && parent.subCategories.includes(category));
   }
 }

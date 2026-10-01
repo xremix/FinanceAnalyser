@@ -45,38 +45,95 @@
 
 <div *ngIf="dataState.hasLoadedData">
 
-  <div class="card mb-3">
-    <div class="card-body">
-      <!-- Filter in einer Zeile -->
-      <div class="mb-3 d-flex justify-content-center align-items-start flex-wrap gap-3">
-        <app-global-search class="flex-grow-1" style="min-width: 300px; max-width: 1000px;"></app-global-search>
-        <app-date-range-picker [from]="dataState.currentFilter.from" [to]="dataState.currentFilter.to"></app-date-range-picker>
-
-        <div ngbDropdown class="d-inline-block">
-          <button type="button" class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>
-            <span>Ein- / Ausgaben</span>
-          </button>
-          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-            <button ngbDropdownItem (click)="dataState.filterByType('all')"> Alle </button>
-            <button ngbDropdownItem (click)="dataState.filterByType('income')"> Einnahmen </button>
-            <button ngbDropdownItem (click)="dataState.filterByType('expense')"> Ausgaben </button>
-          </div>
-        </div>
-
-      </div>
-      
-      <app-category-select></app-category-select>
-
-
-        <div class="d-flex align-items-center">
-          <span class="me-2 text-muted small">Gesamt</span>
-          <div class="form-check form-switch mb-0">
-            <input class="form-check-input" type="checkbox" role="switch" id="avgToggle" [(ngModel)]="dataState.showAverage">
-            <label class="form-check-label text-muted small" for="avgToggle">&#8960; Monatsdurchschnitt</label>
-          </div>
-        </div>
+  <section class="dashboard-header mb-3" aria-labelledby="dashboardTitle">
+    <div>
+      <p class="eyebrow mb-1">Finanzübersicht</p>
+      <h1 id="dashboardTitle" class="dashboard-title mb-1">
+        {{ dataState.currentFilter.from | date:'dd.MM.yyyy' }} – {{ dataState.currentFilter.to | date:'dd.MM.yyyy' }}
+      </h1>
+      <p class="text-muted mb-0">
+        {{ dataState.currentFilter.category?.name || 'Alle Kategorien' }} · {{ typeFilterLabel }}
+      </p>
     </div>
-  </div>
+  </section>
+
+  <section class="row g-3 mb-3" aria-label="Kennzahlen">
+    <div class="col-6 col-xl-3">
+      <div class="card metric-card h-100">
+        <div class="card-body">
+          <div class="metric-label">Einnahmen</div>
+          <div class="metric-value text-success">{{ incomeTotal | currency:'EUR':'symbol':'1.0-0' }}</div>
+          <div class="metric-hint">{{ amountLabel }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-xl-3">
+      <div class="card metric-card h-100">
+        <div class="card-body">
+          <div class="metric-label">Ausgaben</div>
+          <div class="metric-value text-danger">{{ expenseTotal | currency:'EUR':'symbol':'1.0-0' }}</div>
+          <div class="metric-hint">{{ amountLabel }} · ohne Sparen</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-xl-3">
+      <div class="card metric-card h-100">
+        <div class="card-body">
+          <div class="metric-label">Saldo</div>
+          <div class="metric-value" [class.text-success]="netTotal >= 0" [class.text-danger]="netTotal < 0">
+            {{ netTotal | currency:'EUR':'symbol':'1.0-0' }}
+          </div>
+          <div class="metric-hint">{{ amountLabel }} · ohne Sparen</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-xl-3">
+      <div class="card metric-card h-100">
+        <div class="card-body">
+          <div class="metric-label">Buchungen</div>
+          <div class="metric-value">{{ dataState.selectedTransactions.length }}</div>
+          <div class="metric-hint">Im Zeitraum</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card filter-panel mb-3" aria-labelledby="filterTitle">
+    <div class="card-body">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <h2 id="filterTitle" class="section-title mb-0">Filter</h2>
+        <div class="form-check form-switch mb-0">
+          <input class="form-check-input" type="checkbox" role="switch" id="avgToggle" [(ngModel)]="dataState.showAverage">
+          <label class="form-check-label small" for="avgToggle">Monatsdurchschnitt anzeigen</label>
+        </div>
+      </div>
+
+      <div class="filter-grid">
+        <div class="filter-search">
+          <span class="filter-label">Suche</span>
+          <app-global-search></app-global-search>
+        </div>
+        <div>
+          <span class="filter-label">Zeitraum</span>
+          <app-date-range-picker [from]="dataState.currentFilter.from" [to]="dataState.currentFilter.to"></app-date-range-picker>
+        </div>
+        <div>
+          <span class="filter-label" id="typeFilterLabel">Buchungsart</span>
+          <div class="btn-group" role="group" aria-labelledby="typeFilterLabel">
+            <button type="button" class="btn btn-sm" [ngClass]="dataState.currentFilter.type === 'all' ? 'btn-primary' : 'btn-outline-primary'"
+              [attr.aria-pressed]="dataState.currentFilter.type === 'all'" (click)="dataState.filterByType('all')">Alle</button>
+            <button type="button" class="btn btn-sm" [ngClass]="dataState.currentFilter.type === 'income' ? 'btn-primary' : 'btn-outline-primary'"
+              [attr.aria-pressed]="dataState.currentFilter.type === 'income'" (click)="dataState.filterByType('income')">Einnahmen</button>
+            <button type="button" class="btn btn-sm" [ngClass]="dataState.currentFilter.type === 'expense' ? 'btn-primary' : 'btn-outline-primary'"
+              [attr.aria-pressed]="dataState.currentFilter.type === 'expense'" (click)="dataState.filterByType('expense')">Ausgaben</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-divider"></div>
+      <app-category-select></app-category-select>
+    </div>
+  </section>
 
   <div class="row">
     <div class="col-md-8">
