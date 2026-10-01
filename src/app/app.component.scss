@@ -1,7 +1,8 @@
 :host {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  display: block;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 14px;
-  color: #333;
+  color: var(--app-ink);
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -16,10 +17,11 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  background-color: #1976d2;
+  background-color: var(--app-ink-strong);
   color: #fff;
   font-weight: 600;
   padding: 8px 0;
+  box-shadow: 0 2px 12px rgba(23, 40, 36, 0.12);
 }
 
 .toolbar img {
@@ -55,8 +57,8 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  background-color: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
   color: #fff;
   border-radius: 999px;
   padding: 0.35rem 0.8rem;
@@ -67,10 +69,9 @@
 
 .top-nav-btn:hover,
 .top-nav-btn:focus {
-  background-color: rgba(255, 255, 255, 0.28);
-  border-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.35);
   color: #fff;
-  outline: none;
 }
 
 footer {
@@ -86,6 +87,7 @@ svg#clouds {
   left: -230px;
   z-index: -10;
   width: 1920px;
+  fill: var(--app-canvas);
 }
 
 @media screen and (max-width: 767px) {

@@ -1,9 +1,64 @@
-/* You can add global styles to this file, and also import other style files */
+// Keep Bootstrap components aligned with the app's shared visual foundation.
+$primary: #315b52;
+$secondary: #64736f;
+$success: #287a5c;
+$danger: #b64f54;
+$warning: #b8792e;
+$body-bg: #f5f7f5;
+$body-color: #20312f;
+$border-color: #e1e8e4;
+$font-family-sans-serif: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+$border-radius: 0.65rem;
+$border-radius-lg: 0.85rem;
+$card-border-color: #e1e8e4;
+$card-border-radius: 0.85rem;
+$card-cap-bg: #f8faf8;
+$box-shadow-sm: 0 0.125rem 0.5rem rgba(25, 47, 42, 0.06);
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-/* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  color: #20312f;
+  background: #f5f7f5;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  color-scheme: light;
+  --app-ink: #20312f;
+  --app-ink-strong: #172824;
+  --app-muted: #64736f;
+  --app-primary: #315b52;
+  --app-primary-hover: #24483f;
+  --app-success: #287a5c;
+  --app-danger: #b64f54;
+  --app-warning: #b8792e;
+  --app-canvas: #f5f7f5;
+  --app-surface: #fff;
+  --app-surface-muted: #f8faf8;
+  --app-border: #e1e8e4;
+  --app-shadow: 0 0.25rem 1rem rgba(25, 47, 42, 0.06);
+  --app-radius: 0.85rem;
+}
+
+*:focus-visible {
+  outline: 3px solid rgba(49, 91, 82, 0.45);
+  outline-offset: 2px;
+}
+
+.card {
+  border-color: var(--app-border);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow);
+}
 
 .fs-6 {
   font-size: 0.75rem !important;
