@@ -156,15 +156,43 @@ export class ImportService {
   }
 
   public async addOrReplaceFile(file: File): Promise<void> {
-    const fileContent = await this.getFileContent(file);
-    this.upsertStoredFile(file.name, fileContent);
-    this.loadFilesFromLocalStorage();
+    await this.addOrReplaceFiles([file]);
   }
 
-  public removeFile(fileName: string): void {
-    const files = this.getFilesFromLocalStorage().filter((file) => file.fileName !== fileName);
-    localStorage.setItem(this.filesStorageKey, JSON.stringify(files));
-    this.loadFilesFromLocalStorage();
+  public async addOrReplaceFiles(files: File[]): Promise<void> {
+    if (files.length === 0) {
+      return;
+    }
+
+    const message = files.length === 1 ? `${files[0].name} wird geladen…` : `${files.length} Dateien werden geladen…`;
+    await this.runWithLoading(message, async () => {
+      for (const file of files) {
+        const fileContent = await this.getFileContent(file);
+        this.upsertStoredFile(file.name, fileContent);
+      }
+      this.loadFilesFromLocalStorage();
+    });
+  }
+
+  public async removeFile(fileName: string): Promise<void> {
+    await this.runWithLoading('Daten werden aktualisiert…', async () => {
+      const files = this.getFilesFromLocalStorage().filter((file) => file.fileName !== fileName);
+      localStorage.setItem(this.filesStorageKey, JSON.stringify(files));
+      this.loadFilesFromLocalStorage();
+    });
+  }
+
+  // Parsing is synchronous, so yield one frame to let the loading indicator paint first.
+  private async runWithLoading(message: string, work: () => Promise<void>): Promise<void> {
+    this.dataState.loadingMessage = message;
+    this.dataState.isLoading = true;
+    try {
+      await new Promise<void>((resolve) => requestAnimationFrame(() => setTimeout(resolve)));
+      await work();
+    } finally {
+      this.dataState.isLoading = false;
+      this.dataState.loadingMessage = '';
+    }
   }
 
   public clearFiles(): void {
@@ -195,12 +223,21 @@ export class ImportService {
 
 
   public async loadFromLocalStorage(){
-    const loadedFromFile = await this.loadCategoriesFromLinkedFile();
-    if (!loadedFromFile) {
-      this.loadCategoriesFromLocalStorage();
+    const load = async () => {
+      const loadedFromFile = await this.loadCategoriesFromLinkedFile();
+      if (!loadedFromFile) {
+        this.loadCategoriesFromLocalStorage();
+      }
+      this.migrateLegacyFilesToUnifiedFiles();
+      this.loadFilesFromLocalStorage();
+    };
+
+    const hasStoredFiles = this.getFilesFromLocalStorage().length > 0 || !!localStorage.getItem('fileContent');
+    if (hasStoredFiles) {
+      await this.runWithLoading('Gespeicherte Daten werden geladen…', load);
+    } else {
+      await load();
     }
-    this.migrateLegacyFilesToUnifiedFiles();
-    this.loadFilesFromLocalStorage();
   }
 
   private migrateLegacyFilesToUnifiedFiles(): void {

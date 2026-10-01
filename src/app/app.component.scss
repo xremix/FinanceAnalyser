@@ -120,3 +120,48 @@ svg#clouds {
 #main-content:focus {
   outline: none;
 }
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(245, 247, 245, 0.75);
+  backdrop-filter: blur(3px);
+  animation: loading-fade-in 0.15s ease-out;
+}
+
+.loading-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 26rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  background: var(--app-surface);
+  box-shadow: 0 12px 32px rgba(23, 40, 36, 0.12);
+
+  .spinner-border {
+    flex: 0 0 auto;
+  }
+}
+
+.loading-title {
+  color: var(--app-ink-strong);
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.loading-hint {
+  color: var(--app-muted);
+  font-size: 0.8rem;
+}
+
+@keyframes loading-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

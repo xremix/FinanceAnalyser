@@ -45,9 +45,7 @@ export class FileSelectorComponent {
     }
 
     try {
-      for (const file of Array.from(files)) {
-        await this.importService.addOrReplaceFile(file);
-      }
+      await this.importService.addOrReplaceFiles(Array.from(files));
       input.value = '';
     } catch (error) {
       console.error('Error loading file:', error);

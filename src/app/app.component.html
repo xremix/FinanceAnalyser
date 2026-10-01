@@ -1,3 +1,13 @@
+<div class="loading-overlay" *ngIf="dataState.isLoading" role="status" aria-live="polite">
+  <div class="loading-card">
+    <div class="spinner-border text-primary" aria-hidden="true"></div>
+    <div>
+      <div class="loading-title">{{ dataState.loadingMessage || 'Daten werden geladen…' }}</div>
+      <div class="loading-hint">Buchungen werden eingelesen und kategorisiert</div>
+    </div>
+  </div>
+</div>
+
 <a class="skip-link" href="#main-content" (click)="skipToMain($event)">Zum Inhalt springen</a>
 
 <!-- Toolbar -->

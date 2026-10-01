@@ -35,6 +35,8 @@ export class DataState {
     localStorage.setItem(this.showAverageStorageKey, String(value));
   }
   public loadedSources: string[] = []; // Track loaded file sources
+  public isLoading = false;
+  public loadingMessage = '';
 
   public months: DateFilter[] = [];
   public monthStarts: Date[] = [];
