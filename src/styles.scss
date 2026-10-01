@@ -143,3 +143,20 @@ body {
 .fs-6 {
   font-size: 0.75rem !important;
 }
+
+.chart-card .card-body {
+  padding: 1.25rem;
+}
+
+.chart-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.chart-subtitle {
+  color: var(--app-muted);
+  font-size: 0.8rem;
+}

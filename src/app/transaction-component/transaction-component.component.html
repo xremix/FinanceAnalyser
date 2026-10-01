@@ -1,29 +1,28 @@
-<div class="border-bottom py-2">
-    <div class="row">
-        <div class="col-md-3">
-            <span class="fw-bold">{{transaction.payerReceiver}}<br/></span>
-            {{transaction.bookingDate | date}}
+<div class="transaction-row">
+    <div class="transaction-date">
+        <span class="transaction-day">{{ dayLabel }}</span>
+        <span class="transaction-month">{{ monthLabel }}</span>
+    </div>
+
+    <div class="transaction-main" triggers="mouseenter:mouseleave" [ngbPopover]="transaction.raw">
+        <div class="transaction-payee">{{ transaction.payerReceiver || 'Unbekannt' }}</div>
+        <div class="transaction-purpose">{{ transaction.purpose }}</div>
+        <div *ngIf="duplicates.length > 0" class="transaction-recurring">
+            <i class="fa-solid fa-repeat me-1" aria-hidden="true"></i>
+            {{ duplicates.length + 1 }}× verbucht ·
+            <span *ngFor="let duplicate of duplicates; let last = last">{{ formatMonth(duplicate.bookingDate) }}<span *ngIf="!last">, </span></span>
         </div>
-        <div class="col-md-6" triggers="mouseenter:mouseleave" [ngbPopover]="transaction.raw">
-            {{transaction.purpose}}
-            <span *ngIf="duplicates.length > 0" class="opacity-50" style="font-weight: 0.6rem;">
-                <br/>
-                <i class="fa-solid fa-repeat me-1" aria-hidden="true"></i>
-                <b>{{duplicates.length + 1}}x verbucht</b>, am
-                <span *ngFor="let duplicate of duplicates; let last = last">
-                    {{duplicate.bookingDate | date: 'MMMM YY'}}<span *ngIf="!last">, </span>
-                </span> 
-            </span>
-            
-        </div>
-        <div class="col-md-3 text-end">
-            <!-- Category -->
-            <div class="text-end fw-bold" [ngClass]="{'text-warning': transaction.category?.name === 'Sonstiges'}" (click)="showMatchingKeywords(transaction)">{{transaction.category?.name}}</div>
-            <!-- Amount -->
-            <div class="badge {{backgroundColor}}">
-                <i *ngIf="transaction.balancedByDescription || transaction.balancedOfDescription" class="fa-solid fa-scale-balanced me-2" triggers="mouseenter:mouseleave" [ngbPopover]="transaction.balancedByDescription || transaction.balancedOfDescription"></i>
-                <span>{{transaction.amount | currency:'EUR'}}</span>
-            </div>
-        </div>
+    </div>
+
+    <button type="button" class="transaction-category" [class.uncategorized]="transaction.category?.name === 'Sonstiges'"
+        (click)="showMatchingKeywords(transaction)" title="Passende Keywords anzeigen">
+        {{ transaction.category?.name || 'Ohne Kategorie' }}
+    </button>
+
+    <div class="transaction-amount" [ngClass]="amountClass">
+        <i *ngIf="transaction.balancedByDescription || transaction.balancedOfDescription" class="fa-solid fa-scale-balanced me-1"
+            triggers="mouseenter:mouseleave" [ngbPopover]="transaction.balancedByDescription || transaction.balancedOfDescription"
+            aria-label="Ausgeglichene Buchung"></i>
+        {{ transaction.amount | currency:'EUR' }}
     </div>
 </div>

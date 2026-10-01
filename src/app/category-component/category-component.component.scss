@@ -1,0 +1,82 @@
+.category-item {
+  border-bottom: 1px solid var(--app-border);
+}
+
+.category-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.85rem 0.5rem;
+  border: 0;
+  border-radius: 0.5rem;
+  color: var(--app-ink-strong);
+  background: transparent;
+  text-align: left;
+
+  &:hover {
+    background: var(--app-surface-muted);
+  }
+}
+
+.category-icon {
+  display: inline-flex;
+  flex: 0 0 2.25rem;
+  align-items: center;
+  justify-content: center;
+  height: 2.25rem;
+  border-radius: 0.6rem;
+  color: var(--app-primary);
+  background: var(--app-surface-muted);
+}
+
+.category-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 600;
+}
+
+.category-total-hint {
+  color: var(--app-muted);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.category-amount {
+  color: var(--app-ink-strong);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+
+  &.is-income {
+    color: var(--app-success);
+  }
+}
+
+.category-chevron {
+  color: var(--app-muted);
+  font-size: 0.8rem;
+  transition: transform 0.15s ease;
+}
+
+.is-open > .category-header .category-chevron {
+  transform: rotate(90deg);
+}
+
+.category-children {
+  padding-left: 1.25rem;
+}
+
+.category-transactions {
+  padding-left: 3rem;
+}
+
+.category-children .category-item:last-child,
+.category-transactions ::ng-deep app-transaction-component:last-child .transaction-row {
+  border-bottom: 0;
+}
+
+@media (max-width: 767px) {
+  .category-children { padding-left: 0.75rem; }
+  .category-transactions { padding-left: 0; }
+}

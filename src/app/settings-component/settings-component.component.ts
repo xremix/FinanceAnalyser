@@ -410,11 +410,20 @@ export class SettingsComponentComponent implements OnInit, OnDestroy {
 
   public getKeywordClass(category: Category, keyword: string, isExclude: boolean = false): string {
     const isDefault = this.isDefaultKeyword(category, keyword, isExclude);
-    
-    if (isExclude) {
-      return isDefault ? 'badge rounded-pill p-2 text-bg-light border' : 'badge rounded-pill p-2 text-bg-danger';
-    } else {
-      return isDefault ? 'badge rounded-pill p-2 text-bg-light border' : 'badge rounded-pill p-2 text-bg-primary';
+    if (isDefault) {
+      return 'keyword-chip';
+    }
+    return isExclude ? 'keyword-chip is-custom-exclude' : 'keyword-chip is-custom';
+  }
+
+  public getTypeLabel(type: Category['type']): string {
+    switch (type) {
+      case 'income':
+        return 'Einnahmen';
+      case 'savings':
+        return 'Sparen';
+      default:
+        return 'Ausgaben';
     }
   }
 }

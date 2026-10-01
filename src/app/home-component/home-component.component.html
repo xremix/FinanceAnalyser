@@ -155,11 +155,11 @@
     </div>
   </section>
 
-  <div class="row">
-    <div class="col-md-8">
+  <div class="row g-3 mb-3">
+    <div class="col-lg-8">
       <app-history-chart [dates]="dataState.monthStarts" [transactions]="dataState.selectedTransactions" (triggerRefresh)="refreshPage()"></app-history-chart>
     </div>
-    <div class="col-md-4">
+    <div class="col-lg-4">
       <app-category-chart [data]="dataState.categories" (triggerRefresh)="refreshPage()"></app-category-chart>
       <app-statistics-card 
         [transactions]="dataState.selectedTransactions" 
@@ -182,9 +182,9 @@
     </li>
   </ul>
 </div>
-  <div class="border-start border-bottom border-end bg-white py-3 px-4">
+  <div class="tab-panel">
     <div *ngIf="activeTab == 'Kategorien'">
-      <h2>Kategorien</h2>
+      <h2 class="section-title mb-3">Kategorien</h2>
       <app-category-overview-component *ngIf="!dataState.currentFilter.category" [amountMonths]="dataState.selectedMonthAmountInDataRangeFilter"
         [categorySummaries]="dataState.categories"></app-category-overview-component>
       <app-category-component *ngIf="dataState.currentFilter.category" [amountMonths]="dataState.selectedMonthAmountInDataRangeFilter"
@@ -192,7 +192,7 @@
     </div>
 
     <div *ngIf="activeTab == 'Alle Buchungen'">
-      <h2>Alle Buchungen ({{dataState.selectedTransactions.length}})</h2>
+      <h2 class="section-title mb-3">Alle Buchungen ({{dataState.selectedTransactions.length}})</h2>
       <div class="row">
         <div class="col">
           <app-transaction-component *ngFor="let transaction of dataState.selectedTransactions | amountSort" [transaction]="transaction"></app-transaction-component>
@@ -201,7 +201,7 @@
     </div>
 
     <div *ngIf="activeTab == 'Wiederkehrende Buchungen'">
-      <h2>Wiederkehrende Buchungen ({{dataState.duplicates.length}})</h2>
+      <h2 class="section-title mb-3">Wiederkehrende Buchungen ({{dataState.duplicates.length}})</h2>
       <div class="row">
         <div class="col">
 
@@ -212,7 +212,7 @@
     </div>
 
     <div *ngIf="activeTab == 'Ausgeglichene Buchungen'">
-      <h2>Ausgeglichene Buchungen ({{balancedTransactions.length}})</h2>
+      <h2 class="section-title mb-3">Ausgeglichene Buchungen ({{balancedTransactions.length}})</h2>
       <div class="row">
         <div class="col">
           <app-transaction-component *ngFor="let transaction of balancedTransactions | amountSort" [transaction]="transaction">
@@ -222,12 +222,12 @@
     </div>
 
     <div *ngIf="activeTab == 'Monatliche Bilanz'">
-      <h2>Monatliche Bilanz</h2>
+      <h2 class="section-title mb-3">Monatliche Bilanz</h2>
       <app-monthy-billance [dates]="dataState.monthStarts" [transactions]="dataState.selectedTransactions"></app-monthy-billance>
     </div>
 
     <div *ngIf="activeTab == 'Ausgaben-Fluss'">
-      <h2>Ausgaben-Fluss (Sankey Diagramm)</h2>
+      <h2 class="section-title mb-3">Ausgaben-Fluss (Sankey Diagramm)</h2>
       <div class="mb-3">
         <div class="btn-group" role="group">
           <button type="button" class="btn" [ngClass]="{'btn-danger': sankeyType === 'expense', 'btn-outline-danger': sankeyType !== 'expense'}" (click)="sankeyType = 'expense'">

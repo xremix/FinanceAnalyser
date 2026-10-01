@@ -63,7 +63,6 @@ export class StatisticsCardComponent implements OnChanges {
       averageExpenseWithData: Math.abs(this.calculateAverageWithData(monthlyExpenses)),
       monthsWithData: monthsWithAnyData
     };
-    console.log('Calculated statistics:', this.statistics);
   }
 
   private getMonthlyTotals(transactions: Transaction[]): number[] {

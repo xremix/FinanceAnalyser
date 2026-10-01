@@ -13,10 +13,13 @@ import {
   ChartComponent,
   NgApexchartsModule,
   ApexTitleSubtitle,
+  ApexGrid,
+  ApexStates,
 } from 'ng-apexcharts';
 import { Transaction } from '../models/transaction';
 import { CommonModule } from '@angular/common';
 import { DataState } from '../services/data-state';
+import { chartColors, chartFontFamily, formatCompactCurrency, formatCurrency } from '../chart-theme';
 
 @Component({
   selector: 'app-history-chart',
@@ -46,7 +49,10 @@ export class HistoryIncomeChartComponent implements OnInit, OnChanges {
 
 
   private refresh() {
-    this.categories.categories = this.dates.map((d) => d.toLocaleDateString());
+    this.categories = {
+      ...this.categories,
+      categories: this.dates.map((d) => d.toLocaleDateString('de-DE', { month: 'short', year: '2-digit' })),
+    };
     if (this.dates.length === 0) return;
 
     this.series = [
@@ -64,10 +70,10 @@ export class HistoryIncomeChartComponent implements OnInit, OnChanges {
               .reduce((acc, t) => acc + (t.amount | 0), 0)
           );
         }),
-        color: '#54E7A7',
+        color: chartColors.income,
       },
       {
-        name: 'Ausgabe',
+        name: 'Ausgaben',
         // takes the dates and filters the transactions for the month
         data: this.dates.map((d) => {
           return (
@@ -80,7 +86,7 @@ export class HistoryIncomeChartComponent implements OnInit, OnChanges {
               .reduce((acc, t) => acc + ((t.amount * -1) | 0), 0)
           );
         }),
-        color: '#E75454',
+        color: chartColors.expense,
       },
      
     ];
@@ -105,13 +111,19 @@ export class HistoryIncomeChartComponent implements OnInit, OnChanges {
     this.chartOptions = {
       legend: {
         position: 'top',
+        horizontalAlign: 'left',
+        fontFamily: chartFontFamily,
+        labels: { colors: chartColors.text },
       },
       title: {
-        text: 'Einkommen / Ausgaben',
+        text: undefined,
       },
       chart: {
         type: 'bar',
-        height: 350,
+        height: 340,
+        fontFamily: chartFontFamily,
+        foreColor: chartColors.text,
+        toolbar: { show: false },
         events: {
           dataPointSelection: function (event, chartContext, config) {
             var ix = config.dataPointIndex;
@@ -124,34 +136,35 @@ export class HistoryIncomeChartComponent implements OnInit, OnChanges {
         bar: {
           horizontal: false,
           columnWidth: '55%',
+          borderRadius: 4,
+          borderRadiusApplication: 'end',
         },
       },
       dataLabels: {
         enabled: false,
       },
       xaxis: {
-        categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+        categories: [],
       },
       yaxis: {
-        title: {
-          text: '$ (thousands)',
-        },
         labels: {
-          formatter: function (val, index) {
-            return val.toFixed(2);
-          },
+          formatter: (val) => formatCompactCurrency(val),
         },
-        decimalsInFloat: 2,
       },
       fill: {
         opacity: 1,
       },
       tooltip: {
         y: {
-          formatter: function (val) {
-            return '$ ' + val + ' thousands';
-          },
+          formatter: (val) => formatCurrency(val),
         },
+      },
+      grid: {
+        borderColor: chartColors.grid,
+        strokeDashArray: 4,
+      },
+      states: {
+        hover: { filter: { type: 'darken' } },
       },
     };
   }
@@ -167,4 +180,6 @@ export type ChartOptions = {
   tooltip: ApexTooltip;
   legend: ApexLegend;
   title: ApexTitleSubtitle;
+  grid: ApexGrid;
+  states: ApexStates;
 };

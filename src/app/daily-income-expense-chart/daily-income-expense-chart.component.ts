@@ -17,6 +17,7 @@ import {
 import { Transaction } from '../models/transaction';
 import { CommonModule } from '@angular/common';
 import { DataState } from '../services/data-state';
+import { chartColors, chartFontFamily, formatCompactCurrency, formatCurrency } from '../chart-theme';
 
 @Component({
   selector: 'app-daily-income-expense-chart',
@@ -84,12 +85,12 @@ export class DailyIncomeExpenseChartComponent implements OnInit, OnChanges {
       {
         name: 'Einnahmen',
         data: dailyIncome,
-        color: '#54E7A7',
+        color: chartColors.income,
       },
       {
         name: 'Ausgaben',
         data: dailyExpenses,
-        color: '#E75454',
+        color: chartColors.expense,
       }
     ];
 
@@ -135,13 +136,18 @@ export class DailyIncomeExpenseChartComponent implements OnInit, OnChanges {
     this.chartOptions = {
       legend: {
         position: 'top',
+        horizontalAlign: 'left',
+        fontFamily: chartFontFamily,
+        labels: { colors: chartColors.text },
       },
       title: {
-        text: 'Tägliche Ein- und Ausgaben',
+        text: undefined,
       },
       chart: {
         type: 'line',
-        height: 350,
+        height: 320,
+        fontFamily: chartFontFamily,
+        foreColor: chartColors.text,
         zoom: {
           enabled: true,
           type: 'x',
@@ -160,11 +166,11 @@ export class DailyIncomeExpenseChartComponent implements OnInit, OnChanges {
         enabled: false,
       },
       stroke: {
-        width: 3,
+        width: 2.5,
         curve: 'smooth',
       },
       markers: {
-        size: 4,
+        size: 0,
         strokeWidth: 2,
         hover: {
           size: 6,
@@ -172,37 +178,23 @@ export class DailyIncomeExpenseChartComponent implements OnInit, OnChanges {
       },
       xaxis: {
         categories: [],
-        title: {
-          text: 'Datum',
-        },
       },
       yaxis: {
-        title: {
-          text: 'Betrag (€)',
-        },
         labels: {
-          formatter: function (val) {
-            return '€' + val.toFixed(2);
-          },
+          formatter: (val) => formatCompactCurrency(val),
         },
-        decimalsInFloat: 2,
       },
       tooltip: {
         y: {
-          formatter: function (val) {
-            return '€' + val.toFixed(2);
-          },
+          formatter: (val) => formatCurrency(val),
         },
         x: {
           show: true,
         },
       },
       grid: {
-        borderColor: '#e7e7e7',
-        row: {
-          colors: ['#f3f3f3', 'transparent'],
-          opacity: 0.5,
-        },
+        borderColor: chartColors.grid,
+        strokeDashArray: 4,
       },
     };
   }

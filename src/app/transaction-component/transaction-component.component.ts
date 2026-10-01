@@ -6,7 +6,8 @@ import { CategoryService } from '../services/category-service';
 
 @Component({
   selector: 'app-transaction-component',
-  templateUrl: './transaction-component.component.html'
+  templateUrl: './transaction-component.component.html',
+  styleUrl: './transaction-component.component.scss'
 })
 export class TransactionComponentComponent implements OnInit {
   @Input() transaction: Transaction = {} as Transaction;
@@ -24,16 +25,23 @@ export class TransactionComponentComponent implements OnInit {
     this.duplicates = this.duplicateService.foundDuplicates(this.transaction, this.dataState.selectedTransactions);
   }
 
-  get backgroundColor(): string {
+  get dayLabel(): string {
+    return new Date(this.transaction.bookingDate).toLocaleDateString('de-DE', { day: '2-digit' });
+  }
+
+  get monthLabel(): string {
+    return this.formatMonth(this.transaction.bookingDate);
+  }
+
+  formatMonth(date: Date): string {
+    return new Date(date).toLocaleDateString('de-DE', { month: 'short', year: '2-digit' });
+  }
+
+  get amountClass(): string {
     if (this.transaction.balancedByDescription || this.transaction.balancedOfDescription) {
-      return 'bg-secondary'; // Light gray for balanced transactions
-    } else if (this.transaction.amount > 0) {
-      return 'bg-success'; // Light green for positive amounts
-    } else if (this.transaction.amount < 0) {
-      return 'bg-warning'; // Light yellow for negative amounts
-    } else {
-      return ''; // Default background for zero amounts
+      return 'is-balanced';
     }
+    return this.transaction.amount > 0 ? 'is-income' : 'is-expense';
   }
 
   showMatchingKeywords(transaction: Transaction){

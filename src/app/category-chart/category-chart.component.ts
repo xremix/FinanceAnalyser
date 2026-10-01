@@ -3,6 +3,7 @@ import { ApexChart, ApexLegend, NgApexchartsModule } from 'ng-apexcharts';
 import { CommonModule } from '@angular/common';
 import { DataState } from '../services/data-state';
 import { Category } from '../models/category';
+import { chartColors, chartFontFamily, formatCompactCurrency, formatCurrency } from '../chart-theme';
 
 @Component({
   selector: 'app-category-chart',
@@ -38,7 +39,7 @@ export class CategoryChartComponent implements OnChanges, OnInit {
     let x = this.data
       .filter((d) => d.total < 0)
       .map((d) => this.getCalculatedCategory(d))
-      .sort((a, b) => a.value - b.value);
+      .sort((a, b) => b.value - a.value);
     return x;
   }
 
@@ -66,11 +67,19 @@ export class CategoryChartComponent implements OnChanges, OnInit {
   constructor(private dataState: DataState) {
     const self = this;
     this.chartOptions = {
+      colors: chartColors.categories,
       legend: {
         position: 'bottom',
+        fontFamily: chartFontFamily,
+        labels: { colors: chartColors.text },
+        markers: { size: 6 },
+        itemMargin: { horizontal: 6, vertical: 2 },
       } as ApexLegend,
       chart: {
         type: 'donut',
+        height: 320,
+        fontFamily: chartFontFamily,
+        foreColor: chartColors.text,
         events: {
           dataPointSelection: function (event, chartContext, config) {
             var ix = config.dataPointIndex;
@@ -84,6 +93,33 @@ export class CategoryChartComponent implements OnChanges, OnInit {
           },
         },
       } as ApexChart,
+      dataLabels: { enabled: false },
+      stroke: { width: 2, colors: ['#fff'] },
+      tooltip: {
+        y: { formatter: (val: number) => formatCurrency(val) },
+      },
+      plotOptions: {
+        pie: {
+          donut: {
+            size: '68%',
+            labels: {
+              show: true,
+              value: {
+                fontSize: '1.1rem',
+                fontWeight: 700,
+                color: '#172824',
+                formatter: (val: string) => formatCompactCurrency(Number(val)),
+              },
+              total: {
+                show: true,
+                label: 'Gesamt',
+                color: chartColors.text,
+                formatter: (w: any) => formatCompactCurrency(w.globals.seriesTotals.reduce((a: number, b: number) => a + b, 0)),
+              },
+            },
+          },
+        },
+      },
     };
   }
   ngOnInit(): void {
