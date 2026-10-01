@@ -1,4 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DataState } from '../services/data-state';
 import { Subject } from 'rxjs';
@@ -7,7 +8,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 @Component({
   selector: 'app-global-search',
   standalone: true,
-  imports: [FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './global-search.component.html',
   styleUrl: './global-search.component.scss'
 })
