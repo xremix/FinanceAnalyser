@@ -13,7 +13,6 @@ export class CategoryService {
     return [...arr].sort((a, b) => {
       const aPrio = !!a.lowPrio ? 1 : 0;
       const bPrio = !!b.lowPrio ? 1 : 0;
-        console.log(a.lowPrio, b.lowPrio);
       return aPrio - bPrio;
     });
   }

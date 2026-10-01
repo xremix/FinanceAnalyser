@@ -7,10 +7,10 @@ import { Importer } from './importer';
   providedIn: 'root',
 })
 export class IngImporter implements Importer {
-  private ignoreKeywords: string[] = ['UEBERTRAG (', 'Auftragskonto', 'Buchung;Valuta'];
+  private ignoreKeywords: string[] = ['UEBERTRAG ('];
 
     public canParseCSV(csvData: string): boolean {
-        return csvData.toLowerCase().startsWith(`Umsatzanzeige;Datei`.toLowerCase());
+        return csvData.replace(/^\uFEFF/, '').toLowerCase().startsWith(`Umsatzanzeige;Datei`.toLowerCase());
     }
 
   private parseDate(dateString: string): Date {
@@ -56,9 +56,46 @@ export class IngImporter implements Importer {
     return date instanceof Date && !Number.isNaN(date.getTime());
   }
 
-  private parseLine(columns: string[]): Transaction | undefined {
-    const bookingDate = this.parseDate(columns[0]);
-    const valueDate = this.parseDate(columns[1]);
+  private parseAmount(value: string | undefined): number {
+    if (!value) {
+      return NaN;
+    }
+    return parseFloat(value.trim().replace(/\./g, '').replace(',', '.'));
+  }
+
+  /**
+   * Maps column names to indices. ING changed its export over time
+   * (e.g. "Valuta" -> "Wertstellungsdatum", added "Referenz"), so columns are resolved by header name.
+   * Header umlauts may be mangled by encoding, so matching uses prefixes.
+   */
+  private mapHeader(columns: string[]): IngColumnMap | undefined {
+    const headers = columns.map((c) => c.trim().toLowerCase());
+    const find = (...prefixes: string[]) => headers.findIndex((h) => prefixes.some((p) => h.startsWith(p)));
+
+    const bookingDate = headers.indexOf('buchung');
+    const amount = find('betrag');
+    if (bookingDate === -1 || amount === -1) {
+      return undefined;
+    }
+
+    const balance = find('saldo');
+    return {
+      bookingDate,
+      valueDate: find('valuta', 'wertstellung'),
+      payerReceiver: find('auftraggeber'),
+      bookingText: find('buchungstext'),
+      purpose: find('verwendungszweck'),
+      balance,
+      balanceCurrency: balance === -1 ? -1 : balance + 1,
+      amount,
+      amountCurrency: amount + 1,
+    };
+  }
+
+  private parseLine(columns: string[], map: IngColumnMap): Transaction | undefined {
+    const col = (index: number) => (index >= 0 ? columns[index] ?? '' : '');
+    const bookingDate = this.parseDate(col(map.bookingDate));
+    const valueDate = this.parseDate(col(map.valueDate));
     const hasValidBookingDate = this.isValidDate(bookingDate);
     const hasValidValueDate = this.isValidDate(valueDate);
 
@@ -77,49 +114,62 @@ export class IngImporter implements Importer {
       month: monthAndYear, // Monat
       bookingDate: safeBookingDate, // Buchung
       valueDate: safeValueDate, // Valuta
-      payerReceiver: columns[2], // auftraggeberEmpfaenger
-      bookingText: columns[3], // buchungstext
-      purpose: columns[4], // verwendungszweck
-      balance: parseFloat(columns[5].replace('.', '').replace(',', '.')), // saldo
-      balanceCurrency: columns[6], // saldoWaehrung
-      amount: parseFloat(columns[7].replace('.', '').replace(',', '.')), // betrag
-      amountCurrency: columns[8], // betragWaehrung
+      payerReceiver: col(map.payerReceiver), // auftraggeberEmpfaenger
+      bookingText: col(map.bookingText), // buchungstext
+      purpose: col(map.purpose), // verwendungszweck
+      balance: this.parseAmount(col(map.balance)), // saldo
+      balanceCurrency: col(map.balanceCurrency), // saldoWaehrung
+      amount: this.parseAmount(col(map.amount)), // betrag
+      amountCurrency: col(map.amountCurrency), // betragWaehrung
       raw: columns.join(';'),
     };
+
+    if (Number.isNaN(transaction.amount)) {
+      console.warn('Invalid transaction amount:', columns);
+      return undefined;
+    }
 
     return transaction;
   }
 
   public parseCsvToTransactions(csvData: string): Transaction[] {
-    const lines = csvData.split('\n');
+    const lines = csvData.replace(/^\uFEFF/, '').split(/\r?\n/);
     const transactions: Transaction[] = [];
+    let columnMap: IngColumnMap | undefined;
 
-    // Überspringe die Kopfzeile
-    for (let i = 1; i < lines.length; i++) {
-      let line = lines[i];
+    for (const line of lines) {
+      if (line.trim() === '') continue;
 
-      //ignoreKeywords
+      const columns = line.split(';').map((column) => column.replace(/"/g, ''));
+
+      if (!columnMap) {
+        columnMap = this.mapHeader(columns);
+        continue; // Metadaten-Zeilen vor der Kopfzeile überspringen
+      }
+
       if (this.ignoreKeywords.some((keyword) => line.toLowerCase().includes(keyword.toLowerCase()))) {
-        console.warn('Ignoring line because of keyword:', line);
         continue;
       }
 
-      if (line.trim() === '') continue; // Überspringe leere Zeilen
-      const columns = line.split(';');
-      if (columns.length < 9) continue; // Überspringe Zeilen mit zu wenig Spalten
-      
-      // remove " from the columns
-      columns.forEach((column, index) => {
-        columns[index] = column.replace(/"/g, '');
-      });
+      if (columns.length <= columnMap.amount) continue;
 
-      let transaction: Transaction | undefined;
-        transaction = this.parseLine(columns);
-
+      const transaction = this.parseLine(columns, columnMap);
       if (transaction) {
         transactions.push(transaction);
       }
     }
     return transactions;
   }
+}
+
+interface IngColumnMap {
+  bookingDate: number;
+  valueDate: number;
+  payerReceiver: number;
+  bookingText: number;
+  purpose: number;
+  balance: number;
+  balanceCurrency: number;
+  amount: number;
+  amountCurrency: number;
 }
