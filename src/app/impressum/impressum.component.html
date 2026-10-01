@@ -1,0 +1,32 @@
+<article class="legal-page">
+  <a routerLink="/" class="small">&larr; Zur Finanzanalyse</a>
+  <h1 class="dashboard-title mt-3">Impressum</h1>
+
+  <h2 class="section-title mt-4">Angaben gemäß § 5 DDG</h2>
+  <address *ngIf="contact.name; else deploymentConfigNotice">
+    {{contact.name}}<br>
+    {{contact.street}}<br>
+    {{contact.postalCode}} {{contact.city}}<br>
+    {{contact.country}}
+  </address>
+
+  <h2 class="section-title mt-4">Kontakt</h2>
+  <p *ngIf="contact.email">
+    E-Mail: <a [href]="'mailto:' + contact.email">{{contact.email}}</a>
+  </p>
+
+  <h2 class="section-title mt-4">Verantwortlich für den Inhalt</h2>
+  <p *ngIf="contact.name">
+    {{contact.name}}<br>
+    {{contact.street}}<br>
+    {{contact.postalCode}} {{contact.city}}<br>
+    {{contact.country}}
+  </p>
+
+  <h2 class="section-title mt-4">Hinweis zum Angebot</h2>
+  <p>Finanz Uhu ist ein kostenloses, privat betriebenes Softwareprojekt zur lokalen Auswertung von Bankumsätzen. Die Anwendung bietet keine Finanz-, Steuer- oder Rechtsberatung.</p>
+
+  <ng-template #deploymentConfigNotice>
+    <p class="alert alert-warning">Die Impressums-Kontaktdaten sind in dieser Entwicklungsumgebung nicht konfiguriert.</p>
+  </ng-template>
+</article>

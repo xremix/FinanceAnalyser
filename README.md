@@ -20,3 +20,14 @@ To run you need to have npm, and the ng-cli installed.
 The following task is currently being used to deploy the app
 
 - `ng build`
+
+The GitHub Pages workflow injects the public legal contact details at deploy time. Configure these repository Actions secrets before deploying:
+
+- `LEGAL_NAME`
+- `LEGAL_STREET`
+- `LEGAL_POSTAL_CODE`
+- `LEGAL_CITY`
+- `LEGAL_COUNTRY`
+- `LEGAL_EMAIL`
+
+The values are not committed to the repository, but they are included in the deployed legal pages and are publicly visible there.

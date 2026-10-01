@@ -4,6 +4,7 @@ import { DataState } from './services/data-state';
 import { DateService } from './services/date-service';
 import { ImportService } from './services/import-services/import-service';
 import { Router } from '@angular/router';
+import { legalContact } from './legal-contact';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,7 @@ import { Router } from '@angular/router';
 })
 export class AppComponent implements OnInit {
   title = 'FinanceAnalyser';
+  protected readonly legalContact = legalContact;
     constructor(protected dataState: DataState,
       private importService: ImportService,
       protected categoryService: CategoryService, 

@@ -24,6 +24,15 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
+      - name: Inject public legal contact details
+        run: node scripts/inject-legal-contact.mjs
+        env:
+          LEGAL_NAME: ${{ secrets.LEGAL_NAME }}
+          LEGAL_STREET: ${{ secrets.LEGAL_STREET }}
+          LEGAL_POSTAL_CODE: ${{ secrets.LEGAL_POSTAL_CODE }}
+          LEGAL_CITY: ${{ secrets.LEGAL_CITY }}
+          LEGAL_COUNTRY: ${{ secrets.LEGAL_COUNTRY }}
+          LEGAL_EMAIL: ${{ secrets.LEGAL_EMAIL }}
       - run: npx ng build --configuration production --base-href /FinanceAnalyser/
       # SPA fallback so deep links / reloads don't 404
       - run: cp dist/finance-analyser/index.html dist/finance-analyser/404.html

@@ -26,6 +26,8 @@ import { StatisticsCardComponent } from './statistics-card/statistics-card.compo
 import { GlobalSearchComponent } from './global-search/global-search.component';
 import { DailyIncomeExpenseChartComponent } from './daily-income-expense-chart/daily-income-expense-chart.component';
 import { SankeyChartComponent } from './sankey-chart/sankey-chart.component';
+import { ImpressumComponent } from './impressum/impressum.component';
+import { DatenschutzComponent } from './datenschutz/datenschutz.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +45,8 @@ import { SankeyChartComponent } from './sankey-chart/sankey-chart.component';
     MonthyBillanceComponent,
     DateRangePickerComponent,
     StatisticsCardComponent,
+    ImpressumComponent,
+    DatenschutzComponent,
   ],
   imports: [
     BrowserModule,
@@ -63,6 +67,8 @@ import { SankeyChartComponent } from './sankey-chart/sankey-chart.component';
     provideRouter([
       { path: '', component: HomeComponentComponent },
       { path: 'settings', component: SettingsComponentComponent },
+      { path: 'impressum', component: ImpressumComponent },
+      { path: 'datenschutz', component: DatenschutzComponent },
     ]),
   ],
   bootstrap: [AppComponent],
