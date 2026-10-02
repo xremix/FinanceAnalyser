@@ -5,6 +5,7 @@ import { CategoryService } from '../category-service';
 import { IngImporter } from './ing-importer';
 import { SpkImporter } from './spk-importer';
 import { N26Importer } from './n26-importer';
+import { DkbImporter } from './dkb-importer';
 import { Importer } from './importer';
 import { defaultCategories } from 'src/app/default-categories';
 import { BaseCategory, mapBaseCategoryToCategory, mapCategoryToBaseCategory } from 'src/app/models/category';
@@ -14,7 +15,7 @@ import { BalanceService } from '../balance-service';
   providedIn: 'root',
 })
 export class ImportService {
-  private importServices: Importer[] = [new SpkImporter(), new IngImporter(), new N26Importer()];
+  private importServices: Importer[] = [new SpkImporter(), new IngImporter(), new N26Importer(), new DkbImporter()];
   private readonly categoriesFileDbName = 'FinanceAnalyser';
   private readonly categoriesFileStoreName = 'fileHandles';
   private readonly categoriesFileHandleKey = 'categoriesFileHandle';

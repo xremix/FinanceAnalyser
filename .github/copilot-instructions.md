@@ -5,7 +5,7 @@
 FinanceAnalyser ist eine datenschutzfreundliche Angular-Anwendung (v18) zur lokalen Analyse von CSV-Finanzdaten. Die App verarbeitet Daten vollständig im Browser ohne Server-Backend.
 
 ### Core Data Flow
-1. **CSV Import**: `ImportService` erkennt automatisch Bankformate (SpkImporter, IngImporter, N26Importer)
+1. **CSV Import**: `ImportService` erkennt automatisch Bankformate (SpkImporter, IngImporter, N26Importer, DkbImporter)
 2. **Transaction Processing**: Kategorisierung via `CategoryService` mit keyword-basiertem Matching
 3. **State Management**: `DataState` hält alle Transaktionen, Filter und berechnete Daten
 4. **Visualization**: ApexCharts für verschiedene Finanz-Dashboards
