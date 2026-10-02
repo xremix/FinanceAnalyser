@@ -4,19 +4,13 @@ import { DataState, DateFilter } from '../services/data-state';
 import { DateService } from '../services/date-service';
 import { Transaction } from '../models/transaction';
 
-interface PayeeMapEntry {
-  name: string;
-  amount: number;
-  transactionCount: number;
-}
-
 @Component({
   selector: 'app-home-component',
   templateUrl: './home-component.component.html',
   styleUrl: './home-component.component.scss',
 })
 export class HomeComponentComponent {
-  public tabs: string[] = ['Kategorien', 'Alle Buchungen', 'Wiederkehrende Buchungen', 'Ausgeglichene Buchungen', 'Monatliche Bilanz', 'Ausgaben-Fluss', 'Zahlungsorte (Prototyp)'];
+  public tabs: string[] = ['Kategorien', 'Alle Buchungen', 'Wiederkehrende Buchungen', 'Ausgeglichene Buchungen', 'Monatliche Bilanz', 'Ausgaben-Fluss'];
   public activeTab: string = this.tabs[0];
 
   onTabKeydown(event: KeyboardEvent) {
@@ -50,32 +44,6 @@ export class HomeComponentComponent {
 
   get balancedTransactions(): Transaction[] {
     return this.dataState.selectedTransactions.filter(transaction => transaction.balancedByDescription !== undefined);
-  }
-
-  get payeeMapEntries(): PayeeMapEntry[] {
-    const payees = new Map<string, PayeeMapEntry>();
-
-    for (const transaction of this.dataState.selectedTransactions) {
-      const name = transaction.payerReceiver.trim().replace(/\s+/g, ' ');
-      if (transaction.amount >= 0 || !name) {
-        continue;
-      }
-
-      const key = name.toLowerCase();
-      const entry = payees.get(key);
-      if (entry) {
-        entry.amount += Math.abs(transaction.amount);
-        entry.transactionCount++;
-      } else {
-        payees.set(key, { name, amount: Math.abs(transaction.amount), transactionCount: 1 });
-      }
-    }
-
-    return Array.from(payees.values()).sort((a, b) => b.amount - a.amount);
-  }
-
-  googleMapsSearchUrl(payee: string): string {
-    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(payee)}`;
   }
 
   get incomeTotal(): number {
