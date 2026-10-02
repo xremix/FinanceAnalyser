@@ -30,16 +30,23 @@
 .brand-link {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  // The owl fills ~78% of its box and caps are ~75% of the font size,
+  // so font-size ≈ 1.04 × logo size makes the wordmark as tall as the owl.
+  --brand-logo-size: 32px;
+  gap: 6px;
   margin-left: 16px;
   color: var(--app-ink-strong);
-  font-size: 1.1rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-size: calc(var(--brand-logo-size) * 1.04);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
   white-space: nowrap;
   text-decoration: none;
 
   app-owl-loader {
+    width: var(--brand-logo-size);
+    height: var(--brand-logo-size);
+    flex: 0 0 auto;
     transition: transform 0.2s ease;
   }
 

@@ -9,22 +9,24 @@
 }
 
 .welcome-brand {
+	// Same ratio as the nav brand: font-size ≈ 1.04 × logo size gives equal visible heights.
+	--brand-logo-size: clamp(40px, 11vw, 68px);
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	gap: clamp(0.4rem, 1.2vw, 0.75rem);
+	gap: calc(var(--brand-logo-size) * 0.08);
 	margin-bottom: 1.5rem;
 
 	.welcome-logo {
-		width: clamp(56px, 12vw, 84px);
-		height: clamp(56px, 12vw, 84px);
+		width: var(--brand-logo-size);
+		height: var(--brand-logo-size);
 		flex: 0 0 auto;
 	}
 }
 
 .welcome-brand-name {
 	color: var(--app-ink-strong);
-	font-size: clamp(2.25rem, 7vw, 3.5rem);
+	font-size: calc(var(--brand-logo-size) * 1.04);
 	white-space: nowrap;
 	font-weight: 800;
 	letter-spacing: -0.03em;
