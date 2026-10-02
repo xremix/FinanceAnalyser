@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Transaction } from '../../models/transaction';
 import { Importer } from './importer';
+import { BalanceAnchor } from '../../models/balance';
 
 
 @Injectable({
@@ -130,6 +131,40 @@ export class IngImporter implements Importer {
     }
 
     return transaction;
+  }
+
+  /**
+   * Reads the "Saldo;1.234,56;EUR" metadata line. The balance includes all booked
+   * transactions, so it is anchored to the end of the export period ("Zeitraum"),
+   * falling back to the file creation date.
+   */
+  public parseBalance(csvData: string): BalanceAnchor | undefined {
+    const lines = csvData.replace(/^\uFEFF/, '').split(/\r?\n/);
+    let amount = NaN;
+    let periodEnd = new Date(NaN);
+    let createdAt = new Date(NaN);
+
+    for (const line of lines) {
+      const columns = line.split(';').map((column) => column.replace(/"/g, '').trim());
+      const key = columns[0]?.toLowerCase();
+      if (key === 'buchung') break; // column header reached, metadata ends
+
+      if (key === 'saldo') {
+        amount = this.parseAmount(columns[1]);
+      } else if (key === 'zeitraum') {
+        const parts = (columns[1] ?? '').split('-');
+        periodEnd = this.parseDate(parts[parts.length - 1]);
+      } else if (key?.startsWith('umsatzanzeige')) {
+        const match = line.match(/(\d{1,2}\.\d{1,2}\.\d{2,4})/);
+        if (match) createdAt = this.parseDate(match[1]);
+      }
+    }
+
+    const date = this.isValidDate(periodEnd) ? periodEnd : createdAt;
+    if (Number.isNaN(amount) || !this.isValidDate(date)) {
+      return undefined;
+    }
+    return { date, amount, source: 'file' };
   }
 
   public parseCsvToTransactions(csvData: string): Transaction[] {

@@ -7,6 +7,8 @@ import { SpkImporter } from './spk-importer';
 import { Importer } from './importer';
 import { defaultCategories } from 'src/app/default-categories';
 import { BaseCategory, mapBaseCategoryToCategory, mapCategoryToBaseCategory } from 'src/app/models/category';
+import { BalanceAnchor } from 'src/app/models/balance';
+import { BalanceService } from '../balance-service';
 @Injectable({
   providedIn: 'root',
 })
@@ -49,6 +51,15 @@ export class ImportService {
     return transactions;
   }
 
+  public parseBalance(csvData: string): BalanceAnchor | undefined {
+    for (const importService of this.importServices) {
+      if (importService.canParseCSV(csvData)) {
+        return importService.parseBalance?.(csvData);
+      }
+    }
+    return undefined;
+  }
+
   public loadFilesFromLocalStorage() {
     this.dataState.resetState();
 
@@ -58,6 +69,7 @@ export class ImportService {
     }
 
     const transactions: Transaction[] = [];
+    let balanceAnchor: BalanceAnchor | undefined;
     for (const storedFile of storedFiles) {
       try {
         let parsedTransactions = this.parseCsvToTransactions(storedFile.content);
@@ -66,6 +78,12 @@ export class ImportService {
           transaction.source = storedFile.fileName;
         });
         transactions.push(...parsedTransactions);
+
+        // With multiple files the most recent balance wins
+        const fileAnchor = this.parseBalance(storedFile.content);
+        if (fileAnchor && (!balanceAnchor || fileAnchor.date > balanceAnchor.date)) {
+          balanceAnchor = { ...fileAnchor, sourceName: storedFile.fileName };
+        }
       } catch (error) {
         console.error(`Error loading stored file ${storedFile.fileName}:`, error);
       }
@@ -73,6 +91,7 @@ export class ImportService {
 
     const uniqueTransactions = this.removeExactDuplicateTransactions(transactions);
 
+    this.dataState.fileBalanceAnchor = balanceAnchor;
     this.dataState.setTransactions(uniqueTransactions);
 
     if (uniqueTransactions.length > 0) {
@@ -170,6 +189,7 @@ export class ImportService {
         const fileContent = await this.getFileContent(file);
         this.upsertStoredFile(file.name, fileContent);
       }
+      this.balanceService.clearManualBalance();
       this.loadFilesFromLocalStorage();
     });
   }
@@ -178,6 +198,7 @@ export class ImportService {
     await this.runWithLoading('Daten werden aktualisiert…', async () => {
       const files = this.getFilesFromLocalStorage().filter((file) => file.fileName !== fileName);
       localStorage.setItem(this.filesStorageKey, JSON.stringify(files));
+      this.balanceService.clearManualBalance();
       this.loadFilesFromLocalStorage();
     });
   }
@@ -197,6 +218,7 @@ export class ImportService {
 
   public clearFiles(): void {
     localStorage.removeItem(this.filesStorageKey);
+    this.balanceService.clearManualBalance();
     this.dataState.resetState();
   }
 
@@ -219,7 +241,7 @@ export class ImportService {
     return stored ? JSON.parse(stored) : [];
   }
 
-  constructor(private categoryService: CategoryService, private dataState: DataState) {}
+  constructor(private categoryService: CategoryService, private dataState: DataState, private balanceService: BalanceService) {}
 
 
   public async loadFromLocalStorage(){

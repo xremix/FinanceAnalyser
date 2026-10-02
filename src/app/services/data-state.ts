@@ -2,6 +2,7 @@ import { ChangeDetectorRef, EventEmitter, Injectable } from '@angular/core';
 import { Transaction } from '../models/transaction';
 import { DateService } from './date-service';
 import { Category  } from '../models/category';
+import { BalanceAnchor } from '../models/balance';
 
 import { RecurringService, RecurringSeries } from './recurring-service';
 import { DuplicateService } from './duplicate-service';
@@ -39,6 +40,8 @@ export class DataState {
     localStorage.setItem(this.showAverageStorageKey, String(value));
   }
   public loadedSources: string[] = []; // Track loaded file sources
+  /** Account balance found in the loaded files (e.g. ING header), if any */
+  public fileBalanceAnchor: BalanceAnchor | undefined;
   public isLoading = false;
   public loadingMessage = '';
 
@@ -377,6 +380,7 @@ export class DataState {
     this.recurringByTransaction = new Map();
     this.selectedRecurringSeries = [];
     this.loadedSources = [];
+    this.fileBalanceAnchor = undefined;
     this.resetCategories();
   }
 

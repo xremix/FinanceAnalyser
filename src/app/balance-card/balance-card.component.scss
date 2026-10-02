@@ -1,0 +1,66 @@
+.balance-summary {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.balance-figures {
+  flex: 0 0 auto;
+}
+
+.balance-sparkline {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 420px;
+  margin-left: auto;
+  pointer-events: none;
+}
+
+.balance-chevron {
+  color: var(--app-muted);
+}
+
+.balance-table-wrapper {
+  max-height: 360px;
+  overflow-y: auto;
+  border-top: 1px solid var(--app-border);
+
+  thead th {
+    position: sticky;
+    top: 0;
+    background: var(--app-surface);
+  }
+}
+
+.balance-table {
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+
+  tr.no-change td {
+    color: var(--app-muted);
+    font-weight: normal;
+  }
+}
+
+.balance-hint {
+  padding: 0.6rem 0.9rem;
+  border: 1px dashed var(--app-border);
+  border-radius: var(--app-radius);
+  color: var(--app-muted);
+  font-size: 0.875rem;
+}
+
+.balance-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem;
+  margin: 0.75rem 0;
+}

@@ -140,6 +140,8 @@
     </div>
   </section>
 
+  <app-balance-card></app-balance-card>
+
   <section class="card filter-panel mb-3" aria-labelledby="filterTitle">
     <div class="card-body">
       <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
@@ -198,7 +200,7 @@
   </app-daily-income-expense-chart>
 
   <div class="overflow-x-hidden  overflow-x-scroll">
-  <ul class="nav nav-tabs" style="width: 100%; min-width: 840px;" role="tablist" aria-label="Detailansichten" (keydown)="onTabKeydown($event)">
+  <ul class="nav nav-tabs" style="width: 100%; min-width: 1000px;" role="tablist" aria-label="Detailansichten" (keydown)="onTabKeydown($event)">
     <li class="nav-item" role="presentation" *ngFor="let tab of tabs; let i = index">
       <button type="button" class="nav-link" role="tab" [id]="'tab-' + i" [ngClass]="{'active': tab == activeTab}"
         [attr.aria-selected]="tab == activeTab" aria-controls="detail-tabpanel" [attr.tabindex]="tab == activeTab ? 0 : -1"
@@ -263,6 +265,31 @@
         [showAverage]="dataState.showAverage"
         height="1200px">
       </app-sankey-chart>
+    </div>
+
+    <div *ngIf="activeTab == 'Zahlungsorte (Prototyp)'">
+      <h2 class="section-title mb-2">Zahlungsorte <span class="badge text-bg-secondary">Prototyp</span></h2>
+      <p class="text-muted">
+        Ausgaben werden nach Zahlungsempfänger gruppiert. Bankdaten enthalten keine Geschäftsadressen;
+        Google Maps sucht deshalb anhand des Namens und kann ungenaue Treffer liefern.
+        Der Suchbegriff enthält nur den Empfängernamen; beim Öffnen wird eine Anfrage an Google gesendet.
+      </p>
+
+      <div *ngIf="payeeMapEntries.length; else noPayees" class="list-group">
+        <div class="list-group-item d-flex flex-wrap align-items-center gap-3" *ngFor="let payee of payeeMapEntries">
+          <div class="d-flex flex-column flex-grow-1 text-break">
+            <strong>{{ payee.name }}</strong>
+            <span class="text-muted small">{{ payee.transactionCount }} Buchung{{ payee.transactionCount === 1 ? '' : 'en' }}</span>
+          </div>
+          <span class="text-nowrap fw-semibold">{{ payee.amount | currency:'EUR' }}</span>
+          <a class="btn btn-sm btn-outline-primary" [href]="googleMapsSearchUrl(payee.name)" target="_blank" rel="noopener noreferrer">
+            <i class="fa-solid fa-map-location-dot me-1" aria-hidden="true"></i>In Google Maps suchen
+          </a>
+        </div>
+      </div>
+      <ng-template #noPayees>
+        <p class="text-muted mb-0">Für die aktuellen Filter wurden keine Ausgaben mit Zahlungsempfänger gefunden.</p>
+      </ng-template>
     </div>
   </div>
 </div>

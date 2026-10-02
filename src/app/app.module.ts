@@ -30,6 +30,7 @@ import { SankeyChartComponent } from './sankey-chart/sankey-chart.component';
 import { ImpressumComponent } from './impressum/impressum.component';
 import { DatenschutzComponent } from './datenschutz/datenschutz.component';
 import { SpendingInsightComponent } from './spending-insight/spending-insight.component';
+import { BalanceCardComponent } from './balance-card/balance-card.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { SpendingInsightComponent } from './spending-insight/spending-insight.co
     MoneyBadgeComponent,
     GlobalSearchComponent,
     DailyIncomeExpenseChartComponent,
-    SankeyChartComponent
+    SankeyChartComponent,
+    BalanceCardComponent
 ],
   providers: [
     provideAnimationsAsync(),
