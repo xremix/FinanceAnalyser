@@ -17,32 +17,45 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  background-color: var(--app-ink-strong);
-  color: #fff;
+  background-color: rgba(255, 255, 255, 0.94);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  color: var(--app-ink-strong);
   font-weight: 600;
   padding: 8px 0;
-  box-shadow: 0 2px 12px rgba(23, 40, 36, 0.12);
-}
-
-.toolbar img {
-  margin: 0 16px;
+  border-bottom: 1px solid var(--app-border);
+  box-shadow: 0 2px 12px rgba(23, 40, 36, 0.05);
 }
 
 .brand-link {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 600;
+  gap: 10px;
+  margin-left: 16px;
+  color: var(--app-ink-strong);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   white-space: nowrap;
   text-decoration: none;
+
+  img {
+    transition: transform 0.2s ease;
+  }
+
+  &:hover img {
+    transform: translateY(-1px) rotate(-4deg);
+  }
 }
 
 .brand-link:hover,
 .brand-link:focus,
 .brand-link:visited {
-  color: #fff;
+  color: var(--app-ink-strong);
+}
+
+.brand-accent {
+  color: var(--app-primary);
 }
 
 .toolbar-actions {
@@ -57,21 +70,25 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  border: 1px solid var(--app-border);
+  background-color: var(--app-surface);
+  color: var(--app-ink-strong);
   border-radius: 999px;
-  padding: 0.35rem 0.8rem;
+  padding: 0.4rem 0.85rem;
   font-size: 0.875rem;
   line-height: 1;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+
+  i {
+    color: var(--app-primary);
+  }
 }
 
 .top-nav-btn:hover,
 .top-nav-btn:focus {
-  background-color: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.35);
-  color: #fff;
+  background-color: #e6eeeb;
+  border-color: var(--app-primary);
+  color: var(--app-primary-hover);
 }
 
 footer {
@@ -109,6 +126,18 @@ svg#clouds {
 }
 
 @media screen and (max-width: 575px) {
+  .toolbar {
+    flex-wrap: nowrap;
+    align-items: center;
+    padding-bottom: 8px;
+  }
+
+  .toolbar-actions {
+    width: auto;
+    padding: 0;
+    margin-right: 12px !important;
+  }
+
   .top-nav-btn span {
     display: none;
   }
