@@ -16,7 +16,7 @@ import { CategorySelectComponent } from './category-select/category-select.compo
 import { TransactionOverviewComponent } from './transaction-overview/transaction-overview.component';
 import { HomeComponentComponent } from './home-component/home-component.component';
 import { SettingsComponentComponent } from './settings-component/settings-component.component';
-import { provideRouter, RouterOutlet } from '@angular/router';
+import { provideRouter, RouterLink, RouterOutlet } from '@angular/router';
 import { OrderPipe } from './pipes/order.pipe';
 import { AmountSortPipe } from './pipes/amount-sort.pipe';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -61,6 +61,7 @@ import { BalanceCardComponent } from './balance-card/balance-card.component';
     BrowserAnimationsModule,
     CategorySelectComponent,
     RouterOutlet,
+    RouterLink,
     NgbModule,
     MoneyBadgeComponent,
     GlobalSearchComponent,

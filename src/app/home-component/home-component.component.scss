@@ -51,6 +51,16 @@
 		margin-right: 0.4rem;
 		color: var(--app-primary);
 	}
+
+	a {
+		color: inherit;
+		text-decoration: underline;
+
+		&:hover,
+		&:focus {
+			color: var(--app-primary);
+		}
+	}
 }
 
 .welcome-section {
