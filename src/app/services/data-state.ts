@@ -146,12 +146,18 @@ export class DataState {
   }
 
   public showTransaction(transaction: Transaction): boolean {
-    const isBookingDateInFilter =
-      transaction.bookingDate >= this.currentFilter.from && transaction.bookingDate <= this.currentFilter.to;
     const isCategoryInFilter =
       this.currentFilter.category === undefined ||
       transaction.category === this.currentFilter.category ||
       this.currentFilter.category.subCategories?.some((subCat) => transaction.category === subCat);
+
+    return isCategoryInFilter && this.matchesFilterIgnoringCategory(transaction);
+  }
+
+  /** Applies date, type and search filters, but not the category filter. */
+  public matchesFilterIgnoringCategory(transaction: Transaction): boolean {
+    const isBookingDateInFilter =
+      transaction.bookingDate >= this.currentFilter.from && transaction.bookingDate <= this.currentFilter.to;
     const isTypeInFilter =
       this.currentFilter.type === 'all' ||
       (this.currentFilter.type === 'expense' && transaction.amount < 0) ||
@@ -160,7 +166,7 @@ export class DataState {
     // Search filter logic
     const isSearchTermInFilter = this.matchesSearchTerm(transaction, this.currentFilter.searchTerm);
     
-    return isBookingDateInFilter && isCategoryInFilter && isTypeInFilter && isSearchTermInFilter;
+    return isBookingDateInFilter && isTypeInFilter && isSearchTermInFilter;
   }
 
   private matchesSearchTerm(transaction: Transaction, searchTerm: string): boolean {
