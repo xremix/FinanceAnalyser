@@ -26,6 +26,10 @@ export class AppComponent implements OnInit {
     await this.importService.loadFromLocalStorage();
   }
 
+  get showToolbar(): boolean {
+    return this.dataState.hasLoadedData || this.dataState.isLoading || this.router.url.split(/[?#]/)[0] !== '/';
+  }
+
   openSettings() {
     this.router.navigate(['settings']);
   }

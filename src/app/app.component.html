@@ -1,6 +1,6 @@
 <div class="loading-overlay" *ngIf="dataState.isLoading" role="status" aria-live="polite">
   <div class="loading-card">
-    <div class="spinner-border text-primary" aria-hidden="true"></div>
+    <app-owl-loader [size]="64"></app-owl-loader>
     <div>
       <div class="loading-title">{{ dataState.loadingMessage || 'Daten werden geladen…' }}</div>
       <div class="loading-hint">Buchungen werden eingelesen und kategorisiert</div>
@@ -11,9 +11,9 @@
 <a class="skip-link" href="#main-content" (click)="skipToMain($event)">Zum Inhalt springen</a>
 
 <!-- Toolbar -->
-<header class="toolbar sticky-top">
+<header class="toolbar sticky-top" *ngIf="showToolbar">
  <a href="./" class="brand-link">
-  <img src="assets/logo.svg" alt="" width="38" height="38">
+  <app-owl-loader [size]="38" [loop]="false"></app-owl-loader>
   <span class="brand-name">Finanz <span class="brand-accent">Uhu</span></span>
  </a>
   <div class="spacer"></div>

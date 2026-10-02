@@ -16,6 +16,7 @@ import { BalanceService } from '../balance-service';
 })
 export class ImportService {
   private importServices: Importer[] = [new SpkImporter(), new IngImporter(), new N26Importer(), new DkbImporter()];
+  private readonly minLoadingDurationMs = 2800;
   private readonly categoriesFileDbName = 'FinanceAnalyser';
   private readonly categoriesFileStoreName = 'fileHandles';
   private readonly categoriesFileHandleKey = 'categoriesFileHandle';
@@ -206,12 +207,18 @@ export class ImportService {
   }
 
   // Parsing is synchronous, so yield one frame to let the loading indicator paint first.
+  // The loader stays visible long enough for the owl intro animation to finish.
   private async runWithLoading(message: string, work: () => Promise<void>): Promise<void> {
     this.dataState.loadingMessage = message;
     this.dataState.isLoading = true;
+    const startedAt = performance.now();
     try {
       await new Promise<void>((resolve) => requestAnimationFrame(() => setTimeout(resolve)));
       await work();
+      const remaining = this.minLoadingDurationMs - (performance.now() - startedAt);
+      if (remaining > 0) {
+        await new Promise<void>((resolve) => setTimeout(resolve, remaining));
+      }
     } finally {
       this.dataState.isLoading = false;
       this.dataState.loadingMessage = '';

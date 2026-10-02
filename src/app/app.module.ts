@@ -1,5 +1,6 @@
 import { RecurringOverviewComponent } from './recurring-overview/recurring-overview.component';
 import { BrowserModule } from '@angular/platform-browser';
+import { OwlLoaderComponent } from './owl-loader/owl-loader.component';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { FileSelectorComponent } from './file-selector/file-selector.component';
@@ -67,7 +68,8 @@ import { BalanceCardComponent } from './balance-card/balance-card.component';
     GlobalSearchComponent,
     DailyIncomeExpenseChartComponent,
     SankeyChartComponent,
-    BalanceCardComponent
+    BalanceCardComponent,
+    OwlLoaderComponent
 ],
   providers: [
     provideAnimationsAsync(),

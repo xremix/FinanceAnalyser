@@ -1,7 +1,10 @@
 <div class="welcome-shell" *ngIf="!dataState.hasLoadedData && !dataState.isLoading">
   <section class="card welcome-hero" aria-labelledby="welcomeTitle">
     <div class="card-body text-center">
-      <span class="welcome-icon" aria-hidden="true"><i class="fa-solid fa-chart-pie"></i></span>
+      <div class="welcome-brand">
+        <app-owl-loader class="welcome-logo" [size]="null" [loop]="false"></app-owl-loader>
+        <span class="welcome-brand-name">Finanz <span class="welcome-brand-accent">Uhu</span></span>
+      </div>
       <h1 id="welcomeTitle" class="welcome-title">Bankumsätze analysieren – kostenlos und sicher im Browser</h1>
       <p class="welcome-lead">Finanz Uhu macht aus deinem CSV-Umsatzexport von Sparkasse, ING, N26 oder DKB eine übersichtliche Finanzanalyse: Sieh, wofür du Geld ausgibst, welche Einnahmen eingehen und wie sich deine Finanzen entwickeln.</p>
       <app-file-selector [big]="true"></app-file-selector>
